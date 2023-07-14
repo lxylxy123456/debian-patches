@@ -2808,3 +2808,15 @@ msgstr "Argumenten ontleden is mislukt: %s\n"
 
 #~ msgid "_Add or Remove…"
 #~ msgstr "_Toevoegen of verwijderen…"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "_Title:"
+msgstr "_Titel:"
+
+msgid "Set Title"
+msgstr "Titel instellen"
+
+msgid "Transparent background"
+msgstr "Transparante achtergrond"

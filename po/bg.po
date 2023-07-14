@@ -2459,3 +2459,12 @@ msgstr "_Затваряне на този прозорец"
 #, c-format
 msgid "Failed to parse arguments: %s\n"
 msgstr "Аргументите не могат да бъдат анализирани: %s\n"
+
+msgid "Transparent background"
+msgstr "Прозрачен фон"
+
+msgid "_Title:"
+msgstr "_Заглавие:"
+
+msgid "Set Title"
+msgstr "Задаване на заглавие"

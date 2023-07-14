@@ -2366,3 +2366,15 @@ msgstr "Huts egin du argumentuak analizatzean: %s\n"
 
 #~ msgid "_Detach Tab"
 #~ msgstr "_Desuztartu fitxa"
+
+msgid "Title"
+msgstr "Titulua"
+
+msgid "_Title:"
+msgstr "_Titulua:"
+
+msgid "Set Title"
+msgstr "Ezarri titulua"
+
+msgid "Transparent background"
+msgstr "Atzeko plano gardena"

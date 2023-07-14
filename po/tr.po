@@ -2385,3 +2385,15 @@ msgstr "_Pencereyi Kapat"
 #, c-format
 msgid "Failed to parse arguments: %s\n"
 msgstr "Bağımsız değişkenler ayrıştırılamadı: %s\n"
+
+msgid "Transparent background"
+msgstr "Şeffaf arkaplan"
+
+msgid "_Title:"
+msgstr "_Başlık:"
+
+msgid "Set Title"
+msgstr "Başlığı Düzenle"
+
+msgid "_Set Title…"
+msgstr "_Başlığı Ata..."

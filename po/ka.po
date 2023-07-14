@@ -90,6 +90,11 @@ msgstr "პროფილის ადამიანისთვის-სა�
 msgid "Human-readable name of the profile."
 msgstr "პროფილის ადამიანისთვის-სასიამოვნო წასაკითხი სახელი."
 
+#: ../src/gnome-terminal.glade2.h:86
+#, fuzzy
+msgid "Transparent background"
+msgstr "გამჭირვალე"
+
 #: src/org.gnome.Terminal.gschema.xml:139
 msgid "Default color of text in the terminal"
 msgstr "ტერმინალის ტექსტის ნაგულისხმები ფერი"

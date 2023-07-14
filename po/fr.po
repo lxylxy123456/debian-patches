@@ -2533,3 +2533,27 @@ msgstr "Impossible d’analyser les paramètres : %s\n"
 
 #~ msgid "Icelandic"
 #~ msgstr "Islandais"
+
+#~ msgid "Set _Character Encoding"
+#~ msgstr "_Définir le codage des caractères"
+
+#~ msgid "Move Tab _Left"
+#~ msgstr "Déplacer l’onglet vers la _gauche"
+
+#~ msgid "Move Tab _Right"
+#~ msgstr "Déplacer l’onglet vers la _droite"
+
+#~ msgid "_Detach Tab"
+#~ msgstr "_Détacher l’onglet"
+
+msgid "Transparent background"
+msgstr "Arrière-plan transparent"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "_Title:"
+msgstr "_Titre :"
+
+msgid "Set Title"
+msgstr "Définir le titre"
