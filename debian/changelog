@@ -1,3 +1,53 @@
+vte2.91 (0.70.6-1~deb12u1) bookworm; urgency=medium
+
+  * Team upload
+  * Rebuild for bookworm (Closes: #1037919, LP: #2022019)
+  * d/gbp.conf, d/control.in: Use debian/bookworm packaging branch
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 14 Jun 2023 12:17:06 +0100
+
+vte2.91 (0.70.6-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream release
+    - Functionally equivalent to 0.70.5-2, but the fix for #1037919
+      is incorporated upstream instead of as a patch
+  * Add Debian and Ubuntu bug numbers to 0.70.5-2 changelog entry
+  * Fix a typo in revised 0.70.5-1 changelog entry
+  * d/gbp.conf, d/control.in: Use debian/trixie branch for packaging
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 14 Jun 2023 12:16:35 +0100
+
+vte2.91 (0.70.5-2) unstable; urgency=high
+
+  * Team upload
+  * This version is functionally equivalent to 0.70.6 upstream, but 0.70.6
+    tarballs are not yet available
+  * d/p/emulation-Fix-infinite-loop-on-non-number-OSC-104-param.patch:
+    Add patch from upstream to fix an infinite loop processing OSC 104.
+    A malicious program accessed via ssh, telnet or similar protocols could
+    use this as a denial of service.
+    (Closes: #1037919, LP: #2022019; vte#2631 upstream)
+  * Add more details of the bugs fixed in the previous changelog entry
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 14 Jun 2023 10:17:06 +0100
+
+vte2.91 (0.70.5-1) unstable; urgency=medium
+
+  * New upstream bugfix release 0.70.4
+    - Fix an invalid memory access which can cause a terminal freeze
+      or crash, for example when pasting emojis
+      (vte#2606, vte#2620 upstream)
+  * New upstream bugfix release 0.70.5
+    - Fix seconds vs milliseconds confusion so that the cursor stops
+      blinking as intended when a focused window becomes idle
+      (vte#2622 upstream)
+    - Produce correct coordinates when mouse wheel scrolling on the
+      left edge of a terminal (vte#2621 upstream)
+  * d/gbp.conf, d/watch: Branch for 0.70.x and bookworm
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 29 May 2023 17:19:45 -0400
+
 vte2.91 (0.70.3-1) unstable; urgency=medium
 
   * New upstream release

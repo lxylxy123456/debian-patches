@@ -25,7 +25,7 @@ Build-Depends-Indep: libatk1.0-doc <!nodoc>,
                      libgtk-3-doc <!nodoc>
 Standards-Version: 4.6.2
 Vcs-Browser: https://salsa.debian.org/gnome-team/vte2.91
-Vcs-Git: https://salsa.debian.org/gnome-team/vte2.91.git
+Vcs-Git: https://salsa.debian.org/gnome-team/vte2.91.git -b debian/bookworm
 Homepage: https://wiki.gnome.org/Apps/Terminal/VTE
 
 Package: libvte-2.91-0

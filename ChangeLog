@@ -1,4 +1,117 @@
-commit 177c96f2b7e58ba90a7b5738089e8a97094c84d5 (HEAD -> vte-0-70, tag: 0.70.3)
+commit 2654a3f26fc92870bfd65c028d0020432dd6e56e (HEAD -> vte-0-70, tag: 0.70.6)
+Author: Christian Persch <chpe@src.gnome.org>
+Date:   Thu Jun 1 21:30:48 2023 +0200
+
+    emulation: Fix infinite loop on non-number OSC 104 param
+    
+    Fixes: https://gitlab.gnome.org/GNOME/vte/-/issues/2631
+    (cherry picked from commit dce7b5f044b0f9e184f186315c846489a20edf0d)
+
+ src/vteseq.cc | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit b0f11e5bb60187fb3b1a51fdddbe7fe7f1a9507a
+Author: Christian Persch <chpe@src.gnome.org>
+Date:   Thu Apr 20 22:38:36 2023 +0200
+
+    build: Post release version bump
+
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 84e3d29a132721f78dfe96a728db11730d7a3e21 (tag: 0.70.5)
+Author: Eric Johnson <yut23@gvljohnsons.com>
+Date:   Wed Apr 5 19:17:06 2023 +0200
+
+    emulation: Fix invalid mouse scroll event on window edge
+    
+    Fixes: https://gitlab.gnome.org/GNOME/vte/-/issues/2621
+    (cherry picked from commit 19acc51708d9e75ef2b314aa026467570e0bd8ee)
+    (cherry picked from commit 3960fee241f39af6aeeff008a07796854e9b51f7)
+
+ src/vte.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit aa024f25245d7c7810bc4404e7aa2046486d229d
+Author: Christian Persch <chpe@src.gnome.org>
+Date:   Wed Apr 5 19:17:06 2023 +0200
+
+    widget: Fix cursor blink timeout
+    
+    Fix s/ms confusion to make the cursor stop blinking correctly.
+    
+    Fixes: https://gitlab.gnome.org/GNOME/vte/-/issues/2622
+    (cherry picked from commit 4da9d055f68f5b5dad9946b289a1836bd7c0fe8d)
+    (cherry picked from commit c4e8371fe65fdb3ea4c81c838d8373444e6d3400)
+
+ src/vte.cc         | 30 ++++++++++++++++--------------
+ src/vteinternal.hh | 12 ++++++------
+ src/widget.cc      | 12 ++++++------
+ 3 files changed, 28 insertions(+), 26 deletions(-)
+
+commit e7f8f858536b3beee5515caa96b9f2d9714f22bb
+Author: Christian Persch <chpe@src.gnome.org>
+Date:   Mon Mar 20 19:00:20 2023 +0100
+
+    build: Post release version bump
+
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit c851dda5b459bc1d1d186c1134c8303be6e2a9f4 (tag: 0.70.4)
+Author: Christian Persch <chpe@src.gnome.org>
+Date:   Sat Mar 11 11:26:15 2023 +0100
+
+    fonts: Keep the PangoLayout unchanged
+    
+    The previous commit still wasn't completely fixing the problem, since
+    the FontInfo and the UnistrInfo are cached too, and m_layout will be
+    re-used when creating the next UnistrInfo, but the code in
+    pango_cairo_show_layout_line() requires the PangoLayout to still have
+    the same text as when it was created for the UnistrInfo.
+    
+    To fix this, adopt the PangoLayout into the PangoLayoutLine cached in
+    the UnistrInfo, and create a new layout for next use.
+    
+    Fixes: https://gitlab.gnome.org/GNOME/vte/-/issues/2606
+    Fixes: https://gitlab.gnome.org/GNOME/vte/-/issues/2620
+    (cherry picked from commit 3c8f66be867aca6656e4109ce880b6ea7431b895)
+    (cherry picked from commit 164c0f1eb5165786e0addfe5317cf6de3061ddf9)
+
+ src/fonts-pangocairo.cc | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+commit d02c5fce7d828c2c543d9ec01e36f4d6f97547ce
+Author: Christian Hergert <chergert@redhat.com>
+Date:   Sat Mar 11 11:26:15 2023 +0100
+
+    fonts: keep layout text available for cairo
+    
+    When a cairo recording surface is used, it will memcpy() the text and
+    therefore expects the layout's text to be complete enough to contain each
+    glyph item's offset from base pointer.
+    
+    This keeps that text around long enough to satisfy that requirement. It
+    will be reset on the next operation/call to get_unistr_info().
+    
+    Fixes #2620
+    
+    (cherry picked from commit 22b3a562d5c95f5911560131c9f6f2df70881e34)
+    (cherry picked from commit 0dc3dbae6cf71ee3f0efb1f31b8fd3eda7c150dd)
+
+ src/fonts-pangocairo.cc | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
+
+commit 26c3d4a7dd9b0cdbd2ebfc4ff28b06c987cc8c29
+Author: Christian Persch <chpe@src.gnome.org>
+Date:   Sat Feb 11 19:20:53 2023 +0100
+
+    build: Post release version bump
+
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 177c96f2b7e58ba90a7b5738089e8a97094c84d5 (tag: 0.70.3)
 Author: Christian Persch <chpe@src.gnome.org>
 Date:   Sat Feb 11 19:05:48 2023 +0100
 

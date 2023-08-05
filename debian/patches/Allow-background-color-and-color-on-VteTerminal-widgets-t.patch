@@ -13,7 +13,7 @@ Last-Update: 2021-11-08
  1 file changed, 22 insertions(+), 6 deletions(-)
 
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index 3945ba6..899592f 100644
+index 591c127..87375f3 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
 @@ -92,6 +92,7 @@ template<typename T>
