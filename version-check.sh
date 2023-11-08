@@ -41,6 +41,8 @@ fi
 
 # Push and fail
 cd 'versions/'
+git config user.email "lxylxy123456@github-user"
+git config user.name "lxylxy123456"
 git add -A
 git commit -m 'Auto commit by version-check.sh'
 git push origin version-check
