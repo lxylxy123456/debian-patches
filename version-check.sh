@@ -1,4 +1,6 @@
 #!/bin/bash
 
-echo hello
-head -n 10000 /etc/*release
+apt-get update
+apt list libvte-2.91-0
+apt list gnome-terminal
+
