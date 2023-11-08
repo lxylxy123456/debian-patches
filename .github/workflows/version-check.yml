@@ -2,7 +2,7 @@ name: Version check
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '34 12 * * *'
 
 jobs:
   build:
