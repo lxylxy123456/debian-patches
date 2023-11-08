@@ -28,20 +28,10 @@ check_version () {
 	return 0
 }
 
-FAIL='n'
+[ ! -f '/tmp/version-check-fail' ]
 for i in $(ls 'versions/'); do
 	if ! check_version "$i"; then
-		FAIL='y'
+		touch '/tmp/version-check-fail'
 	fi
 done
-
-if [ "$FAIL" = 'y' ]; then
-	apt-get install git -y
-	git add 'versions/'
-	git commit -m 'auto commit by version-check.sh'
-	git push
-	exit 1
-fi
-
-exit 0
 
