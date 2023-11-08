@@ -8,20 +8,14 @@ jobs:
     container:
       image: debian:stable
     steps:
+    - name: apt
+      run: |
+        apt-get update && apt-get install -y git
     - uses: actions/checkout@v4
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         ref: 'version-check'
         path: 'versions'
     - name: version check
       run: ./version-check.sh
-    - name: push
-      run: |
-        apt-get install -y git
-    - uses: EndBug/add-and-commit@v9
-      with:
-        author_name: 'lxylxy123456'
-        author_email: 'lixiaoyi13691419520@gmail.com'
-        cwd: 'versions'
-        message: 'Version check update'
 

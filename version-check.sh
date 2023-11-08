@@ -28,10 +28,21 @@ check_version () {
 	return 0
 }
 
-[ ! -f '/tmp/version-check-fail' ]
+FAIL='n'
 for i in $(ls 'versions/'); do
 	if ! check_version "$i"; then
-		touch '/tmp/version-check-fail'
+		FAIL='y'
 	fi
 done
+
+if [ "$FAIL" = 'n' ]; then
+	exit 0
+fi
+
+# Push and fail
+cd 'versions/'
+git add -A
+git commit -m 'Auto commit by version-check.sh'
+git push origin version-check
+exit 1
 
