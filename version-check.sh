@@ -3,7 +3,6 @@
 set -xe
 apt-get update
 
-
 check_version () {
 	NAME="$1"
 
