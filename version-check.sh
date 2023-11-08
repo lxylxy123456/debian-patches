@@ -1,4 +1,4 @@
 #!/bin/bash
 
 echo hello
-lsb_release -a
+head -n 10000 /etc/*release
