@@ -9,9 +9,9 @@ check_version () {
 
 	TMPF="$(mktemp)"
 	# apt-get does not provide "list" command, so we have to use apt.
-	apt list "$NAME" | grep -F "$NAME/stable " | tee "$TMPF"
+	apt list "$NAME" 2> /dev/null | grep -F "$NAME/stable " | tee "$TMPF"
 
-	if [ "$(wc -l "$TMPF")" != "1" ]; then
+	if [ "$(wc -l < "$TMPF")" != "1" ]; then
 		echo "Error: expecting only one result for '$NAME' in 'apt list'."
 		return 1
 	fi
@@ -36,6 +36,9 @@ for i in $(ls 'versions/'); do
 done
 
 if [ "$FAIL" = 'y' ]; then
+	git add 'versions/'
+	git commit -m 'auto commit by version-check.sh'
+	git push
 	exit 1
 fi
 
