@@ -40,6 +40,7 @@ if [ "$FAIL" = 'n' ]; then
 fi
 
 # Push and fail
+# Need to set GitHub "Workflow permissions" to "Read and write permissions"
 cd 'versions/'
 git config user.email "lxylxy123456@github-user"
 git config user.name "lxylxy123456"
