@@ -21,4 +21,5 @@ sudo apt-mark hold libvte-2.91-0
 
 * [`vte2.91-0.70.3`](https://github.com/lxylxy123456/debian-patches/tree/vte2.91-0.70.3)
 * [`vte2.91-0.70.6`](https://github.com/lxylxy123456/debian-patches/tree/vte2.91-0.70.6)
+* [`libvte-2.91-0_0.70.6-2_deb12u1`](https://github.com/lxylxy123456/debian-patches/tree/libvte-2.91-0_0.70.6-2_deb12u1)
 
