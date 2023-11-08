@@ -1,0 +1,25 @@
+name: Version check
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:stable
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
+      with:
+        ref: 'version-check'
+        path: 'versions'
+    - name: version check
+      run: ./version-check.sh
+    - uses: EndBug/add-and-commit@v9
+      with:
+        author_name: 'lxylxy123456'
+        author_email: 'lixiaoyi13691419520@gmail.com'
+        branch: 'version-check'
+        cwd: 'versions'
+        message: 'Version check update'
+
