@@ -36,6 +36,7 @@ for i in $(ls 'versions/'); do
 done
 
 if [ "$FAIL" = 'y' ]; then
+	apt-get install git -y
 	git add 'versions/'
 	git commit -m 'auto commit by version-check.sh'
 	git push
