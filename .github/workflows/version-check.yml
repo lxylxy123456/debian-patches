@@ -15,11 +15,13 @@ jobs:
         path: 'versions'
     - name: version check
       run: ./version-check.sh
+    - name: push
+      run: |
+        apt-get install -y git
     - uses: EndBug/add-and-commit@v9
       with:
         author_name: 'lxylxy123456'
         author_email: 'lixiaoyi13691419520@gmail.com'
-        branch: 'version-check'
         cwd: 'versions'
         message: 'Version check update'
 
