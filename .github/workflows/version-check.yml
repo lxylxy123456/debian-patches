@@ -3,7 +3,7 @@ name: Version check
 on:
   push: {}
   schedule:
-    - cron: '27 6 * * *'
+    - cron: '* * * * *'
 
 jobs:
   build:
