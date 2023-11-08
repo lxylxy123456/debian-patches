@@ -1,6 +1,9 @@
 name: Version check
 
-on: [push, pull_request]
+on:
+  push
+  schedule:
+    - cron: '6 26 * * *'
 
 jobs:
   build:
