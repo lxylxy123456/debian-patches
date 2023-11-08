@@ -2050,7 +2050,6 @@ Terminal::queue_adjustment_value_changed(double v)
         _vte_debug_print(VTE_DEBUG_ADJ,
                          "Scrolling by %f\n", dy);
 
-        m_ringview.invalidate();
         invalidate_all();
         match_contents_clear();
         emit_text_scrolled(dy);
@@ -2900,9 +2899,6 @@ Terminal::drop_scrollback()
         if (m_screen == &m_normal_screen) {
                 queue_adjustment_value_changed(m_normal_screen.insert_delta);
                 adjust_adjustments_full();
-                m_ringview.invalidate();
-                invalidate_all();
-                match_contents_clear();
         }
 }
 
@@ -7552,9 +7548,6 @@ Terminal::set_size(long columns,
 			gtk_widget_queue_resize(m_widget); // FIXMEgtk4?
 #endif
 
-                m_ringview.invalidate();
-                invalidate_all();
-                match_contents_clear();
 		/* Our visible text changed. */
 		emit_text_modified();
 	}
@@ -9787,10 +9780,6 @@ Terminal::set_scrollback_lines(long lines)
 	queue_adjustment_value_changed(scroll_delta);
 	adjust_adjustments_full();
 
-        m_ringview.invalidate();
-        invalidate_all();
-        match_contents_clear();
-
         return true;
 }
 
@@ -9973,9 +9962,7 @@ Terminal::reset(bool clear_tabstops,
         /* BiDi */
         m_bidi_rtl = FALSE;
 	/* Cause everything to be redrawn (or cleared). */
-	m_ringview.invalidate();
 	invalidate_all();
-	match_contents_clear();
 
         /* Reset XTerm window controls */
         m_xterm_wm_iconified = false;
