@@ -28,9 +28,11 @@ jobs:
     - name: dummy
       run: |
         cd dummy
+        date >> run_dates.txt
         git config user.email "lxylxy123456@github-user"
         git config user.name "lxylxy123456"
-        git commit --allow-empty -m 'Dummy commit by version-check.yml'
+        git add -A
+        git commit -m 'Dummy commit by version-check.yml'
         git push origin dummy
         cd ..
 
