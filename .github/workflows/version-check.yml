@@ -1,6 +1,7 @@
 name: Version check
 
 on:
+  push: []
   schedule:
     - cron: '34 12 * * *'
 
@@ -20,4 +21,16 @@ jobs:
         path: 'versions'
     - name: version check
       run: ./version-check.sh
+    - uses: actions/checkout@v4
+      with:
+        ref: 'dummy'
+        path: 'dummy'
+    - name: dummy
+      run: |
+        cd dummy
+        git config user.email "lxylxy123456@github-user"
+        git config user.name "lxylxy123456"
+        git commit --allow-empty -m 'Dummy commit by version-check.yml'
+        git push origin dummy
+        cd ..
 
