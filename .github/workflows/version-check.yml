@@ -1,0 +1,23 @@
+name: Version check
+
+on:
+  schedule:
+    - cron: '34 12 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:stable
+    steps:
+    - name: apt
+      run: |
+        apt-get update && apt-get install -y git
+    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+      with:
+        ref: 'version-check'
+        path: 'versions'
+    - name: version check
+      run: ./version-check.sh
+
