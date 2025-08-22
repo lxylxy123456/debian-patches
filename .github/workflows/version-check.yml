@@ -23,7 +23,9 @@ jobs:
         ref: 'version-check'
         path: 'versions'
     - name: version check
-      run: cd versions/debian-${{ matrix.debian_version }}; ./version-check.sh
+      run: |
+        cd versions/debian-${{ matrix.debian_version }}
+        ../../version-check.sh
     - uses: actions/checkout@v5
       with:
         ref: 'dummy'
@@ -31,11 +33,12 @@ jobs:
     - name: dummy
       run: |
         cd dummy
-        echo "$(date) ${{ matrix.debian_version }}" >> run_dates.txt
+        echo "$(date)" >> run_dates_${{ matrix.debian_version }}.txt
         git config user.email "lxylxy123456@github-user"
         git config user.name "lxylxy123456"
         git add -A
         git commit -m 'Dummy commit by version-check.yml'
+        git pull origin dummy --no-edit
         git push origin dummy
         cd ..
 
