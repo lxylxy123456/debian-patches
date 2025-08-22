@@ -234,7 +234,7 @@ FontInfo::FontInfo(vte::glib::RefPtr<PangoContext> context)
 
         measure_font();
 
-#if PANGO_VERSION_CHECK(1, 44, 0)
+#if 0
         /* Try using the font's metrics; see issue#163. */
         if (auto metrics = vte::take_freeable
             (pango_context_get_metrics(context.get(),
