@@ -23,7 +23,7 @@ jobs:
         ref: 'version-check'
         path: 'versions'
     - name: version check
-      run: cd debian-${{ matrix.debian_version }}; ./version-check.sh
+      run: cd versions/debian-${{ matrix.debian_version }}; ./version-check.sh
     - uses: actions/checkout@v5
       with:
         ref: 'dummy'

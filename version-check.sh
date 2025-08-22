@@ -15,11 +15,11 @@ check_version () {
 		return 1
 	fi
 
-	EXPECTED_VERSION="$(cat "versions/$NAME")"
+	EXPECTED_VERSION="$(cat "$NAME")"
 	ACTUAL_VERSION="$(cut -d ' ' -f 2 "$TMPF")"
 
 	if [ "$ACTUAL_VERSION" != "$EXPECTED_VERSION" ]; then
-		echo "$ACTUAL_VERSION" > "versions/$NAME"
+		echo "$ACTUAL_VERSION" > "$NAME"
 		echo "Error: '$NAME' updated: '$EXPECTED_VERSION' -> '$ACTUAL_VERSION'."
 		return 2
 	fi
@@ -28,7 +28,7 @@ check_version () {
 }
 
 FAIL='n'
-for i in $(ls 'versions/'); do
+for i in *; do
 	if ! check_version "$i"; then
 		FAIL='y'
 	fi
@@ -40,7 +40,6 @@ fi
 
 # Push and fail
 # Need to set GitHub "Workflow permissions" to "Read and write permissions"
-cd 'versions/'
 git config user.email "lxylxy123456@github-user"
 git config user.name "lxylxy123456"
 git add -A
