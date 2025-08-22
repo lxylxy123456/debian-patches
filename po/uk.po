@@ -2562,3 +2562,18 @@ msgstr "Не вдається визначити аргументи: %s\n"
 
 #~ msgid "Georgian"
 #~ msgstr "Грузинське"
+
+msgid "Title"
+msgstr "Заголовок"
+
+msgid "_Title:"
+msgstr "За_головок:"
+
+msgid "Set Title"
+msgstr "Встановлення заголовка"
+
+msgid "_Set Title…"
+msgstr "_Встановити заголовок…"
+
+msgid "Transparent background"
+msgstr "Прозоре тло"

@@ -2567,3 +2567,15 @@ msgstr "_Ablak bezárása"
 #, c-format
 msgid "Failed to parse arguments: %s\n"
 msgstr "A paraméterek feldolgozása meghiúsult: %s\n"
+
+msgid "Title"
+msgstr "Cím"
+
+msgid "_Title:"
+msgstr "_Cím:"
+
+msgid "Set Title"
+msgstr "Cím beállítása"
+
+msgid "Transparent background"
+msgstr "Áttetsző háttér"

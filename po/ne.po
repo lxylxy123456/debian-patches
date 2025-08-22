@@ -2745,8 +2745,8 @@ msgstr "%sतर्कहरू पार्स गर्न असफल\n"
 #~ msgid "_None (use solid color)"
 #~ msgstr "कुनै पनि होइन (एउटै रङ प्रयोग गर्नुहोस्)"
 
-#~ msgid "_Transparent background"
-#~ msgstr "पारदर्शी पृष्ठभूमि"
+msgid "Transparent background"
+msgstr "पारदर्शी पृष्ठभूमि"
 
 #~ msgid "_Use the system fixed width font"
 #~ msgstr "प्रणाली निश्चित गरिएको फन्ट चौडाइ प्रयोग गर्नुहोस्"
@@ -3338,6 +3338,9 @@ msgstr "%sतर्कहरू पार्स गर्न असफल\n"
 #~ msgid "The text you clicked on doesn't seem to be a valid OTP challenge."
 #~ msgstr "तपाईँले क्लिक गरेको पाठ वैध OTP चुनौती नहुने देखिन्छ ।"
 
+msgid "Set Title"
+msgstr "शीर्षक सेट गर्नुहोस्"
+
 #~ msgid "Switch to Tab 3"
 #~ msgstr "ट्याब ३ मा स्विच गर्नुहोस्"
 
@@ -3477,8 +3480,8 @@ msgstr "%sतर्कहरू पार्स गर्न असफल\n"
 #~ msgid "_Input Methods"
 #~ msgstr "आगत विधि"
 
-#~ msgid "_Title:"
-#~ msgstr "शीर्षक:"
+msgid "_Title:"
+msgstr "शीर्षक:"
 
 #~ msgid "text/plain dropped on terminal had wrong format (%d) or length (%d)\n"
 #~ msgstr "टर्मिनलमा छोडिएको पाठ/सादा गलत ढाँचा (%d) वा लम्बाइ (%d)को थियो\n"

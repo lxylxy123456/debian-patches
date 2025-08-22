@@ -2500,11 +2500,14 @@ msgstr "P_echar a xanela"
 msgid "Failed to parse arguments: %s\n"
 msgstr "Produciuse un erro ao analizar os argumentos: %s\n"
 
-#~ msgid "org.gnome.Terminal"
-#~ msgstr "org.gnome.Terminal"
+msgid "Title"
+msgstr "Título"
 
-#~ msgid "Armenian"
-#~ msgstr "Armenio"
+msgid "_Title:"
+msgstr "_Título:"
 
-#~ msgid "Georgian"
-#~ msgstr "Xeorxiano"
+msgid "Set Title"
+msgstr "Definir o título"
+
+msgid "Transparent background"
+msgstr "Fondo transparente"

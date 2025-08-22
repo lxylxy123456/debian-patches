@@ -2428,3 +2428,15 @@ msgstr "Chiudi _finestra"
 #, c-format
 msgid "Failed to parse arguments: %s\n"
 msgstr "Analisi degli argomenti non riuscita: %s\n"
+
+msgid "Transparent background"
+msgstr "Sfondo trasparente"
+
+msgid "Title"
+msgstr "Titolo"
+
+msgid "_Title:"
+msgstr "_Titolo:"
+
+msgid "Set Title"
+msgstr "Imposta titolo"

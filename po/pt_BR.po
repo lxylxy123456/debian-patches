@@ -2577,3 +2577,15 @@ msgstr "Falha ao analisar os argumentos: %s\n"
 #~ msgctxt "theme variant"
 #~ msgid "Dark"
 #~ msgstr "Escuro"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "_Title:"
+msgstr "_Título:"
+
+msgid "Set Title"
+msgstr "Definir título"
+
+msgid "Transparent background"
+msgstr "Fundo transparente"

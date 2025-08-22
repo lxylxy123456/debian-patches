@@ -2533,3 +2533,6 @@ msgstr "_Закрыць акно"
 #, c-format
 msgid "Failed to parse arguments: %s\n"
 msgstr "Не ўдалося разабраць аргументы: %s\n"
+
+msgid "Transparent background"
+msgstr "Празрысты фон"
