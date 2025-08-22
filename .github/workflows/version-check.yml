@@ -1,14 +1,18 @@
 name: Version check
 
 on:
+  push
   schedule:
     - cron: '34 12 * * *'
 
 jobs:
   build:
+    strategy:
+      matrix:
+        debian_version: [12, 13]
     runs-on: ubuntu-latest
     container:
-      image: debian:stable
+      image: debian:${{ matrix.debian_version }}
     steps:
     - name: apt
       run: |
@@ -19,7 +23,7 @@ jobs:
         ref: 'version-check'
         path: 'versions'
     - name: version check
-      run: ./version-check.sh
+      run: cd debian-${{ matrix.debian_version }}; ./version-check.sh
     - uses: actions/checkout@v5
       with:
         ref: 'dummy'
@@ -27,7 +31,7 @@ jobs:
     - name: dummy
       run: |
         cd dummy
-        date >> run_dates.txt
+        echo "$(date) ${{ matrix.debian_version }}" >> run_dates.txt
         git config user.email "lxylxy123456@github-user"
         git config user.name "lxylxy123456"
         git add -A
