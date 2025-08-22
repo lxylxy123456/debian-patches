@@ -8,7 +8,7 @@ check_version () {
 
 	TMPF="$(mktemp)"
 	# apt-get does not provide "list" command, so we have to use apt.
-	apt list "$NAME" 2> /dev/null | grep -F "$NAME/stable " | tee "$TMPF"
+	apt list "$NAME" 2> /dev/null | grep -F "$NAME/" | tee "$TMPF"
 
 	if [ "$(wc -l < "$TMPF")" != "1" ]; then
 		echo "Error: expecting only one result for '$NAME' in 'apt list'."
