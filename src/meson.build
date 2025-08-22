@@ -65,6 +65,11 @@ debug_sources = files(
   'terminal-debug.hh',
 )
 
+default_sources = files(
+  'terminal-default.cc',
+  'terminal-default.hh',
+)
+
 dbus_sources = gnome.gdbus_codegen(
   'terminal-gdbus-generated',
   gt_dns_name + '.xml',
@@ -185,9 +190,10 @@ server_resources_sources = gnome.compile_resources(
     menubar_ui_nomnemonics,
   ],
   export: false,
+  install: false,
 )
 
-server_sources = app_sources + client_util_sources + debug_sources + dbus_sources + egg_sources + i18n_sources + marshal_sources + misc_sources + profiles_sources + regex_sources + server_resources_sources + settings_dbus_sources + settings_utils_sources + types_sources + util_sources + version_sources + files(
+server_sources = app_sources + client_util_sources + debug_sources + default_sources + dbus_sources + egg_sources + i18n_sources + marshal_sources + misc_sources + profiles_sources + regex_sources + server_resources_sources + settings_dbus_sources + settings_utils_sources + types_sources + util_sources + version_sources + files(
   'server.cc',
   'terminal-enums.hh',
   'terminal-gdbus.cc',
@@ -228,9 +234,13 @@ if get_option('search_provider')
     'terminal-search-provider.hh',
   )
 
+  search_provider_dbus_interface = files(
+    'org.gnome.ShellSearchProvider2.xml',
+  )
+
   server_sources += gnome.gdbus_codegen(
     'terminal-search-provider-gdbus-generated',
-    gt_prefix / gt_dbusinterfacedir / 'org.gnome.ShellSearchProvider2.xml',
+    search_provider_dbus_interface,
     autocleanup: 'none',
     install_header: false,
     interface_prefix: 'org.gnome.Shell',
@@ -253,6 +263,8 @@ server_deps = [
   gio_unix_dep,
   glib_dep,
   gtk_dep,
+  libdl_dep,
+  libhandy_dep,
   pcre2_dep,
   pthreads_dep,
   schemas_dep,
@@ -268,6 +280,7 @@ server = executable(
   include_directories: server_incs,
   install: true,
   install_dir: gt_prefix / gt_libexecdir,
+  install_tag: 'runtime',
   sources: server_sources,
 )
 
@@ -284,6 +297,7 @@ configure_file(
   configuration: server_conf,
   install: true,
   install_dir: gt_prefix / gt_dbusservicedir,
+  install_tag: 'runtime',
 )
 
 configure_file(
@@ -291,7 +305,8 @@ configure_file(
   output: gt_name + '-server.service',
   configuration: server_conf,
   install: true,
-  install_dir: gt_prefix / gt_systemduserdir
+  install_dir: gt_prefix / gt_systemduserdir,
+  install_tag: 'runtime',
 )
 
 # Search provider
@@ -303,6 +318,7 @@ if get_option('search_provider')
   install_data(
     provider_ini,
     install_dir: gt_prefix / gt_searchproviderdir,
+    install_tag: 'runtime',
   )
 endif # option 'search_provider'
 
@@ -313,9 +329,10 @@ prefs_resources_sources = gnome.compile_resources(
   'prefs.gresource.xml',
   c_name: 'terminal',
   export: false,
+  install: false,
 )
 
-prefs_main_sources = app_sources + client_util_sources + debug_sources + i18n_sources + marshal_sources + misc_sources + prefs_resources_sources + profiles_sources + settings_dbus_sources + settings_utils_sources + types_sources + util_sources + version_sources + files(
+prefs_main_sources = app_sources + client_util_sources + debug_sources + default_sources + i18n_sources + marshal_sources + misc_sources + prefs_resources_sources + profiles_sources + settings_dbus_sources + settings_utils_sources + types_sources + util_sources + version_sources + files(
   'prefs-main.cc',
   'profile-editor.cc',
   'profile-editor.hh',
@@ -339,6 +356,7 @@ prefs_main = executable(
   dependencies: prefs_main_deps,
   install: true,
   install_dir: gt_prefix / gt_libexecdir,
+  install_tag: 'runtime',
   sources: prefs_main_sources,
 )
 
@@ -380,6 +398,7 @@ client = executable(
   include_directories: client_incs,
   dependencies: client_deps,
   install: true,
+  install_tag: 'runtime',
   sources: client_sources,
 )
 
@@ -388,6 +407,7 @@ client = executable(
 install_data(
   gt_dns_name + '.gschema.xml',
   install_dir: gt_prefix / gt_schemadir,
+  install_tag: 'runtime',
 )
 
 meson.add_install_script(
@@ -405,6 +425,7 @@ reference_schemas = custom_target(
   ],
   install: true,
   install_dir: gt_prefix / gt_pkglibdir,
+  install_tag: 'runtime',
   output: 'gschemas.compiled',
 )
 
@@ -446,6 +467,7 @@ if get_option('nautilus_extension')
      include_directories: nautilus_incs,
      install: true,
      install_dir: gt_prefix / gt_nautilusextensiondir,
+     install_tag: 'runtime',
      link_args: nautilus_ldflags,
      link_depends: nautilus_map,
      sources: nautilus_sources,
@@ -490,3 +512,20 @@ foreach test: test_units
     env: test_env,
   )
 endforeach
+
+# Non-unit tests
+
+test_default_sources = debug_sources + default_sources + misc_sources
+
+test_default = executable(
+  'test-default',
+  cpp_args: common_cxxflags + [
+    '-DTERMINAL_DEFAULT_MAIN',
+  ],
+  dependencies: [
+    glib_dep,
+  ],
+  include_directories: [top_inc, src_inc,],
+  sources: test_default_sources,
+  install: false,
+)

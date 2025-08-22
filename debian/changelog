@@ -1,3 +1,199 @@
+gnome-terminal (3.56.2-2) unstable; urgency=medium
+
+  * Team upload
+  * d/p/prefs-Replace-icon.patch:
+    Add patch from upstream to avoid a using legacy icon name.
+    emblem-default-symbolic is no longer in adwaita-icon-theme, only in
+    adwaita-icon-theme-legacy, which we intentionally don't install by
+    default. Use a similar-looking icon instead. (Closes: #1109086)
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 15 Jul 2025 20:51:26 +0100
+
+gnome-terminal (3.56.2-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream bugfix release
+    - Fix an uninitialized variable that caused intermittent
+      "Failed to parse arguments: Can only use --wait once" errors
+      (gnome-terminal#8122 upstream)
+    - Remove an unused struct field
+    - Updates to bundled vte subproject
+      (not used in Debian, we use the vte2.91 package instead)
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 14 Jul 2025 10:57:25 +0100
+
+gnome-terminal (3.56.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump minimum vte
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 17 Apr 2025 10:23:18 -0400
+
+gnome-terminal (3.56.0-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 17 Mar 2025 15:41:07 -0400
+
+gnome-terminal (3.55.91-1) unstable; urgency=medium
+
+  * New upstream release
+  * Remove xdg-terminal-exec patches applied in new release
+  * Refresh patches
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 06 Mar 2025 13:22:25 -0500
+
+gnome-terminal (3.55.90-2) unstable; urgency=medium
+
+  * Cherry-pick patches to fix xdg-terminal-exec handling
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 19 Feb 2025 18:23:46 -0500
+
+gnome-terminal (3.55.90-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump minimum glib and vte
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Tue, 18 Feb 2025 19:40:11 -0500
+
+gnome-terminal (3.54.3-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update debian/watch back to download.gnome.org
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sun, 26 Jan 2025 08:00:22 -0500
+
+gnome-terminal (3.54.2-2) unstable; urgency=medium
+
+  * Team upload
+  * Improve x-terminal-emulator compatibility:
+    - d/gnome-terminal.wrapper: Stop translating -fn, -fg, -bg, -tn.
+      The corresponding options no longer exist in gnome-terminal, so
+      using these options would cause a command-line parsing error.
+    - d/gnome-terminal.wrapper: Consume one argument given to the -n option.
+      This exists for command-line compatibility with xterm, but xterm -n
+      takes an argument, so for compatibility we should also accept and
+      ignore an argument after -n.
+    - Generate a separate man page for gnome-terminal.wrapper.
+      Neither gnome-terminal.wrapper nor x-terminal-emulator expects a
+      command-line syntax that is compatible with gnome-terminal itself,
+      so it is misleading for `man x-terminal-emulator` to show the
+      gnome-terminal man page.
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 11 Dec 2024 12:33:56 +0000
+
+gnome-terminal (3.54.2-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 25 Nov 2024 16:34:45 -0500
+
+gnome-terminal (3.54.1-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 20 Nov 2024 10:16:21 -0500
+
+gnome-terminal (3.54.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * Remove obsolete patch lowering VTE dependency
+  * Bump Build-Depends
+  * Refresh patch
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 16 Sep 2024 09:29:50 -0400
+
+gnome-terminal (3.52.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump Standards Version to 4.7.0
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 29 May 2024 10:46:01 -0400
+
+gnome-terminal (3.52.1-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 29 Apr 2024 08:27:59 -0400
+
+gnome-terminal (3.52.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * Add patch to revert vte dependency bump
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 18 Mar 2024 12:51:55 -0400
+
+gnome-terminal (3.51.90-1) unstable; urgency=medium
+
+  * New upstream release
+  * Stop using debian/control.in and dh_gnome_clean
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 21 Feb 2024 22:31:03 -0500
+
+gnome-terminal (3.50.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control.in: Bump minimum vte to 0.74.0
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 23 Oct 2023 08:38:31 -0400
+
+gnome-terminal (3.50.0-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 18 Sep 2023 15:06:46 -0400
+
+gnome-terminal (3.49.99-1) unstable; urgency=medium
+
+  * New upstream release
+  * Release to unstable
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sat, 02 Sep 2023 19:04:52 -0400
+
+gnome-terminal (3.49.92-2) experimental; urgency=medium
+
+  * Added libhandy-1-dev to Build-Depends
+
+ -- Gunnar Hjalmarsson <gunnarhj@debian.org>  Thu, 10 Aug 2023 12:45:12 +0200
+
+gnome-terminal (3.49.92-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Gunnar Hjalmarsson <gunnarhj@debian.org>  Thu, 10 Aug 2023 01:43:12 +0200
+
+gnome-terminal (3.48.2-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Gunnar Hjalmarsson <gunnarhj@debian.org>  Wed, 09 Aug 2023 20:07:08 +0200
+
+gnome-terminal (3.48.1-2) unstable; urgency=medium
+
+  * Release to unstable
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sun, 23 Jul 2023 15:49:27 -0400
+
+gnome-terminal (3.48.1-1) experimental; urgency=medium
+
+  * Team upload
+  * New upstream release
+
+ -- Amin Bandali <bandali@ubuntu.com>  Thu, 18 May 2023 10:25:54 -0400
+
+gnome-terminal (3.48.0-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Nathan Pratta Teodosio <nathan.teodosio@canonical.com>  Thu, 23 Mar 2023 10:54:04 -0300
+
+gnome-terminal (3.47.92-1) experimental; urgency=medium
+
+  * New upstream release
+  * debian/control.in: Bump minimum VTE to 0.71.92
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Wed, 15 Feb 2023 10:16:49 -0500
+
 gnome-terminal (3.46.8-1) unstable; urgency=medium
 
   [ Jeremy Bicha ]

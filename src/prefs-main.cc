@@ -137,10 +137,13 @@ main(int argc,
 
   auto const home_dir = g_get_home_dir();
   if (home_dir == nullptr || chdir(home_dir) < 0)
-   (void) chdir("/");
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result"
+    chdir("/");
+#pragma GCC diagnostic pop
 
-  g_set_prgname("gnome-terminal-preferences");
-  g_set_application_name(_("Preferences"));
+  g_set_prgname(TERMINAL_PREFERENCES_APPLICATION_ID);
+  g_set_application_name(_("Terminal Preferences"));
 
   gs_free_error GError *error = nullptr;
   if (!gtk_init_with_args(&argc, &argv, nullptr, options, nullptr, &error)) {

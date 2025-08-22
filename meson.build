@@ -18,7 +18,7 @@ project(
   ['c', 'cpp',],
   default_options: [
     'buildtype=release',
-    'warning_level=' + (meson.version().version_compare('>= 0.50.0') ? '0' : '1'),
+    'warning_level=0',
     'b_ndebug=false',
   ],
   license: [
@@ -26,8 +26,8 @@ project(
     'GPL-3.0-only', 'CC-BY-SA-3.0', # the documentation
     'GFDL-1.3-only',                # the appstream data
   ],
-  meson_version: '>= 0.61.0',
-  version: '3.46.8',
+  meson_version: '>= 0.62.0',
+  version: '3.56.2',
 )
 
 # Naming
@@ -38,23 +38,32 @@ gt_dns_name = 'org.gnome.Terminal'
 # Compiler requirements
 
 c_req_std = 'gnu11'
-cxx_req_std               = 'gnu++14'
+cxx_req_std               = 'gnu++17'
 gxx_req_version           = '4.8.1'
 clangxx_req_version       = '3.3'
 
 # Requirements
 
 vte_req                      = 'vte-2.91'
-vte_req_version              = '0.70.0'
+vte_req_version              = '0.80.0'
+vte_default_options          = [
+  'docs=false',
+  'gir=false',
+  'glade=false',
+  'gtk3=true',
+  'gtk4=false',
+  'vapi=false',
+]
 
 glib_req_version             = '2.52.0'
 glib_min_req_version         = '2.52'
-glib_max_allowed_version     = '2.52'
+glib_max_allowed_version     = '2.68'
 
 gtk_req_version              = '3.22.27'
 gtk_min_req_version          = '3.18'
 gtk_max_allowed_version      = '3.24'
 
+libhandy_req_version         = '1.6.0'
 libnautilus_ext_req_version  = '43'
 pcre2_req_version            = '10.00'
 schemas_req_version          = '0.1.0'
@@ -108,7 +117,6 @@ pkg   = import('pkgconfig')
 # i18n
 
 gt_gettext_domain = gt_name
-po_dir = meson.current_source_dir() / 'po'
 
 # Compilers
 
@@ -226,6 +234,18 @@ assert(get_option('b_ndebug') == 'false', 'assertions may not be disabled')
 # LTO very much NOT supported
 
 assert(get_option('b_lto') == false, 'LTO not supported')
+
+# Check for functions
+
+libdl_dep = cxx.find_library('dl')
+
+check_dl_functions_required = [
+  'dlsym',
+]
+
+foreach func: check_dl_functions_required
+  assert(cxx.has_function(func, dependencies: libdl_dep), func + ' not found')
+endforeach
 
 # Compiler flags
 
@@ -346,12 +366,17 @@ add_project_arguments(global_cxxflags, language: 'cpp')
 
 # Dependencies
 
-vte_dep       = dependency(vte_req,        version: '>=' + vte_req_version)
+vte_dep = dependency(
+  vte_req,
+  version: '>=' + vte_req_version,
+  default_options: vte_default_options
+)
 
 gio_dep       = dependency('gio-2.0',      version: '>=' + glib_req_version)
 gio_unix_dep  = dependency('gio-unix-2.0', version: '>=' + glib_req_version)
 glib_dep      = dependency('glib-2.0',     version: '>=' + glib_req_version)
 gtk_dep       = dependency('gtk+-3.0',     version: '>=' + gtk_req_version)
+libhandy_dep  = dependency('libhandy-1',   version: '>=' + libhandy_req_version)
 pcre2_dep     = dependency('libpcre2-8',   version: '>=' + pcre2_req_version)
 pthreads_dep  = dependency('threads')
 schemas_dep   = dependency('gsettings-desktop-schemas',
@@ -364,7 +389,7 @@ else
   libnautilus_extension_dep = dependency('', required: false,)
 endif
 
-if gtk_dep.get_pkgconfig_variable('targets').contains('x11')
+if gtk_dep.get_variable('targets').contains('x11')
   x11_dep = dependency('x11')
 else
   x11_dep = dependency('', required: false)
@@ -375,6 +400,7 @@ endif
 configure_file(
   output: 'config.h',
   configuration: config_h,
+  install: false,
 )
 
 # Utilities
@@ -385,8 +411,8 @@ xsltproc = find_program('xsltproc')
 # Subdirs
 
 subdir('src')
-subdir('data')
 subdir('po')
+subdir('data')
 
 if get_option('docs')
   subdir('help')
@@ -409,6 +435,7 @@ configure_file(
   input: 'Makefile.meson',
   output: '@BASENAME@',
   configuration: makefile_conf,
+  install: false,
 )
 
 # .gitignore everything in the build directory
@@ -438,5 +465,19 @@ output += '\n'
 output += '  Nautilus extension: ' + get_option('nautilus_extension').to_string() + '\n'
 output += '  Search provider:    ' + get_option('search_provider').to_string() + '\n'
 message(output)
+
+# Check stable/unstable status
+
+if (gt_minor_version % 2) != 0
+  if (gt_micro_version >= 99)
+    warning('This is a release candidate release!\n')
+  elif (gt_micro_version > 90)
+    warning('This is a beta release!\n')
+  else
+    warning('This is an unstable development release!\n')
+  endif
+else
+  message('This is a stable release.')
+endif
 
 # Done

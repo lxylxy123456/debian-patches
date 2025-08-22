@@ -1,11 +1,11 @@
 [Desktop Entry]
 Categories=GNOME;GTK;System;TerminalEmulator;
-Comment=Use the command line
+Comment=Configure the command line
 DBusActivatable=false
 Exec=gnome-terminal --preferences
 Icon=org.gnome.Terminal.Preferences
 Keywords=shell;prompt;command;commandline;cmd;
-Name=Preferences
+Name=Terminal Preferences
 NoDisplay=true
 SingleMainWindow=true
 StartupNotify=true

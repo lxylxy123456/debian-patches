@@ -32,6 +32,7 @@ while ($opt = shift(@ARGV))
     elsif ($opt eq '-n')
     {
 	# Accept but ignore
+	shift(@ARGV);
 	print STDERR "$0: to set an icon, please use -name <profile> and set a profile icon\n"
     }
     elsif ($opt eq '-T' || $opt eq '-title')
@@ -50,26 +51,6 @@ while ($opt = shift(@ARGV))
     {
 	$arg = shift(@ARGV);
 	push(@args, "--geometry=$arg");
-    }
-    elsif ($opt eq '-fn')
-    {
-	$arg = shift(@ARGV);
-	push(@args, "--font=$arg");
-    }
-    elsif ($opt eq '-fg')
-    {
-	$arg = shift(@ARGV);
-	push(@args, "--foreground=$arg");
-    }
-    elsif ($opt eq '-bg')
-    {
-	$arg = shift(@ARGV);
-	push(@args, "--background=$arg");
-    }
-    elsif ($opt eq '-tn')
-    {
-	$arg = shift(@ARGV);
-	push(@args, "--termname=$arg");
     }
     elsif ($opt eq '-e')
     {
@@ -120,3 +101,140 @@ while ($opt = shift(@ARGV))
 }
 
 exec('gnome-terminal',@args);
+
+=encoding UTF-8
+
+=head1 NAME
+
+gnome-terminal.wrapper - x-terminal-emulator interface for gnome-terminal
+
+=head1 SYNOPSIS
+
+B<x-terminal-emulator> [B<-T> I<TITLE>] [B<-e> I<COMMAND> [I<ARGUMENTS>...]]
+
+=head1 DESCRIPTION
+
+B<gnome-terminal.wrapper> wraps L<gnome-terminal(1)> to provide an
+interface that is compatible with the B<x-terminal-emulator> specification
+in Debian Policy, which is a subset of the L<xterm(1)> command-line
+interface.
+
+Its behaviour is similar to B<gnome-terminal --wait>,
+with some command-line options converted from B<x-terminal-emulator>
+syntax to L<gnome-terminal(1)> syntax.
+
+=head1 OPTIONS
+
+=head2 Standard x-terminal-emulator options
+
+These options work as specified in Debian Policy §11.8.3.
+
+=over 4
+
+=item B<-T> I<TITLE>
+
+Set the title of the terminal to I<TITLE>, as specified in Debian Policy.
+Equivalent to B<xterm -T> I<TITLE> or B<gnome-terminal -t> I<TITLE>.
+
+=item B<-e> I<COMMAND> [I<ARGUMENTS>...]
+
+Run I<COMMAND> with arguments I<ARGUMENTS> in the terminal, and stop
+parsing options after B<-e>.
+Equivalent to B<xterm -e> I<COMMAND> I<ARGUMENTS>.
+
+If there are no I<ARGUMENTS>, B<gnome-terminal.wrapper> will attempt
+to find the I<COMMAND> in the B<PATH>.
+If found, it is used as the command to execute, as specified in Debian Policy.
+If not found, as an extension, B<gnome-terminal.wrapper> will treat the
+I<COMMAND> as a shell command instead,
+running it as if via B<sh -c> I<COMMAND>.
+This is similar to the behaviour of B<xterm -e>, but is not guaranteed
+to be implemented by all B<x-terminal-emulator> implementations.
+
+Otherwise equivalent to B<gnome-terminal --> I<COMMAND> I<ARGUMENTS>.
+
+=back
+
+=head2 Non-standard options
+
+These options are provided for convenience,
+increasing command-line compatibility with L<xterm(1)> and/or
+L<gnome-terminal(1)>,
+but are not guaranteed to be available in other B<x-terminal-emulator>
+implementations.
+Using these options is discouraged: to obtain functionality beyond the
+standardized B<x-terminal-emulator> interface,
+invoke a specific terminal such as L<gnome-terminal(1)> or L<xterm(1)>
+directly.
+
+=over 4
+
+=item B<-display> I<X11DISPLAY>
+
+If using X11, select I<X11DISPLAY> as the X11 display to use.
+If using native Wayland, this option is ignored.
+
+It is preferable to set the B<DISPLAY> and/or B<WAYLAND_DISPLAY> environment
+variables instead.
+
+=item B<-geometry> I<COLS>B<x>I<ROWS>B<+>I<X>B<+>I<Y>
+
+Set the window size to I<COLS> × I<ROWS> at position (I<X>,I<Y>).
+Equivalent to B<gnome-terminal --geometry=>I<COLS>B<x>I<ROWS>B<+>I<X>B<+>I<Y>.
+
+=item B<-ls>
+
+Using this option is treated as a command-line parsing error.
+In L<xterm(1)> it would run a login shell, but L<gnome-terminal(1)>
+does not have that feature.
+
+=item B<+ls>
+
+Accepted, with a warning, but otherwise ignored.
+L<gnome-terminal(1)> never runs a login shell.
+
+=item B<-n> I<ICON>
+
+Accepted for command-line compatibility with L<xterm(1)>, but ignored.
+
+=item B<-name> I<NAME>
+
+Select I<NAME> as a L<gnome-terminal(1)> profile, if it exists.
+Equivalent to B<gnome-terminal --window-with-profile=>I<NAME>.
+
+=item B<-h>, B<--help>
+
+Show gnome-terminal's help.
+
+=item Any other option
+
+Passed as-is to gnome-terminal.
+
+=back
+
+=head1 EXIT STATUS
+
+The exit status is the same as for L<gnome-terminal(1)>.
+
+=head1 STANDARDS
+
+Debian Policy §11.8.3 "Packages providing a terminal emulator".
+
+For more details please see
+L<https://www.debian.org/doc/debian-policy/ch-customized-programs.html>.
+
+This is a Debian-specific interface and should not be expected to be
+available on non-Debian-derived systems.
+
+=head1 EXAMPLE
+
+To run the command C<mutt -f=> in a window with title C<mutt e-mail client>:
+
+    $ x-terminal-emulator -T "mutt e-mail client" -e mutt -f=
+
+=head1 SEE ALSO
+
+L<gnome-terminal(1)>, L<xterm(1)>,
+L<Debian Policy|https://www.debian.org/doc/debian-policy/>.
+
+=cut

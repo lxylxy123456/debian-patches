@@ -199,6 +199,7 @@ initial_tab_new (char *profile /* adopts */)
   it->active = FALSE;
   it->fd_list = nullptr;
   it->fd_array = nullptr;
+  it->wait = false;
 
   return it;
 }
@@ -429,6 +430,15 @@ option_command_callback (const gchar *option_name,
   char  **exec_argv;
 
   deprecated_command_option_warning (option_name);
+
+  // Already have argv e.g. via '--' ?
+  if (options->exec_argv) {
+    g_set_error (error,
+                 G_OPTION_ERROR,
+                 G_OPTION_ERROR_BAD_VALUE,
+                 _("Cannot specify more than one command to run"));
+    return FALSE;
+  }
 
   if (!g_shell_parse_argv (value, nullptr, &exec_argv, &err))
     {
@@ -827,8 +837,6 @@ option_wait_cb (const gchar *option_name,
   if (options->initial_windows)
     {
       InitialTab *it = ensure_top_tab (options);
-
-      g_free (it->working_dir);
       it->wait = TRUE;
     }
   else
@@ -1130,6 +1138,15 @@ terminal_options_parse (int *argcp,
 
   if (!retval) {
     terminal_options_free (options);
+    return nullptr;
+  }
+
+  // Error out if there are any arguments left after parsing
+  if (*argcp > 1) {
+    g_set_error (error,
+                 G_OPTION_ERROR,
+                 G_OPTION_ERROR_BAD_VALUE,
+                 _("Too many arguments"));
     return nullptr;
   }
 

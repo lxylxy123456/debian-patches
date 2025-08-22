@@ -220,7 +220,8 @@
     </key>
     <key name="word-char-exceptions" type="ms">
       <default>nothing</default>
-      <summary>List of ASCII punctuation characters that are not to be treated as part of a word when doing word-wise selection</summary>
+      <summary>List of punctuation characters that are treated as word characters</summary>
+      <description>By default, when doing word-wise selection, most punctuation breaks up word boundaries. This list of exceptions will instead be treated as part of the word.</description>
     </key>
     <key name="default-size-columns" type="i">
       <range min="16" max="511" />
@@ -247,6 +248,11 @@
       <default>false</default>
       <summary>Whether an unlimited number of lines should be kept in scrollback</summary>
       <description>If true, scrollback lines will never be discarded. The scrollback history is stored on disk temporarily, so this may cause the system to run out of disk space if there is a lot of output to the terminal.</description>
+    </key>
+    <key name="scroll-on-insert" type="b">
+      <default>true</default>
+      <summary>Whether to scroll to the bottom when text is inserted</summary>
+      <description>If true, the terminal will scroll to the bottom when text is inserted by paste.</description>
     </key>
     <key name="scroll-on-keystroke" type="b">
       <default>true</default>
@@ -309,7 +315,7 @@
                 '#d0cfcc',
                 '#5e5c64',
                 '#f66151',
-                '#33da7a',
+                '#33d17a',
                 '#e9ad0c',
                 '#2a7bde',
                 '#c061cb',
@@ -660,7 +666,7 @@
     </key>
 
     <key name="shell-integration-enabled" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Whether the shell integration is enabled</summary>
     </key>
 

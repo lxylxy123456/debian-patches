@@ -31,6 +31,8 @@
 #include <fcntl.h>
 #include <uuid.h>
 
+#include <algorithm>
+
 #if defined(__FreeBSD__) || defined(__DragonFly__) || defined(__OpenBSD__)
 #include <sys/sysctl.h>
 #endif
@@ -112,6 +114,15 @@ struct _TerminalScreenPrivate
   gboolean exec_on_realize;
   guint idle_exec_source;
   ExecData *exec_data;
+
+  GIcon* icon_color;
+  GIcon* icon_image;
+
+  bool has_progress;
+  bool icon_progress_set;
+  VteProgressHint progress_hint;
+  double progress_fraction;
+  GIcon* icon_progress;
 };
 
 enum
@@ -124,10 +135,13 @@ enum
 };
 
 enum {
-  PROP_0,
-  PROP_PROFILE,
+  PROP_PROFILE = 1,
+  PROP_ICON,
   PROP_TITLE,
+  N_PROPS
 };
+
+static GParamSpec* pspecs[N_PROPS];
 
 enum
 {
@@ -475,6 +489,217 @@ terminal_screen_class_enable_menu_bar_accel_notify_cb (GSettings *settings,
     gtk_binding_entry_skip (binding_set, GDK_KEY_F10, GDK_SHIFT_MASK);
 }
 
+static void
+terminal_screen_icon_color_changed_cb(TerminalScreen* screen,
+                                      char const* prop,
+                                      VteTerminal* terminal)
+{
+  auto const priv = screen->priv;
+
+  g_clear_object(&priv->icon_color);
+
+  auto color = GdkRGBA{};
+  if (vte_terminal_get_termprop_rgba_by_id(terminal,
+                                           VTE_PROPERTY_ID_ICON_COLOR,
+                                           &color)) {
+    auto const scale = gtk_widget_get_scale_factor(GTK_WIDGET(screen));
+    auto const w = 32 * scale, h = 32 * scale;
+    auto const xc = w / 2, yc = h / 2;
+    auto const radius = w / 2 - 1;
+
+    auto surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h);
+    auto cr = cairo_create(surface);
+    cairo_set_source_rgb(cr, color.red, color.green, color.blue);
+    cairo_new_sub_path(cr);
+    cairo_arc(cr, xc, yc, radius, 0., G_PI * 2);
+    cairo_close_path(cr);
+    cairo_fill(cr);
+
+    priv->icon_color =
+      G_ICON(gdk_pixbuf_get_from_surface(surface,
+                                         0,
+                                         0,
+                                         cairo_image_surface_get_width(surface),
+                                         cairo_image_surface_get_height(surface)));
+
+    cairo_destroy(cr);
+    cairo_surface_destroy(surface);
+  }
+
+  g_object_notify_by_pspec(G_OBJECT(terminal), pspecs[PROP_ICON]);
+}
+
+static void
+terminal_screen_icon_image_changed_cb(TerminalScreen* screen,
+                                      char const* prop,
+                                      VteTerminal* terminal)
+{
+  auto const priv = screen->priv;
+
+  g_clear_object(&priv->icon_image);
+  priv->icon_image =
+    G_ICON(vte_terminal_ref_termprop_image_pixbuf_by_id(terminal,
+                                                        VTE_PROPERTY_ID_ICON_IMAGE));
+
+  g_object_notify_by_pspec(G_OBJECT(terminal), pspecs[PROP_ICON]);
+}
+
+static GIcon*
+terminal_screen_ensure_icon_progress(TerminalScreen* screen)
+{
+  auto const priv = screen->priv;
+
+  if (priv->icon_progress_set)
+    return priv->icon_progress;
+
+  if (priv->has_progress) {
+    GIcon* icon = nullptr;
+
+    switch (priv->progress_hint) {
+    case VTE_PROGRESS_HINT_ERROR:
+      icon = g_themed_icon_new("dialog-error-symbolic");
+      break;
+
+    case VTE_PROGRESS_HINT_INDETERMINATE:
+      icon = nullptr;
+      break;
+
+    case VTE_PROGRESS_HINT_PAUSED:
+    case VTE_PROGRESS_HINT_ACTIVE: {
+      auto const scale = gtk_widget_get_scale_factor(GTK_WIDGET(screen));
+      auto const w = 16 * scale, h = 16 * scale;
+      auto const xc = w / 2, yc = h / 2;
+      auto const radius = w / 2 - 1;
+
+      auto color = GdkRGBA{};
+      G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
+      auto style_context = gtk_widget_get_style_context(GTK_WIDGET(screen));
+      gtk_style_context_get_color(style_context, gtk_style_context_get_state(style_context), &color);
+      G_GNUC_END_IGNORE_DEPRECATIONS;
+
+      auto surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h);
+      auto cr = cairo_create(surface);
+
+      // First draw a shadow filled circle
+      cairo_set_source_rgba(cr, color.red, color.green, color.blue, 0.25);
+      cairo_arc(cr, xc, yc, radius, 0., 2 * G_PI);
+      cairo_close_path(cr);
+      cairo_fill(cr);
+
+      // Now draw progress filled circle
+      auto const fraction = priv->progress_fraction;
+      if (fraction > 0.) {
+        cairo_set_line_width(cr, 1.);
+        cairo_set_source_rgb(cr, color.red, color.green, color.blue);
+        cairo_new_sub_path(cr);
+
+        if (fraction < 1.) {
+          cairo_move_to(cr, xc, yc);
+          cairo_line_to(cr, xc + radius, yc);
+          cairo_arc_negative(cr, xc, yc, radius, 0, 2 * G_PI * (1. - fraction));
+          cairo_line_to(cr, xc, yc);
+        } else {
+          cairo_arc(cr, xc, yc, radius, 0, 2 * G_PI);
+        }
+
+        cairo_close_path(cr);
+        cairo_fill(cr);
+      }
+      cairo_destroy(cr);
+
+      icon = G_ICON(gdk_pixbuf_get_from_surface(surface,
+                                                0,
+                                                0,
+                                                cairo_image_surface_get_width(surface),
+                                                cairo_image_surface_get_height(surface)));
+
+      cairo_surface_destroy(surface);
+      break;
+    }
+
+    case VTE_PROGRESS_HINT_INACTIVE:
+    default:
+      icon = nullptr;
+      break;
+    }
+
+    g_set_object(&priv->icon_progress, icon);
+
+  } else {
+    // Remove progress
+    g_clear_object(&priv->icon_progress);
+  }
+
+  priv->icon_progress_set = true;
+
+  return priv->icon_progress;
+}
+
+static void
+terminal_screen_clear_icon_progress(TerminalScreen* screen)
+{
+  auto const priv = screen->priv;
+
+  g_clear_object(&priv->icon_progress);
+  priv->icon_progress_set = false;
+
+  g_object_notify_by_pspec(G_OBJECT(screen), pspecs[PROP_ICON]);
+}
+
+static void
+terminal_screen_progress_value_changed_cb(TerminalScreen* screen,
+                                          char const* prop,
+                                          VteTerminal* terminal)
+{
+  auto const priv = screen->priv;
+
+  auto fraction = 0.;
+  uint64_t value = 0;
+  auto const has_progress = vte_terminal_get_termprop_uint_by_id(terminal,
+                                                                 VTE_PROPERTY_ID_PROGRESS_VALUE,
+                                                                 &value);
+  if (has_progress)
+    fraction = std::clamp(double(value) / 100., 0., 1.);
+  else
+    fraction = 0.;
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+  if (priv->has_progress == has_progress &&
+      priv->progress_fraction == fraction)
+    return;
+#pragma GCC diagnostic pop
+
+  priv->has_progress = has_progress;
+  priv->progress_fraction = fraction;
+
+  terminal_screen_clear_icon_progress(screen);
+}
+
+static void
+terminal_screen_progress_hint_changed_cb(TerminalScreen* screen,
+                                         char const* prop,
+                                         VteTerminal* terminal)
+{
+  auto const priv = screen->priv;
+
+  VteProgressHint hint;
+  int64_t value = 0;
+  if (vte_terminal_get_termprop_int_by_id(terminal,
+                                          VTE_PROPERTY_ID_PROGRESS_HINT,
+                                          &value))
+    hint = VteProgressHint(value);
+  else
+    hint = VTE_PROGRESS_HINT_INACTIVE;
+
+  if (priv->progress_hint == hint)
+    return;
+
+  priv->progress_hint = hint;
+
+  terminal_screen_clear_icon_progress(screen);
+}
+
 static TerminalWindow *
 terminal_screen_get_window (TerminalScreen *screen)
 {
@@ -552,6 +777,10 @@ terminal_screen_init (TerminalScreen *screen)
 
   priv->child_pid = -1;
 
+  priv->has_progress = false;
+  priv->progress_hint = VTE_PROGRESS_HINT_INACTIVE;
+  priv->progress_fraction = 0.;
+
   vte_terminal_set_allow_hyperlink (terminal, TRUE);
 
   for (i = 0; i < n_url_regexes; ++i)
@@ -588,6 +817,16 @@ terminal_screen_init (TerminalScreen *screen)
                     G_CALLBACK (terminal_screen_window_title_changed),
                     screen);
 
+  g_signal_connect(screen, "termprop-changed::" VTE_TERMPROP_ICON_COLOR,
+                   G_CALLBACK(terminal_screen_icon_color_changed_cb), screen);
+  g_signal_connect(screen, "termprop-changed::" VTE_TERMPROP_ICON_IMAGE,
+                   G_CALLBACK(terminal_screen_icon_image_changed_cb), screen);
+
+  g_signal_connect(screen, "termprop-changed::" VTE_TERMPROP_PROGRESS_VALUE,
+                   G_CALLBACK(terminal_screen_progress_value_changed_cb), screen);
+  g_signal_connect(screen, "termprop-changed::" VTE_TERMPROP_PROGRESS_HINT,
+                   G_CALLBACK(terminal_screen_progress_hint_changed_cb), screen);
+
   app = terminal_app_get ();
   g_signal_connect (terminal_app_get_desktop_interface_settings (app), "changed::" MONOSPACE_FONT_KEY_NAME,
                     G_CALLBACK (terminal_screen_system_font_changed_cb), screen);
@@ -606,6 +845,9 @@ terminal_screen_get_property (GObject *object,
     {
       case PROP_PROFILE:
         g_value_set_object (value, terminal_screen_get_profile (screen));
+        break;
+      case PROP_ICON:
+        g_value_set_object(value, terminal_screen_get_icon(screen));
         break;
       case PROP_TITLE:
         g_value_set_string (value, terminal_screen_get_title (screen));
@@ -629,6 +871,7 @@ terminal_screen_set_property (GObject *object,
       case PROP_PROFILE:
         terminal_screen_set_profile (screen, (GSettings*)g_value_get_object (value));
         break;
+      case PROP_ICON:
       case PROP_TITLE:
         /* not writable */
       default:
@@ -700,25 +943,29 @@ terminal_screen_class_init (TerminalScreenClass *klass)
                   G_TYPE_NONE,
                   0);
 
-  g_object_class_install_property
-    (object_class,
-     PROP_PROFILE,
+  pspecs[PROP_PROFILE] =
      g_param_spec_object ("profile", nullptr, nullptr,
                           G_TYPE_SETTINGS,
                           GParamFlags(G_PARAM_READWRITE |
 				      G_PARAM_STATIC_NAME |
 				      G_PARAM_STATIC_NICK |
-				      G_PARAM_STATIC_BLURB)));
+				      G_PARAM_STATIC_BLURB));
 
-  g_object_class_install_property
-    (object_class,
-     PROP_TITLE,
+  pspecs[PROP_ICON] =
+     g_param_spec_object ("icon", nullptr, nullptr,
+                          G_TYPE_ICON,
+                          GParamFlags(G_PARAM_READABLE |
+				      G_PARAM_STATIC_STRINGS |
+                                      G_PARAM_EXPLICIT_NOTIFY));
+
+  pspecs[PROP_TITLE] =
      g_param_spec_string ("title", nullptr, nullptr,
                           nullptr,
                           GParamFlags(G_PARAM_READABLE |
-				      G_PARAM_STATIC_NAME |
-				      G_PARAM_STATIC_NICK |
-				      G_PARAM_STATIC_BLURB)));
+				      G_PARAM_STATIC_STRINGS |
+                                      G_PARAM_EXPLICIT_NOTIFY));
+
+  g_object_class_install_properties(object_class, N_PROPS, pspecs);
 
   g_type_class_add_private (object_class, sizeof (TerminalScreenPrivate));
 
@@ -770,6 +1017,9 @@ terminal_screen_dispose (GObject *object)
     }
 
   terminal_screen_clear_exec_data (screen, TRUE);
+
+  g_clear_object(&screen->priv->icon_color);
+  g_clear_object(&screen->priv->icon_image);
 
   G_OBJECT_CLASS (terminal_screen_parent_class)->dispose (object);
 
@@ -1122,6 +1372,9 @@ terminal_screen_profile_changed_cb (GSettings     *profile,
   if (!prop_name || prop_name == I_(TERMINAL_PROFILE_AUDIBLE_BELL_KEY))
       vte_terminal_set_audible_bell (vte_terminal, g_settings_get_boolean (profile, TERMINAL_PROFILE_AUDIBLE_BELL_KEY));
 
+  if (!prop_name || prop_name == I_(TERMINAL_PROFILE_SCROLL_ON_INSERT_KEY))
+    vte_terminal_set_scroll_on_insert(vte_terminal,
+                                      g_settings_get_boolean(profile, TERMINAL_PROFILE_SCROLL_ON_INSERT_KEY));
   if (!prop_name || prop_name == I_(TERMINAL_PROFILE_SCROLL_ON_KEYSTROKE_KEY))
     vte_terminal_set_scroll_on_keystroke (vte_terminal,
                                           g_settings_get_boolean (profile, TERMINAL_PROFILE_SCROLL_ON_KEYSTROKE_KEY));
@@ -1341,7 +1594,7 @@ terminal_screen_set_profile (TerminalScreen *screen,
   if (old_profile)
     g_object_unref (old_profile);
 
-  g_object_notify (G_OBJECT (screen), "profile");
+  g_object_notify_by_pspec (G_OBJECT (screen), pspecs[PROP_PROFILE]);
 }
 
 GSettings*
@@ -1916,7 +2169,7 @@ static void
 terminal_screen_window_title_changed (VteTerminal *vte_terminal,
                                       TerminalScreen *screen)
 {
-  g_object_notify (G_OBJECT (screen), "title");
+  g_object_notify_by_pspec (G_OBJECT (screen), pspecs[PROP_TITLE]);
 }
 
 static void
@@ -2421,4 +2674,36 @@ terminal_screen_paste_text (TerminalScreen* screen,
   /* Note that @text MUST be NUL-terminated */
 
   vte_terminal_paste_text (VTE_TERMINAL (screen), text);
+}
+
+GIcon*
+terminal_screen_get_window_icon(TerminalScreen* screen)
+{
+  g_return_val_if_fail(TERMINAL_IS_SCREEN(screen), nullptr);
+
+  auto const priv = screen->priv;
+
+  if (priv->icon_image)
+    return priv->icon_image;
+  else if (priv->icon_color)
+    return priv->icon_color;
+  else
+    return nullptr;
+}
+
+GIcon*
+terminal_screen_get_icon(TerminalScreen* screen)
+{
+  g_return_val_if_fail(TERMINAL_IS_SCREEN(screen), nullptr);
+
+  auto const priv = screen->priv;
+
+  if (priv->has_progress)
+    return terminal_screen_ensure_icon_progress(screen);
+  else if (priv->icon_image)
+    return priv->icon_image;
+  else if (priv->icon_color)
+    return priv->icon_color;
+  else
+    return nullptr;
 }

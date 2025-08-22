@@ -3,5 +3,16 @@
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 export DEB_LDFLAGS_MAINT_APPEND = -Wl,-O1 -Wl,-z,defs
 
+include /usr/share/dpkg/default.mk
+
 %:
 	dh $@
+
+execute_after_dh_auto_build:
+	pod2man \
+		--center '$(DEB_VENDOR)' \
+		--release '$(DEB_SOURCE) $(DEB_VERSION)' \
+		debian/gnome-terminal.wrapper \
+		debian/gnome-terminal.wrapper.1
+
+override_dh_gnome_clean:

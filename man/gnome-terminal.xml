@@ -179,7 +179,7 @@
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term><option>--command, -e=COMMAND</option></term>
+        <term><option>--command, -e COMMAND</option></term>
         <listitem>
           <para>
             Split the argument to this option into a program and arguments
@@ -234,7 +234,7 @@
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term><option>--title, -t=TITLE</option></term>
+        <term><option>--title, -t TITLE</option></term>
         <listitem>
           <para>
             Set the initial terminal title.

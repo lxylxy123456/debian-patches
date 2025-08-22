@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-terminal.HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-terminal/issues\n"
-"POT-Creation-Date: 2023-01-09 15:23+0000\n"
-"PO-Revision-Date: 2023-01-19 23:16+0200\n"
+"POT-Creation-Date: 2023-02-12 18:41+0000\n"
+"PO-Revision-Date: 2023-02-18 22:57+0200\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -25,7 +25,7 @@ msgstr ""
 "X-Generator: Gtranslator 42.0\n"
 
 #: data/org.gnome.Terminal.desktop.in:3
-#: data/org.gnome.Terminal.metainfo.xml.in:34 src/server.cc:152
+#: data/org.gnome.Terminal.metainfo.xml.in:37 src/server.cc:152
 #: src/terminal-accels.cc:232 src/terminal-menubar.ui.in:144
 #: src/terminal-tab-label.cc:81 src/terminal-window.cc:1903
 #: src/terminal-window.cc:2207 src/terminal-window.cc:2522 src/terminal.cc:598
@@ -33,8 +33,7 @@ msgid "Terminal"
 msgstr "Terminalas"
 
 #: data/org.gnome.Terminal.desktop.in:4
-#: data/org.gnome.Terminal.Preferences.desktop.in:4
-#: data/org.gnome.Terminal.metainfo.xml.in:35
+#: data/org.gnome.Terminal.metainfo.xml.in:38
 msgid "Use the command line"
 msgstr "Naudoti komandų eilutę"
 
@@ -47,13 +46,34 @@ msgstr "apvalkalas;eilutė;komanda;komandų eilutė;cmd;"
 msgid "New Window"
 msgstr "Naujas langas"
 
-#: data/org.gnome.Terminal.desktop.in:22
-#: data/org.gnome.Terminal.Preferences.desktop.in:9 src/prefs-main.cc:143
-#: src/terminal-accels.cc:146
+#: data/org.gnome.Terminal.desktop.in:22 src/terminal-accels.cc:146
 msgid "Preferences"
 msgstr "Nuostatos"
 
-#: data/org.gnome.Terminal.metainfo.xml.in:37
+#: data/org.gnome.Terminal.Preferences.desktop.in:4
+msgid "Configure the command line"
+msgstr "Konfigūruoti komandų eilutę"
+
+#: data/org.gnome.Terminal.Preferences.desktop.in:9 src/prefs-main.cc:143
+msgid "Terminal Preferences"
+msgstr "Terminalo nuostatos"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:34
+#: data/org.gnome.Terminal.metainfo.xml.in:63
+msgid "org.gnome.Terminal.desktop"
+msgstr "org.gnome.Terminal.desktop"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:35
+#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:36
+msgid "GPL-3.0+ or GFDL-1.3-only"
+msgstr "GPL-3.0+ arba GFDL-1.3-only"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:36
+#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:37
+msgid "GPL-3.0+"
+msgstr "GPL-3.0+"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:40
 msgid ""
 "GNOME Terminal is a terminal emulator application for accessing a UNIX shell "
 "environment which can be used to run programs available on your system."
@@ -61,7 +81,7 @@ msgstr ""
 "GNOME terminas yra terminalo emuliatorius UNIX apvalkalo aplinkai pasiekti, "
 "kurį galima naudoti jūsų sistemos programų vykdymui."
 
-#: data/org.gnome.Terminal.metainfo.xml.in:38
+#: data/org.gnome.Terminal.metainfo.xml.in:41
 msgid ""
 "It supports several profiles, multiple tabs and implements several keyboard "
 "shortcuts."
@@ -69,15 +89,77 @@ msgstr ""
 "Jis palaiko kelis profilius, daug kortelių ir turi daug klaviatūros "
 "trumpinių."
 
+#: data/org.gnome.Terminal.metainfo.xml.in:44
+msgid "console"
+msgstr "konsolė"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:45
+msgid "keyboard"
+msgstr "klaviatūra"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:46
+msgid "pointing"
+msgstr "rodymas"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:50
+msgid ""
+"https://help.gnome.org/users/gnome-terminal/stable/figures/gnome-terminal.png"
+msgstr ""
+"https://help.gnome.org/users/gnome-terminal/stable/figures/gnome-terminal.png"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:54
+msgid "HiDpiIcon"
+msgstr "HiDpiIcon"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:55
+msgid "HighContrast"
+msgstr "HighContrast"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:56
+msgid "ModernToolkit"
+msgstr "ModernToolkit"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:57
+msgid "SearchProvider"
+msgstr "SearchProvider"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:58
+msgid "UserDocs"
+msgstr "UserDocs"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:60
+#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:43
+msgid "https://wiki.gnome.org/Apps/Terminal"
+msgstr "https://wiki.gnome.org/Apps/Terminal"
+
+#. This is the name of a colour scheme
+#: data/org.gnome.Terminal.metainfo.xml.in:61
+#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:44 src/preferences.ui:214
+msgid "GNOME"
+msgstr "GNOME"
+
+#: data/org.gnome.Terminal.metainfo.xml.in:62
+#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:45
+msgid "https://wiki.gnome.org/Apps/Terminal/ReportingBugs"
+msgstr "https://wiki.gnome.org/Apps/Terminal/ReportingBugs"
+
+#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:34
+msgid "org.gnome.Terminal.Nautilus"
+msgstr "org.gnome.Terminal.Nautilus"
+
 #: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:35
+msgid "org.gnome.Nautilus.desktop"
+msgstr "org.gnome.Nautilus.desktop"
+
+#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:38
 msgid "Terminal plugin for Files"
 msgstr "Terminalo įskiepis, skirtas Failams"
 
-#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:36
+#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:39
 msgid "Open a terminal from Files"
 msgstr "Atverti terminalą iš Failų"
 
-#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:38
+#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:41
 msgid ""
 "Open Terminal is a plugin for the Files application that adds a menu item to "
 "the context menu to open a terminal in the currently browsed directory."
@@ -85,6 +167,10 @@ msgstr ""
 "Atverti terminalą yra Failų programai skirtas įskiepis, kuris prideda "
 "kontekstinio meniu elementą, atveriantį terminalą esamu metu naršomame "
 "kataloge."
+
+#: data/org.gnome.Terminal.Nautilus.metainfo.xml.in:46
+msgid "gnome-terminal"
+msgstr "gnome-terminal"
 
 #. Translators: This needs to be parsed as a GVariant string, so keep the regular single quotes around the string as-is, and do not add extra quotes.
 #: src/org.gnome.Terminal.gschema.xml:133
@@ -741,7 +827,7 @@ msgstr "Ar naujos kortelės turi būti atvertos šalia dabartinės, ar pabaigoje
 
 #: src/org.gnome.Terminal.gschema.xml:711
 msgid "Always check whether GNOME Terminal is the default terminal"
-msgstr "Visada tikrinti ar GNOME Terminalas yra numatytasis terminalas"
+msgstr "Visada tikrinti, ar GNOME Terminalas yra numatytasis terminalas"
 
 #. Open new terminal in new window
 #: src/preferences.ui:14
@@ -876,11 +962,6 @@ msgid "Hold the terminal open"
 msgstr "Laikyti terminalą atvertą"
 
 #. This is the name of a colour scheme
-#: src/preferences.ui:214
-msgid "GNOME"
-msgstr "GNOME"
-
-#. This is the name of a colour scheme
 #: src/preferences.ui:217
 msgid "Tango"
 msgstr "Tango"
@@ -966,11 +1047,11 @@ msgstr "Naujos kortelės _padėtis:"
 
 #: src/preferences.ui:499
 msgid "_Always check if default terminal"
-msgstr "_Visada tikrinti, ar numatytasis terminalas"
+msgstr "_Visada tikrinti, ar numatytasis terminas"
 
 #: src/preferences.ui:516
 msgid "_Set as default terminal"
-msgstr "_Nustatyti kaip numatytąjį terminalą"
+msgstr "_Nustatyti kaip numatytąjį"
 
 #: src/preferences.ui:556
 msgid "_Enable shortcuts"
@@ -1412,6 +1493,7 @@ msgid "Palette entry %u"
 msgstr "Paletės įrašas %u"
 
 #: src/search-popover.ui:7 src/search-popover.ui:37 src/terminal-accels.cc:150
+#: src/terminal-headerbar.ui:118
 msgid "Find"
 msgstr "Ieškoti"
 
@@ -1443,7 +1525,7 @@ msgstr "Tenkina _reguliarioji išraiška"
 msgid "_Wrap around"
 msgstr "_Priėjus pabaigą, ieškoti nuo pradžios"
 
-#: src/terminal-accels.cc:126
+#: src/terminal-accels.cc:126 src/terminal-headerbar.ui:48
 msgid "New Tab"
 msgstr "Nauja kortelė"
 
@@ -1600,30 +1682,34 @@ msgstr "Veiksm_as"
 msgid "Shortcut _Key"
 msgstr "Spartusis _klavišas"
 
-#: src/terminal-app.cc:550
+#: src/terminal-app.cc:552
 msgid "New Terminal"
 msgstr "Naujas terminalas"
 
-#: src/terminal-app.cc:560 src/terminal-window.cc:1804
+#: src/terminal-app.cc:562 src/terminal-window.cc:1804
 msgid "New _Terminal"
 msgstr "Naujas _terminalas"
 
-#: src/terminal-app.cc:562 src/terminal-window.cc:1813
+#: src/terminal-app.cc:564 src/terminal-window.cc:1813
 msgid "New _Tab"
 msgstr "Nauja _kortelė"
 
-#: src/terminal-app.cc:563 src/terminal-headermenu.ui:39
+#: src/terminal-app.cc:565 src/terminal-headermenu.ui:39
 #: src/terminal-window.cc:1809
 msgid "New _Window"
 msgstr "Naujas _langas"
 
-#: src/terminal-app.cc:612
+#: src/terminal-app.cc:614
 msgid "Change _Profile"
 msgstr "_Pakeisti profilį"
 
-#: src/terminal-app.cc:625
+#: src/terminal-app.cc:627
 msgid "_Profile"
 msgstr "_Profilis"
+
+#: src/terminal-headerbar.ui:72 src/terminal-prefs.cc:657
+msgid "Profiles"
+msgstr "Profiliai"
 
 #: src/terminal-headermenu.ui:23 src/terminal-menubar.ui.in:115
 msgid "Zoom _Out"
@@ -2176,11 +2262,7 @@ msgstr "Bendrieji"
 msgid "Shortcuts"
 msgstr "Trumpiniai"
 
-#: src/terminal-prefs.cc:657
-msgid "Profiles"
-msgstr "Profiliai"
-
-#: src/terminal-screen.cc:1405
+#: src/terminal-screen.cc:1402
 msgid "No command supplied nor shell requested"
 msgstr "Nepateikta komanda bei neprašyta apvalkalo"
 
@@ -2347,7 +2429,7 @@ msgstr "_Palikti visą ekraną"
 
 #: src/terminal-window.cc:2291
 msgid "Set GNOME Terminal as your default terminal?"
-msgstr "Nustatyti GNOME Terminalą numatytuoju?"
+msgstr "Nustatyti GNOME Terminalą kaip numatytąjį terminalą?"
 
 #: src/terminal-window.cc:2297
 msgid "_Yes"
@@ -2390,64 +2472,8 @@ msgstr "_Užverti langą"
 msgid "Failed to parse arguments: %s\n"
 msgstr "Nepavyko apdoroti argumentų: %s\n"
 
-#~ msgid "org.gnome.Terminal.Nautilus"
-#~ msgstr "org.gnome.Terminal.Nautilus"
-
-#~ msgid "org.gnome.Nautilus.desktop"
-#~ msgstr "org.gnome.Nautilus.desktop"
-
-#~ msgid "GPL-3.0+ or GFDL-1.3-only"
-#~ msgstr "GPL-3.0+ arba GFDL-1.3-only"
-
-#~ msgid "GPL-3.0+"
-#~ msgstr "GPL-3.0+"
-
-#~ msgid "https://wiki.gnome.org/Apps/Terminal"
-#~ msgstr "https://wiki.gnome.org/Apps/Terminal"
-
-#~ msgid "https://wiki.gnome.org/Apps/Terminal/ReportingBugs"
-#~ msgstr "https://wiki.gnome.org/Apps/Terminal/ReportingBugs"
-
-#~ msgid "gnome-terminal"
-#~ msgstr "gnome-terminal"
-
 #~ msgid "org.gnome.Terminal"
 #~ msgstr "org.gnome.Terminal"
-
-#~ msgid "org.gnome.Terminal.desktop"
-#~ msgstr "org.gnome.Terminal.desktop"
-
-#~| msgid "Linux console"
-#~ msgid "console"
-#~ msgstr "konsolė"
-
-#~ msgid "keyboard"
-#~ msgstr "klaviatūra"
-
-#~ msgid "pointing"
-#~ msgstr "rodymas"
-
-#~ msgid ""
-#~ "https://help.gnome.org/users/gnome-terminal/stable/figures/gnome-terminal."
-#~ "png"
-#~ msgstr ""
-#~ "https://help.gnome.org/users/gnome-terminal/stable/figures/gnome-terminal."
-#~ "png"
-
-#~ msgid "HiDpiIcon"
-#~ msgstr "HiDpiIcon"
-
-#~ msgid "HighContrast"
-#~ msgstr "HighContrast"
-
-#~ msgid "ModernToolkit"
-#~ msgstr "ModernToolkit"
-
-#~ msgid "SearchProvider"
-#~ msgstr "SearchProvider"
-
-#~ msgid "UserDocs"
-#~ msgstr "UserDocs"
 
 #~ msgid "Armenian"
 #~ msgstr "Armėnų"
@@ -2557,9 +2583,6 @@ msgstr "Nepavyko apdoroti argumentų: %s\n"
 #~ "nekorektiškai. Jie čia yra tik dėl to, kad būtų galima apeiti kai kurių "
 #~ "programų ir operacinių sistemų, kurios tikisi kitokio terminalo veikimo, "
 #~ "elgseną."
-
-#~ msgid "Profile Preferences"
-#~ msgstr "Profilio nuostatos"
 
 #~ msgid "New _Profile"
 #~ msgstr "Naujas _profilis"

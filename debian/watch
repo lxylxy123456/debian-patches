@@ -1,3 +1,4 @@
 version=4
-https://gitlab.gnome.org/GNOME/@PACKAGE@/tags \
-	.*/@PACKAGE@-([\d][02468.]+[\d]+)@ARCHIVE_EXT@
+opts="searchmode=plain, uversionmangle=s/\.(alpha|beta|rc)/~$1/, downloadurlmangle=s|cache.json||" \
+https://download.gnome.org/sources/@PACKAGE@/cache.json \
+	[\d.]+/@PACKAGE@-([\d.]+\.?(?:beta|rc)?[\d.]*)@ARCHIVE_EXT@

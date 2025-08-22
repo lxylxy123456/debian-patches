@@ -1,2 +1,3 @@
 01_onlyshowin.patch
 Provide-fallback-for-reading-current-directory-if-OS.patch
+prefs-Replace-icon.patch
