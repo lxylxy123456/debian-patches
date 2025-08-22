@@ -31,6 +31,9 @@ Contents
 gnome-terminal: enable transparent background
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+From
+https://aur.archlinux.org/cgit/aur.git/tree/transparency.patch?h=gnome-terminal-transparency
+
 +--------+----------------------------+-----------------------+
 | Debian | Branch                     | Diff                  |
 +========+============================+=======================+
@@ -46,6 +49,8 @@ gnome-terminal: enable transparent background
 
 libvte-2.91: fix line height problem
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Thanks to https://gitlab.gnome.org/GNOME/vte/-/issues/347#note_1197315
 
 +--------+-----------------------------------+-----------------------+
 | Debian | Branch                            | Diff                  |
