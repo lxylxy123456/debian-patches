@@ -21,6 +21,7 @@ sudo apt-mark hold libvte-2.91-0
 ## gnome-terminal: enable transparent background
 
 * [`gnome-terminal-3.46.8`](https://github.com/lxylxy123456/debian-patches/tree/gnome-terminal-3.46.8)
+* [`gnome-terminal_3.56.2-2`](https://github.com/lxylxy123456/debian-patches/tree/gnome-terminal_3.56.2-2)
 
 ## libvte-2.91: fix line height problem
 
