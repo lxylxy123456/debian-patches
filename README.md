@@ -3,18 +3,30 @@ Virtual TErminal
 
 VTE provides a virtual terminal widget for GTK applications.
 
-Source & Releases
------------------
+CI status
+---------
+
+[![pipeline status](https://gitlab.gnome.org/GNOME/vte/badges/master/pipeline.svg)](https://gitlab.gnome.org/GNOME/vte/-/commits/master)
+
+[![coverage report](https://gitlab.gnome.org/GNOME/vte/badges/master/coverage.svg)](https://gitlab.gnome.org/GNOME/vte/-/commits/master)
+
+Releases
+--------
+
+[![Latest Release](https://gitlab.gnome.org/GNOME/vte/-/badges/release.svg)](https://gitlab.gnome.org/GNOME/vte/-/releases)
+
+Tarballs for newer releases are available from the
+[package registry](https://gitlab.gnome.org/GNOME/vte/-/packages)
+and new and old release are also available on
+[download.gnome.org](https://download.gnome.org/sources/vte/).
+
+Source code
+-----------
 
 To get the source code, use
 ```
 $ git clone https://gitlab.gnome.org/GNOME/vte
 ```
-
-To get the source for a release version, use the corresponding git tag, or
-download a tarball at
-https://gitlab.gnome.org/GNOME/vte/-/archive/TAG/vte-TAG.tar.bz2
-replacing `TAG` with the desired tag's name (e.g. `0.64.0`).
 
 Installation
 ------------
@@ -39,13 +51,13 @@ run the configure script before, you should also pass `--reconfigure` option to 
 * If you wish to test VTE before installing it, you may execute it directly from
 its build directory. As `_build` directory, it should be `_build/src/app/vte-[version]`.
 
-* You can pass `-Ddebugg=true` option to meson if you wish to enable debug function.
+* You can pass `-Ddbg=true` option to meson if you wish to enable debug function.
 
 
 Debugging
 ---------
 
-After installing VTE with `-Ddebugg=true` flag, you can use `VTE_DEBUG` variable to control
+After installing VTE with `-Ddbg=true` flag, you can use `VTE_DEBUG` variable to control
 VTE to print out the debug information
 
 ```
@@ -72,3 +84,10 @@ support forums.
 
 If you want to provide a patch, please attach them to an issue in GNOME
 GitLab, in the format output by the git format-patch command.
+
+When providing a patch, make sure to add the correct licensing headers to
+each new file. If code was taken from somewhere else, note from where it was
+taken and under which license it was there. You must only contribute code
+that you have either written yourself, or that was copied from a source
+whose license is LGPL3+ compatible. You may not contribute any code that
+was written, whether wholly or partly, by using AI in any form.

@@ -81,18 +81,11 @@
 #define VTE_CHILD_INPUT_PRIORITY	G_PRIORITY_DEFAULT_IDLE
 #define VTE_CHILD_OUTPUT_PRIORITY	G_PRIORITY_HIGH
 #define VTE_MAX_INPUT_READ		0x1000
-#define VTE_DISPLAY_TIMEOUT		10
-#define VTE_UPDATE_TIMEOUT		15
-#define VTE_UPDATE_REPEAT_TIMEOUT	30
 #define VTE_MAX_PROCESS_TIME		100
 #define VTE_CELL_BBOX_SLACK		1
 #define VTE_DEFAULT_UTF8_AMBIGUOUS_WIDTH 1
 
 #define VTE_UTF8_BPC                    (4) /* Maximum number of bytes used per UTF-8 character */
-
-/* Keep in decreasing order of precedence. */
-#define VTE_COLOR_SOURCE_ESCAPE 0
-#define VTE_COLOR_SOURCE_API 1
 
 #define VTE_FONT_SCALE_MIN (.25)
 #define VTE_FONT_SCALE_MAX (4.)
@@ -130,9 +123,6 @@
  * Make sure there are enough bits to store this in VteStreamCellAttr.hyperlink_length */
 #define VTE_HYPERLINK_TOTAL_LENGTH_MAX  (VTE_HYPERLINK_ID_LENGTH_MAX + 1 + VTE_HYPERLINK_URI_LENGTH_MAX)
 
-/* Max length of title */
-#define VTE_WINDOW_TITLE_MAX_LENGTH (1024)
-
 /* Max depth of title stack */
 #define VTE_WINDOW_TITLE_STACK_MAX_DEPTH (8)
 
@@ -150,3 +140,5 @@
 #define VTE_MIN_GRID_HEIGHT (1)
 
 #define VTE_FONT_WEIGHT_BOLDENING (PANGO_WEIGHT_BOLD - PANGO_WEIGHT_NORMAL)
+
+#define VTE_MAX_TERMPROP_NUM (256)

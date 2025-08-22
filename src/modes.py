@@ -50,6 +50,7 @@ class Source(enum.Enum):
     WYSE     = enum.auto()
     XDG      = enum.auto()
     XTERM    = enum.auto()
+    UNDET    = enum.auto()
 
     @classmethod
     def from_name(cls, name):
@@ -80,7 +81,7 @@ class Source(enum.Enum):
         elif name.startswith('XTERM'):
             return cls.XTERM
         else:
-            return cls.ECMA48
+            return cls.UNDET
             #raise ValueError(f'Could not determine source for mode {name}')
 
 # Control Sequence
@@ -92,6 +93,7 @@ class NamedMode:
     number: int
     name: str
     default: bool
+    preserve_decstr: bool=False
     flags: Flags=Flags.NONE
     source: typing.Optional[Source]=None
     alias: typing.Optional[typing.List[str]]=None
@@ -226,7 +228,7 @@ modes = [
     # References: ECMA-48 § F.5.2 Removed!
     #             VT525
     #
-    mode_ECMA('LNM', 20, default=False),
+    mode_ECMA('LNM', 20, default=False, preserve_decstr=True),
 
     mode_ECMA('GRCM', 21, default=True),
 
@@ -369,14 +371,14 @@ modes = [
     # Sets page width to 132 (set) or 80 (reset) columns.
     #
     # Changing this mode resets the top, bottom, left, right margins;
-    # clears the screen (unless DECNCSM is set); resets DECLRMM; and clears
+    # clears the screen (unless DECNCSM is set); resets DECLRMM; and clearsb
     # the status line if host-writable.
     #
     # Default: reset
     #
     # References: VT525
     #
-    mode_WHAT('DEC_132_COLUMN', 3, default=False, flags=Flags.WRITABLE),
+    mode_WHAT('DEC_132_COLUMN', 3, default=False, preserve_decstr=True, flags=Flags.WRITABLE),
 
     # DECANM - ansi-mode
     # Resetting this puts the terminal into VT52 compatibility mode.
@@ -407,7 +409,7 @@ modes = [
     #
     # References: VT525
     #
-    mode_WHAT('DEC_REVERSE_IMAGE', 5, default=False, flags=Flags.WRITABLE),
+    mode_WHAT('DEC_REVERSE_IMAGE', 5, default=False, preserve_decstr=True, flags=Flags.WRITABLE),
 
     # DECOM - origin mode
     # If set, the cursor is restricted to within the page margins.
@@ -442,7 +444,7 @@ modes = [
     #
     # Probably not worth implementing.
     #
-    mode_WHAT('DECARM', 8, default=True),
+    mode_WHAT('DECARM', 8, default=True, preserve_decstr=True),
 
     mode_WHAT('XTERM_MOUSE_X10', 9, default=False, flags=Flags.WRITABLE),
     mode_WHAT('DECLTM', 11, default=False),
@@ -693,7 +695,7 @@ modes = [
     #
     # aka DECVSSM
     #
-    mode_WHAT('DECLRMM', 69, default=False),
+    mode_WHAT('DECLRMM', 69, default=False, flags=Flags.WRITABLE),
 
     # DECXRLM - transmit rate limit
     # If set, limits the transmit rate; if reset, the rate is
@@ -1186,6 +1188,9 @@ modes = [
     mode_WHAT('XTERM_MOUSE_EXT_SGR', 1006, default=False, flags=Flags.WRITABLE),
     mode_WHAT('XTERM_ALTBUF_SCROLL', 1007, default=True, flags=Flags.WRITABLE),
 
+    mode_WHAT('XTERM_FAST_SCROLL', 1014, default=False),
+    mode_WHAT('XTERM_MOUSE_EXT_SGR_PIXEL', 1016, default=False),
+
     mode_WHAT('XTERM_8BIT_META', 1034, default=False),
     mode_WHAT('XTERM_NUMLOCK', 1035, default=False),
 
@@ -1236,6 +1241,11 @@ modes = [
 
     mode_WHAT('XTERM_READLINE_PASTE_QUOTE', 2005, default=False),
     mode_WHAT('XTERM_READLINE_PASTE_LITERAL_NL', 2006, default=False),
+
+    # In-band resize notifications,
+    #
+    # References: https://gist.github.com/rockorager/e695fb2924d36b2bcf1fff4a3704bd83
+    mode_WHAT('UNDET_IRN', 2048, default=False),
 
     # ************************************************************************
 

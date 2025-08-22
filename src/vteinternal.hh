@@ -35,7 +35,11 @@
 
 #include "debug.h"
 #include "clipboard-gtk.hh"
-#include "drawing-cairo.hh"
+#if VTE_GTK == 3
+# include "drawing-cairo.hh"
+#elif VTE_GTK == 4
+# include "drawing-gsk.hh"
+#endif
 #include "vtedefines.hh"
 #include "vtetypes.hh"
 #include "reaper.hh"
@@ -46,8 +50,12 @@
 #include "parser-glue.hh"
 #include "modes.hh"
 #include "tabstops.hh"
+#include "termprops.hh"
 #include "refptr.hh"
 #include "fwd.hh"
+#include "color-palette.hh"
+#include "osc-colors.hh"
+#include "rect.hh"
 
 #include "pcre2-glue.hh"
 #include "vteregexinternal.hh"
@@ -60,18 +68,27 @@
 #include <queue>
 #include <optional>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <variant>
 #include <vector>
 
-#ifdef WITH_A11Y
+#define GDK_ARRAY_NAME vte_char_attr_list
+#define GDK_ARRAY_TYPE_NAME VteCharAttrList
+#define GDK_ARRAY_ELEMENT_TYPE VteCharAttributes
+#define GDK_ARRAY_BY_VALUE 1
+#define GDK_ARRAY_PREALLOC 32
+#define GDK_ARRAY_NO_MEMSET
+#include "gdkarrayimpl.c"
+
+#if WITH_A11Y
 #if VTE_GTK == 3
 #include "vteaccess.h"
 #else
-#undef WITH_A11Y
 #endif
 #endif
 
-#ifdef WITH_ICU
+#if WITH_ICU
 #include "icu-converter.hh"
 #endif
 
@@ -128,14 +145,19 @@ public:
         }
 
         vte::base::Ring m_ring; /* buffer contents */
-        VteRing* row_data;
+        vte::base::Ring *row_data;
         VteVisualPosition cursor;  /* absolute value, from the beginning of the terminal history */
+        /* Whether the last relevant input was an explicit cursor movement or a graphic character.
+         * Needed to decide if the next character will wrap at the right margin, if that differs from
+         * the right edge of the terminal. See https://gitlab.gnome.org/GNOME/vte/-/issues/2677. */
+        bool cursor_advanced_by_graphic_character{false};
         double scroll_delta{0.0}; /* scroll offset */
         long insert_delta{0}; /* insertion offset */
 
         /* Stuff saved along with the cursor */
         struct {
                 VteVisualPosition cursor;  /* onscreen coordinate, that is, relative to insert_delta */
+                bool cursor_advanced_by_graphic_character;
                 bool reverse_mode;
                 bool origin_mode;
                 VteCell defaults;
@@ -145,11 +167,62 @@ public:
         } saved;
 };
 
-struct vte_scrolling_region {
-        int start, end;
-};
-
 namespace vte {
+
+        // Inclusive rect of integer
+        using grid_rect = vte::rect_inclusive<int>;
+        using grid_point = vte::point<int>;
+
+/* Tracks the DECSTBM / DECSLRM scrolling region, a.k.a. margins.
+ * For effective operation, it stores in a single boolean if at its default state. */
+struct scrolling_region {
+private:
+        int m_width{1};
+        int m_height{1};
+        /* The following are 0-based, inclusive */
+        int m_top{0};
+        int m_bottom{0};
+        int m_left{0};
+        int m_right{0};
+        bool m_is_restricted{false};
+
+        constexpr void update_is_restricted() noexcept
+        {
+                m_is_restricted = (m_top != 0) || (m_bottom != m_height - 1) ||
+                                  (m_left != 0) || (m_right != m_width - 1);
+        }
+
+public:
+        constexpr scrolling_region() noexcept = default;
+
+        inline constexpr auto top() const noexcept { return m_top; }
+        inline constexpr auto bottom() const noexcept { return m_bottom; }
+        inline constexpr auto left() const noexcept { return m_left; }
+        inline constexpr auto right() const noexcept { return m_right; }
+        inline constexpr auto is_restricted() const noexcept { return m_is_restricted; }
+        inline constexpr bool contains_row_col(int row, int col) const noexcept {
+                return row >= m_top && row <= m_bottom && col >= m_left && col <= m_right;
+        }
+
+        void set_vertical(int t, int b) noexcept { m_top = t; m_bottom = b; update_is_restricted(); }
+        void reset_vertical() noexcept { set_vertical(0, m_height - 1); }
+        void set_horizontal(int l, int r) noexcept { m_left = l; m_right = r; update_is_restricted(); }
+        void reset_horizontal() noexcept { set_horizontal(0, m_width - 1); }
+        void reset() noexcept { reset_vertical(); reset_horizontal(); }
+        void reset_with_size(int w, int h) noexcept { m_width = w; m_height = h; reset(); }
+
+        // FIXME inherit from grid_rect instead
+        constexpr grid_rect as_rect() const noexcept
+        {
+                return grid_rect{left(), top(), right(), bottom()};
+        }
+
+        constexpr grid_point origin() const noexcept
+        {
+                return grid_point{left(), top()};
+        }
+
+}; // class scrolling_region
 
 namespace platform {
 class Widget;
@@ -207,8 +280,7 @@ private:
         enum class Alignment : uint8_t {
                 START  = 0u,
                 CENTRE = 1u,
-                /* BASELINE = 2u, */
-                END    = 3u,
+                END    = 2u,
         };
 
 protected:
@@ -261,7 +333,7 @@ public:
 
         void unset_widget() noexcept;
 
-#ifdef WITH_A11Y
+#if WITH_A11Y && VTE_GTK == 3
         /* Accessible */
         vte::glib::RefPtr<VteTerminalAccessible> m_accessible{};
 #endif
@@ -279,6 +351,7 @@ public:
 
         vte::terminal::modes::ECMA m_modes_ecma{};
         vte::terminal::modes::Private m_modes_private{};
+        bool m_decsace_is_rectangle{false};
 
 	/* PTY handling data. */
         vte::base::RefPtr<vte::base::Pty> m_pty{};
@@ -293,11 +366,6 @@ public:
         pid_t m_pty_pid{-1};           /* pid of child process */
         int m_child_exit_status{-1};   /* pid's exit status, or -1 */
         bool m_eos_pending{false};
-        bool m_child_exited_after_eos_pending{false};
-        bool child_exited_eos_wait_callback();
-        vte::glib::Timer m_child_exited_eos_wait_timer{std::bind(&Terminal::child_exited_eos_wait_callback,
-                                                                 this),
-                                                       "child-exited-eos-wait-timer"};
         VteReaper *m_reaper;
 
 	/* Queue of chunks of data read from the PTY.
@@ -310,7 +378,7 @@ public:
         enum class DataSyntax {
                 /* The primary data syntax is always one of the following: */
                 ECMA48_UTF8,
-                #ifdef WITH_ICU
+                #if WITH_ICU
                 ECMA48_PCTERM,
                 #endif
                 /* ECMA48_ECMA35, not supported */
@@ -349,10 +417,7 @@ public:
         GArray *m_update_rects;
 #endif
         bool m_invalidated_all{false};       /* pending refresh of entire terminal */
-        /* If non-nullptr, contains the GList element for @this in g_active_terminals
-         * and means that this terminal is processing data.
-         */
-        GList *m_active_terminals_link;
+        bool m_is_processing{false};
         // FIXMEchpe should these two be g[s]size ?
         size_t m_input_bytes;
         long m_max_input_bytes{VTE_MAX_INPUT_READ};
@@ -360,16 +425,20 @@ public:
 	/* Output data queue. */
         VteByteArray *m_outgoing; /* pending input characters */
 
-#ifdef WITH_ICU
+#if WITH_ICU
         /* Legacy charset support */
+        // The main converter for the PTY stream
         std::unique_ptr<vte::base::ICUConverter> m_converter;
+        // Extra converter for use in one-off conversion e.g. for
+        // DECFRA, instantiated on-demand
+        std::unique_ptr<vte::base::ICUDecoder> m_oneoff_decoder;
 #endif /* WITH_ICU */
 
         char const* encoding() const noexcept
         {
                 switch (primary_data_syntax()) {
                 case DataSyntax::ECMA48_UTF8:   return "UTF-8";
-                #ifdef WITH_ICU
+                #if WITH_ICU
                 case DataSyntax::ECMA48_PCTERM: return m_converter->charset().c_str();
                 #endif
                 default: g_assert_not_reached(); return nullptr;
@@ -426,13 +495,14 @@ public:
 
 	/* Scrolling options. */
         bool m_fallback_scrolling{true};
+        bool m_scroll_on_insert{false};
         bool m_scroll_on_output{false};
         bool m_scroll_on_keystroke{true};
         vte::grid::row_t m_scrollback_lines{0};
 
         inline auto scroll_limit_lower() const noexcept
         {
-                return _vte_ring_delta (m_screen->row_data);
+                return m_screen->row_data->delta();
         }
 
         inline constexpr auto scroll_limit_upper() const noexcept
@@ -446,8 +516,8 @@ public:
         }
 
         /* Restricted scrolling */
-        struct vte_scrolling_region m_scrolling_region;     /* the region we scroll in */
-        gboolean m_scrolling_restricted;
+        scrolling_region m_scrolling_region;     /* the region we scroll in */
+        inline void reset_scrolling_region() { m_scrolling_region.reset_with_size(m_column_count, m_row_count); }
 
 	/* Cursor shape, as set via API */
         CursorShape m_cursor_shape{CursorShape::eBLOCK};
@@ -459,7 +529,7 @@ public:
                                                         this),
                                               "cursor-blink-timer"};
         CursorBlinkMode m_cursor_blink_mode{CursorBlinkMode::eSYSTEM};
-        bool m_cursor_blink_state{false};
+        bool m_cursor_blink_state{true};
         bool m_cursor_blinks{false};        /* whether the cursor is actually blinking */
         bool m_cursor_blinks_system{true};  /* gtk-cursor-blink */
         int m_cursor_blink_cycle_ms{1000};  /* gtk-cursor-blink-time / 2 */
@@ -487,14 +557,15 @@ public:
         time_t m_last_keypress_time;
 
         MouseTrackingMode m_mouse_tracking_mode{MouseTrackingMode::eNONE};
-        guint m_mouse_pressed_buttons;      /* bits 0, 1, 2 resp. for buttons 1, 2, 3 */
+        guint m_mouse_pressed_buttons;      /* bits 0..14 resp. for buttons 1..15 */
         guint m_mouse_handled_buttons;      /* similar bitmap for buttons we handled ourselves */
         /* The last known position the mouse pointer from an event. We don't store
          * this in grid coordinates because we want also to check if they were outside
          * the viewable area, and also want to catch in-cell movements if they make the pointer visible.
          */
         vte::view::coords m_mouse_last_position{-1, -1};
-        double m_mouse_smooth_scroll_delta{0.0};
+        double m_mouse_smooth_scroll_x_delta{0.0};
+        double m_mouse_smooth_scroll_y_delta{0.0};
         bool mouse_autoscroll_timer_callback();
         vte::glib::Timer m_mouse_autoscroll_timer{std::bind(&Terminal::mouse_autoscroll_timer_callback,
                                                             this),
@@ -573,8 +644,8 @@ public:
                 return match_regexes_writable().emplace_back(std::forward<Args>(args)...);
         }
 
-        char* m_match_contents;
-        GArray* m_match_attributes;
+        GString* m_match_contents;
+        VteCharAttrList m_match_attributes;
         char* m_match;
         /* If m_match non-null, then m_match_span contains the region of the match.
          * If m_match is null, and m_match_span is not .empty(), then it contains
@@ -587,10 +658,11 @@ public:
         vte::base::RefPtr<vte::base::Regex> m_search_regex{};
         uint32_t m_search_regex_match_flags{0};
         gboolean m_search_wrap_around;
-        GArray* m_search_attrs; /* Cache attrs */
+        VteCharAttrList m_search_attrs; /* Cache attrs */
 
 	/* Data used when rendering the text which does not require server
 	 * resources and which can be kept after unrealizing. */
+        vte::Freeable<cairo_font_options_t> m_font_options{};
         vte::Freeable<PangoFontDescription> m_api_font_desc{};
         vte::Freeable<PangoFontDescription> m_unscaled_font_desc{};
         vte::Freeable<PangoFontDescription> m_fontdesc{};
@@ -640,7 +712,11 @@ public:
         }
 
 	/* Data used when rendering */
-        vte::view::DrawingContext m_draw{};
+#if VTE_GTK == 3
+        vte::view::DrawingCairo m_draw{};
+#elif VTE_GTK == 4
+        vte::view::DrawingGsk m_draw{};
+#endif
         bool m_clear_background{true};
 
         VtePaletteColor m_palette[VTE_PALETTE_SIZE];
@@ -662,19 +738,15 @@ public:
         gboolean m_cursor_moved_pending;
         gboolean m_contents_changed_pending;
 
-        std::string m_window_title{};
-        std::string m_current_directory_uri{};
-        std::string m_current_file_uri{};
-        std::string m_window_title_pending{};
-        std::string m_current_directory_uri_pending{};
-        std::string m_current_file_uri_pending{};
-
         std::vector<std::string> m_window_title_stack{};
 
         enum class PendingChanges {
-                TITLE = 1u << 0,
-                CWD   = 1u << 1,
-                CWF   = 1u << 2,
+                TERMPROPS = 1u << 0,
+
+                // deprecated but still emitted for now
+                TITLE = 1u << 1,
+                CWD   = 1u << 2,
+                CWF   = 1u << 3,
         };
         unsigned m_pending_changes{0};
 
@@ -728,21 +800,84 @@ public:
         const char *m_hyperlink_hover_uri; /* data is owned by the ring */
         long m_hyperlink_auto_id{0};
 
+        /* Accessibility support */
+        bool m_enable_a11y{true};
+
         /* RingView and friends */
         vte::base::RingView m_ringview;
         bool m_enable_bidi{true};
         bool m_enable_shaping{true};
 
+        /* FrameClock driven updates */
+        gpointer m_scheduler;
+
         /* BiDi parameters outside of ECMA and DEC private modes */
         guint m_bidi_rtl : 1;
 
+        // Termprops
+        std::vector<TermpropValue> m_termprop_values{};
+        std::vector<bool> m_termprops_dirty{}; // FIMXE: make this a dynamic_bitset
+
+        auto get_termprop_info(std::string_view const& name) const
+        {
+                return vte::terminal::get_termprop_info(name);
+        }
+
+        auto get_termprop_info(int id) const
+        {
+                return vte::terminal::get_termprop_info(id);
+        }
+
+        auto get_termprop(TermpropInfo const& info) const
+        {
+                return std::addressof(m_termprop_values.at(info.id()));
+        }
+
+        auto get_termprop(TermpropInfo const& info)
+        {
+                return std::addressof(m_termprop_values.at(info.id()));
+        }
+
+        void reset_termprop(TermpropInfo const& info)
+        {
+                auto const is_valueless = info.type() == vte::terminal::TermpropType::VALUELESS;
+                auto value = get_termprop(info);
+                if (value &&
+                    !std::holds_alternative<std::monostate>(*value)) {
+                        *value = {};
+                        m_termprops_dirty.at(info.id()) = !is_valueless;
+                } else if (is_valueless) {
+                        m_termprops_dirty.at(info.id()) = false;
+                }
+        }
+
+        void reset_termprops()
+        {
+                for (auto const& info: vte::terminal::s_registered_termprops) {
+                        reset_termprop(info);
+                }
+
+                m_pending_changes |= vte::to_integral(PendingChanges::TERMPROPS);
+        }
+
+        bool m_enable_legacy_osc777{false};
+
+        bool set_enable_legacy_osc777(bool enable) noexcept
+        {
+                if (enable == m_enable_legacy_osc777)
+                        return false;
+
+                m_enable_legacy_osc777 = enable;
+                return true;
+        }
+
+        constexpr auto enable_legacy_osc777() const noexcept
+        {
+                return m_enable_legacy_osc777;
+        }
+
 public:
 
-        // FIXMEchpe inline!
-        /* inline */ VteRowData* ring_insert(vte::grid::row_t position,
-                                       bool fill);
-        /* inline */ VteRowData* ring_append(bool fill);
-        /* inline */ void ring_remove(vte::grid::row_t position);
         inline VteRowData const* find_row_data(vte::grid::row_t row) const;
         inline VteRowData* find_row_data_writable(vte::grid::row_t row) const;
         inline VteCell const* find_charcell(vte::grid::column_t col,
@@ -759,26 +894,111 @@ public:
         inline vte::grid::row_t last_displayed_row() const;
         inline bool cursor_is_onscreen() const noexcept;
 
-        inline VteRowData *insert_rows (guint cnt);
-        VteRowData *ensure_row();
         VteRowData *ensure_cursor();
         void update_insert_delta();
+
+        // FIXMEchpe replace this with a method on VteRing
+        inline VteRowData* ring_insert(vte::grid::row_t position, bool fill) {
+                VteRowData *row;
+                auto ring = m_screen->row_data;
+                bool const not_default_bg = (m_color_defaults.attr.back() != VTE_DEFAULT_BG);
+
+                while G_UNLIKELY (long(ring->next()) < position) {
+                        row = ring->append(get_bidi_flags());
+                        if (fill && not_default_bg)
+                                _vte_row_data_fill (row, &m_color_defaults, m_column_count);
+                }
+                row = ring->insert(position, get_bidi_flags());
+                if (fill && not_default_bg)
+                        _vte_row_data_fill (row, &m_color_defaults, m_column_count);
+                return row;
+        }
+
+        inline VteRowData* ring_append(bool fill) {
+                return ring_insert(m_screen->row_data->next(), fill);
+        }
+
+        // FIXMEchpe replace this with a method on Ring
+        inline void ring_remove(vte::grid::row_t position) {
+                m_screen->row_data->remove(position);
+        }
+
+        // FIXMEchpe replace this with a method on Ring
+        inline VteRowData* insert_rows (guint cnt) {
+                VteRowData* row;
+                do {
+                        row = ring_append(false);
+                } while(--cnt);
+                return row;
+        }
+
+        // Make sure we have enough rows and columns to hold data at the current
+        // cursor position.
+        inline VteRowData *ensure_row() {
+                VteRowData *row;
+
+                // Figure out how many rows we need to add.
+                auto const delta = m_screen->cursor.row - long(m_screen->row_data->next()) + 1;
+                if G_UNLIKELY (delta > 0) {
+                        row = insert_rows(delta);
+                        adjust_adjustments();
+                } else {
+                        // Find the row the cursor is in.
+                        row = m_screen->row_data->index_writable(m_screen->cursor.row);
+                }
+                g_assert(row != NULL);
+
+                return row;
+        }
+
 
         void set_hard_wrapped(vte::grid::row_t row);
         void set_soft_wrapped(vte::grid::row_t row);
 
-        void cleanup_fragments(long start,
+        inline void cleanup_fragments(long start,
+                                      long end) {
+                ensure_row();
+                cleanup_fragments(m_screen->cursor.row, start, end);
+        }
+        void cleanup_fragments(VteRowData* row,
+                               long rownum,
+                               long start,
                                long end);
+        void cleanup_fragments(long rownum,
+                               long start,
+                               long end) {
+                auto const row = m_screen->row_data->index_writable(rownum);
+                if (!row)
+                        return;
 
-        void cursor_down(bool explicit_sequence);
+                cleanup_fragments(row, rownum, start, end);
+        }
+
+        void scroll_text_up(scrolling_region const& scrolling_region,
+                            vte::grid::row_t amount, bool fill);
+        void scroll_text_down(scrolling_region const& scrolling_region,
+                              vte::grid::row_t amount, bool fill);
+        void scroll_text_left(scrolling_region const& scrolling_region,
+                              vte::grid::row_t amount, bool fill);
+        void scroll_text_right(scrolling_region const& scrolling_region,
+                               vte::grid::row_t amount, bool fill);
+        void cursor_down_with_scrolling(bool fill);
+        void cursor_up_with_scrolling(bool fill);
+        void cursor_right_with_scrolling(bool fill);
+        void cursor_left_with_scrolling(bool fill);
+
         void drop_scrollback();
 
         void restore_cursor(VteScreen *screen__);
         void save_cursor(VteScreen *screen__);
 
+        /* [[gnu::always_inline]] */ /* C++23 constexpr */ gunichar character_replacement(gunichar c) noexcept;
+        int character_width(gunichar c) noexcept;
+
         void insert_char(gunichar c,
-                         bool insert,
                          bool invalidate_now);
+        void insert_single_width_chars(gunichar const *p,
+                                       int len);
 
         void invalidate_row(vte::grid::row_t row);
         void invalidate_rows(vte::grid::row_t row_start,
@@ -801,12 +1021,12 @@ public:
         void process_incoming();
         void process_incoming_utf8(ProcessingContext& context,
                                    vte::base::Chunk& chunk);
-        #ifdef WITH_ICU
+        #if WITH_ICU
         void process_incoming_pcterm(ProcessingContext& context,
                                      vte::base::Chunk& chunk);
         #endif
-        bool process(bool emit_adj_changed);
-        inline bool is_processing() const { return m_active_terminals_link != nullptr; }
+        bool process();
+        inline bool is_processing() const { return m_is_processing; };
         void start_processing();
 
         gssize get_preedit_width(bool left_only);
@@ -925,8 +1145,8 @@ public:
                                 int blink_time_ms,
                                 int blink_timeout_ms) noexcept;
 
-        void draw(cairo_t *cr,
-                  cairo_region_t const* region) noexcept;
+        void draw(cairo_region_t const* region) noexcept;
+        vte::view::Rectangle cursor_rect();
         void paint_cursor();
         void paint_im_preedit_string();
         void draw_cells(vte::view::DrawingContext::TextRequest* items,
@@ -978,7 +1198,8 @@ public:
 
         void pty_channel_eof();
         bool pty_io_read(int const fd,
-                         GIOCondition const condition);
+                         GIOCondition const condition,
+                         int amount = -1);
         bool pty_io_write(int const fd,
                           GIOCondition const condition);
 
@@ -1008,7 +1229,7 @@ public:
         void reset_decoder();
 
         void feed(std::string_view const& data,
-                  bool start_processsing_ = true);
+                  bool start_processing_ = true);
         void feed_child(char const* data,
                         size_t length) { assert(data); feed_child({data, length}); }
         void feed_child(std::string_view const& str);
@@ -1020,21 +1241,23 @@ public:
                            vte::grid::column_t bcol,
                            vte::grid::row_t brow) const;
 
-        GString* get_text(vte::grid::row_t start_row,
-                          vte::grid::column_t start_col,
-                          vte::grid::row_t end_row,
-                          vte::grid::column_t end_col,
-                          bool block,
-                          bool wrap,
-                          GArray* attributes = nullptr);
+        void get_text(vte::grid::row_t start_row,
+                      vte::grid::column_t start_col,
+                      vte::grid::row_t end_row,
+                      vte::grid::column_t end_col,
+                      bool block,
+                      bool preserve_empty,
+                      GString* string,
+                      VteCharAttrList* attributes = nullptr);
 
-        GString* get_text_displayed(bool wrap,
-                                    GArray* attributes = nullptr);
+        void get_text_displayed(GString* string,
+                                VteCharAttrList* attributes = nullptr);
 
-        GString* get_text_displayed_a11y(bool wrap,
-                                         GArray* attributes = nullptr);
+        void get_text_displayed_a11y(GString* string,
+                                     VteCharAttrList* attributes = nullptr);
 
-        GString* get_selected_text(GArray* attributes = nullptr);
+        void get_selected_text(GString *string,
+                               VteCharAttrList* attributes = nullptr);
 
         template<unsigned int redbits, unsigned int greenbits, unsigned int bluebits>
         inline void rgb_from_index(guint index,
@@ -1067,7 +1290,7 @@ public:
         VteCellAttr const* char_to_cell_attr(VteCharAttributes const* attr) const;
 
         GString* attributes_to_html(GString* text_string,
-                                    GArray* attrs);
+                                    VteCharAttrList* attrs);
 
         void start_selection(vte::view::coords const& pos,
                              SelectionType type);
@@ -1080,12 +1303,25 @@ public:
         void resolve_selection();
         void selection_maybe_swap_endpoints(vte::view::coords const& pos);
         void modify_selection(vte::view::coords const& pos);
-        bool cell_is_selected_log(vte::grid::column_t lcol,
-                                  vte::grid::row_t) const;
+        bool _cell_is_selected_log(vte::grid::column_t lcol,
+                                   vte::grid::row_t) const;
         bool cell_is_selected_vis(vte::grid::column_t vcol,
                                   vte::grid::row_t) const;
 
-        void reset_default_attributes(bool reset_hyperlink);
+        inline bool cell_is_selected_log(vte::grid::column_t lcol,
+                                         vte::grid::row_t row) const {
+                // Callers need to update the ringview. However, don't assert, just
+                // return out-of-view coords. FIXME: may want to throw instead
+                if (!m_ringview.is_updated())
+                        [[unlikely]] return false;
+
+                // In normal modes, resolve_selection() made sure to generate
+                // such boundaries for m_selection_resolved.
+                if (!m_selection_block_mode)
+                        [[likely]] return m_selection_resolved.contains ({row, lcol});
+
+                return _cell_is_selected_log(lcol, row);
+        }
 
         void ensure_font();
         void update_font();
@@ -1123,15 +1359,17 @@ public:
 
         void scroll_lines(long lines);
         void scroll_pages(long pages) { scroll_lines(pages * m_row_count); }
-        void maybe_scroll_to_top();
-        void maybe_scroll_to_bottom();
+        void scroll_to_top();
+        void scroll_to_bottom();
+        void scroll_to_previous_prompt();
+        void scroll_to_next_prompt();
 
         void queue_cursor_moved();
         void queue_contents_changed();
         void queue_child_exited();
         void queue_eof();
 
-#ifdef WITH_A11Y
+#if WITH_A11Y && VTE_GTK == 3
 
         void set_accessible(VteTerminalAccessible* accessible) noexcept
         {
@@ -1174,7 +1412,14 @@ public:
         inline constexpr void emit_text_modified() const noexcept { }
         inline constexpr void emit_text_scrolled(long delta) const noexcept { }
 
-#endif /* WITH_A11Y */
+#endif /* WITH_A11Y && VTE_GTK == 3*/
+
+        bool m_no_legacy_signals{false};
+
+        void set_no_legacy_signals() noexcept
+        {
+                m_no_legacy_signals = true;
+        }
 
         void emit_pending_signals();
         void emit_increase_font_size();
@@ -1324,11 +1569,18 @@ public:
         long get_cell_width()  { ensure_font(); return m_cell_width;  }
 
         vte::color::rgb const* get_color(int entry) const;
+        vte::color::rgb const* get_color(color_palette::ColorPaletteIndex entry) const noexcept;
+        auto get_color_opt(color_palette::ColorPaletteIndex entry) const noexcept -> std::optional<vte::color::rgb>;
         void set_color(int entry,
-                       int source,
+                       color_palette::ColorSource source,
+                       vte::color::rgb const& proposed);
+        void set_color(color_palette::ColorPaletteIndex entry,
+                       color_palette::ColorSource source,
                        vte::color::rgb const& proposed);
         void reset_color(int entry,
-                         int source);
+                         color_palette::ColorSource source);
+        void reset_color(color_palette::ColorPaletteIndex entry,
+                         color_palette::ColorSource source);
 
         bool set_audible_bell(bool setting);
         bool set_text_blink_mode(TextBlinkMode setting);
@@ -1366,12 +1618,15 @@ public:
         bool set_cursor_style(CursorStyle style);
         bool set_delete_binding(EraseMode binding);
         auto delete_binding() const noexcept { return m_delete_binding; }
+        bool set_enable_a11y(bool setting);
         bool set_enable_bidi(bool setting);
         bool set_enable_shaping(bool setting);
         bool set_encoding(char const* codeset,
                           GError** error);
         bool set_font_desc(vte::Freeable<PangoFontDescription> desc);
         bool update_font_desc();
+        bool set_font_options(vte::Freeable<cairo_font_options_t> font_options);
+        cairo_font_options_t const* get_font_options() const noexcept { return m_font_options.get(); }
         bool set_font_scale(double scale);
         bool set_input_enabled(bool enabled);
         bool set_mouse_autohide(bool autohide);
@@ -1379,6 +1634,7 @@ public:
         bool set_scrollback_lines(long lines);
         bool set_fallback_scrolling(bool set);
         auto fallback_scrolling() const noexcept { return m_fallback_scrolling; }
+        bool set_scroll_on_insert(bool scroll);
         bool set_scroll_on_keystroke(bool scroll);
         bool set_scroll_on_output(bool scroll);
         bool set_images_enabled(bool enabled);
@@ -1390,7 +1646,7 @@ public:
                                   GCancellable *cancellable,
                                   GError **error);
 
-        inline void ensure_cursor_is_onscreen();
+        inline void maybe_retreat_cursor();
         inline void home_cursor();
         inline void clear_screen();
         inline void clear_current_line();
@@ -1418,46 +1674,44 @@ public:
         inline void clear_to_bol();
         inline void clear_below_current();
         inline void clear_to_eol();
-        inline void delete_character();
         inline void set_cursor_column(vte::grid::column_t col);
         inline void set_cursor_column1(vte::grid::column_t col); /* 1-based */
-        inline int get_cursor_column() const noexcept { return CLAMP(m_screen->cursor.col, 0, m_column_count - 1); }
-        inline int get_cursor_column1() const noexcept { return get_cursor_column() + 1; }
+        /* Return the xterm-like cursor column, 0-based, decremented by 1 if about to wrap.
+         * See maybe_retreat_cursor() for further details. */
+        inline int get_xterm_cursor_column() const noexcept {
+                if (m_screen->cursor.col >= m_column_count) [[unlikely]] {
+                        return m_column_count - 1;
+                } else if (m_screen->cursor.col == m_scrolling_region.right() + 1 &&
+                           m_screen->cursor_advanced_by_graphic_character) [[unlikely]] {
+                        return m_screen->cursor.col - 1;
+                } else {
+                        return m_screen->cursor.col;
+                }
+        }
         inline void set_cursor_row(vte::grid::row_t row /* relative to scrolling region */);
         inline void set_cursor_row1(vte::grid::row_t row /* relative to scrolling region */); /* 1-based */
-        inline int get_cursor_row() const noexcept { return CLAMP(m_screen->cursor.row, 0, m_row_count - 1); }
-        inline int get_cursor_row1() const noexcept { return get_cursor_row() + 1; }
+        inline int get_xterm_cursor_row() const noexcept { return m_screen->cursor.row - m_screen->insert_delta; }
         inline void set_cursor_coords(vte::grid::row_t row /* relative to scrolling region */,
                                       vte::grid::column_t column);
         inline void set_cursor_coords1(vte::grid::row_t row /* relative to scrolling region */,
                                        vte::grid::column_t column); /* 1-based */
-        inline vte::grid::row_t get_cursor_row_unclamped() const;
-        inline vte::grid::column_t get_cursor_column_unclamped() const;
-        inline void move_cursor_up(vte::grid::row_t rows);
-        inline void move_cursor_down(vte::grid::row_t rows);
         inline void erase_characters(long count,
                                      bool use_basic = false);
-        inline void insert_blank_character();
 
-        template<unsigned int redbits, unsigned int greenbits, unsigned int bluebits>
-        inline bool seq_parse_sgr_color(vte::parser::Sequence const& seq,
-                                        unsigned int& idx,
-                                        uint32_t& color) const noexcept;
-
+        inline void move_cursor_up(vte::grid::row_t rows);
+        inline void move_cursor_down(vte::grid::row_t rows);
         inline void move_cursor_backward(vte::grid::column_t columns);
         inline void move_cursor_forward(vte::grid::column_t columns);
         inline void move_cursor_tab_backward(int count = 1);
         inline void move_cursor_tab_forward(int count = 1);
+
+        inline void carriage_return();
         inline void line_feed();
+
         inline void erase_in_display(vte::parser::Sequence const& seq);
         inline void erase_in_line(vte::parser::Sequence const& seq);
-        inline void insert_lines(vte::grid::row_t param);
-        inline void delete_lines(vte::grid::row_t param);
 
-        unsigned int checksum_area(vte::grid::row_t start_row,
-                                   vte::grid::column_t start_col,
-                                   vte::grid::row_t end_row,
-                                   vte::grid::column_t end_col);
+        unsigned int checksum_area(grid_rect rect);
 
         void select_text(vte::grid::column_t start_col,
                          vte::grid::row_t start_row,
@@ -1494,46 +1748,81 @@ public:
                    ...) noexcept G_GNUC_PRINTF(5, 6);
 
         /* OSC handler helpers */
-        bool get_osc_color_index(int osc,
-                                 int value,
-                                 int& index) const noexcept;
         void set_color_index(vte::parser::Sequence const& seq,
                              vte::parser::StringTokeniser::const_iterator& token,
                              vte::parser::StringTokeniser::const_iterator const& endtoken,
-                             int number,
-                             int index,
-                             int index_fallback,
+                             std::optional<int> number,
+                             osc_colors::OSCColorIndex index,
                              int osc) noexcept;
+        auto resolve_reported_color(osc_colors::OSCColorIndex index) const noexcept -> std::optional<vte::color::rgb>;
+        void parse_termprop(vte::parser::Sequence const& seq,
+                            std::string_view const& str,
+                            bool& set,
+                            bool& query) noexcept;
+        #if VTE_DEBUG
+        void reply_termprop_query(vte::parser::Sequence const& seq,
+                                  vte::terminal::TermpropInfo const* info);
+        #endif
 
         /* OSC handlers */
         void set_color(vte::parser::Sequence const& seq,
                        vte::parser::StringTokeniser::const_iterator& token,
                        vte::parser::StringTokeniser::const_iterator const& endtoken,
+                       osc_colors::OSCValuedColorSequenceKind osc_kind,
                        int osc) noexcept;
         void set_special_color(vte::parser::Sequence const& seq,
                                vte::parser::StringTokeniser::const_iterator& token,
                                vte::parser::StringTokeniser::const_iterator const& endtoken,
-                               int index,
-                               int index_fallback,
+                               color_palette::ColorPaletteIndex index,
                                int osc) noexcept;
         void reset_color(vte::parser::Sequence const& seq,
                          vte::parser::StringTokeniser::const_iterator& token,
                          vte::parser::StringTokeniser::const_iterator const& endtoken,
-                         int osc) noexcept;
-        void set_current_directory_uri(vte::parser::Sequence const& seq,
-                                       vte::parser::StringTokeniser::const_iterator& token,
-                                       vte::parser::StringTokeniser::const_iterator const& endtoken) noexcept;
-        void set_current_file_uri(vte::parser::Sequence const& seq,
-                                  vte::parser::StringTokeniser::const_iterator& token,
-                                  vte::parser::StringTokeniser::const_iterator const& endtoken) noexcept;
+                         osc_colors::OSCValuedColorSequenceKind osc_kind) noexcept;
+        void set_termprop_uri(vte::parser::Sequence const& seq,
+                              vte::parser::StringTokeniser::const_iterator& token,
+                              vte::parser::StringTokeniser::const_iterator const& endtoken,
+                              int termprop_id,
+                              PendingChanges legacy_pending_change) noexcept;
         void set_current_hyperlink(vte::parser::Sequence const& seq,
                                    vte::parser::StringTokeniser::const_iterator& token,
                                    vte::parser::StringTokeniser::const_iterator const& endtoken) noexcept;
+        void set_current_shell_integration_mode(vte::parser::Sequence const& seq,
+                                                vte::parser::StringTokeniser::const_iterator& token,
+                                                vte::parser::StringTokeniser::const_iterator const& endtoken) noexcept;
+        void vte_termprop(vte::parser::Sequence const& seq,
+                          vte::parser::StringTokeniser::const_iterator& token,
+                          vte::parser::StringTokeniser::const_iterator const& endtoken) noexcept;
 
+        void urxvt_extension(vte::parser::Sequence const& seq,
+                             vte::parser::StringTokeniser::const_iterator& token,
+                             vte::parser::StringTokeniser::const_iterator const& endtoken) noexcept;
+        void conemu_extension(vte::parser::Sequence const& seq,
+                              vte::parser::StringTokeniser::const_iterator& token,
+                              vte::parser::StringTokeniser::const_iterator const& endtoken) noexcept;
+
+        // helpers
+
+        grid_rect collect_rect(vte::parser::Sequence const&,
+                               unsigned&) noexcept;
+
+        void copy_rect(grid_rect srect,
+                       grid_point dest) noexcept;
+
+        void fill_rect(grid_rect rect,
+                       char32_t c,
+                       VteCellAttr attr) noexcept;
+
+        template<class P>
+        void rewrite_rect(grid_rect rect,
+                          bool as_rectangle,
+                          bool only_attrs,
+                          P&& pen) noexcept;
+
+        // ringview
         void ringview_update();
 
         /* Sequence handlers */
-        bool m_line_wrapped; // signals line wrapped from character insertion
         // Note: inlining the handlers seems to worsen the performance, so we don't do that
 #define _VTE_CMD_HANDLER(cmd) \
 	/* inline */ void cmd (vte::parser::Sequence const& seq);
@@ -1565,5 +1854,6 @@ _vte_double_equal(double a,
 }
 
 #define VTE_TEST_FLAG_DECRQCRA (G_GUINT64_CONSTANT(1) << 0)
+#define VTE_TEST_FLAG_TERMPROP (G_GUINT64_CONSTANT(1) << 1)
 
 extern uint64_t g_test_flags;

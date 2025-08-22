@@ -43,6 +43,8 @@ public:
         static Regex* compile(Purpose purpose,
                               std::string_view const& pattern,
                               uint32_t flags,
+                              uint32_t extra_flags,
+                              size_t* error_offset,
                               GError** error);
 
 private:

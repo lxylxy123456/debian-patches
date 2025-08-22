@@ -20,6 +20,7 @@
 
 #include "fonts-pangocairo.hh"
 
+#include "cairo-glue.hh"
 #include "debug.h"
 #include "vtedefines.hh"
 
@@ -48,6 +49,8 @@ _vte_double_equal(double a,
 
 namespace vte {
 namespace view {
+
+static GHashTable* s_font_info_for_context{nullptr};
 
 FontInfo::UnistrInfo*
 FontInfo::find_unistr_info(vteunistr c)
@@ -149,18 +152,29 @@ FontInfo::cache_ascii()
 		uinfo->width = PANGO_PIXELS_CEIL (geometry->width);
 		uinfo->has_unknown_chars = false;
 
+#if VTE_GTK == 3
 		uinfo->set_coverage(UnistrInfo::Coverage::USE_CAIRO_GLYPH);
 
 		ufi->using_cairo_glyph.scaled_font = cairo_scaled_font_reference (scaled_font);
 		ufi->using_cairo_glyph.glyph_index = glyph;
+#elif VTE_GTK == 4
+		uinfo->set_coverage(UnistrInfo::Coverage::USE_PANGO_GLYPH_STRING);
 
-#ifdef VTE_DEBUG
+		ufi->using_pango_glyph_string.font = (PangoFont *)g_object_ref (pango_font);
+		ufi->using_pango_glyph_string.glyph_string = pango_glyph_string_new ();
+		pango_glyph_string_set_size (ufi->using_pango_glyph_string.glyph_string, 1);
+		ufi->using_pango_glyph_string.glyph_string->num_glyphs = 1;
+		ufi->using_pango_glyph_string.glyph_string->glyphs[0] = glyph_string->glyphs[iter.start_glyph];
+		ufi->using_pango_glyph_string.glyph_string->log_clusters[0] = 0;
+#endif
+
+#if VTE_DEBUG
 		m_coverage_count[0]++;
 		m_coverage_count[(unsigned)uinfo->coverage()]++;
 #endif
 	}
 
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
 	_vte_debug_print (VTE_DEBUG_PANGOCAIRO,
 			  "vtepangocairo: %p cached %d ASCII letters\n",
 			  (void*)this, m_coverage_count[0]);
@@ -275,7 +289,7 @@ FontInfo::~FontInfo()
 	g_hash_table_remove(s_font_info_for_context,
                             pango_layout_get_context(m_layout.get()));
 
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
 	_vte_debug_print (VTE_DEBUG_PANGOCAIRO,
 			  "vtepangocairo: %p freeing font_info.  coverages %d = %d + %d + %d\n",
 			  (void*)this,
@@ -345,6 +359,7 @@ FontInfo*
 FontInfo::create_for_context(vte::glib::RefPtr<PangoContext> context,
                              PangoFontDescription const* desc,
                              PangoLanguage* language,
+                             cairo_font_options_t const* font_options,
                              guint fontconfig_timestamp)
 {
 	if (!PANGO_IS_CAIRO_FONT_MAP(pango_context_get_font_map(context.get()))) {
@@ -365,15 +380,51 @@ FontInfo::create_for_context(vte::glib::RefPtr<PangoContext> context,
             language != pango_context_get_language(context.get()))
                 pango_context_set_language(context.get(), language);
 
-        /* Make sure our contexts have a font_options set.  We use
-          * this invariant in our context hash and equal functions.
-          */
-        if (!pango_cairo_context_get_font_options(context.get())) {
-                cairo_font_options_t *font_options;
+        {
+                // Make sure our contexts have a font_options set.  We use
+                // this invariant in our context hash and equal functions.
+                auto builtin_font_options = vte::take_freeable(cairo_font_options_create());
 
-                font_options = cairo_font_options_create ();
-                pango_cairo_context_set_font_options(context.get(), font_options);
-                cairo_font_options_destroy (font_options);
+#if VTE_GTK == 4
+                // On gtk4, we need to ensure Pango and cairo are configured to quantize
+                // and hint font metrics.  Terminal cells in vte have integer pixel sizes.
+                // If Pango is configured to do sub-pixel glyph advances, a small fractional
+                // part might get rounded up to a whole pixel; so the character spacing will
+                // appear too wide. Setting the cairo hint metrics option ensures that there
+                // are integer numbers of pixels both above and below the baseline.
+                // See issue#2573.
+                cairo_font_options_set_hint_metrics(builtin_font_options.get(),
+                                                    CAIRO_HINT_METRICS_ON);
+#endif /* VTE_GTK == 4 */
+
+                // Allow using the API to override the built-in hint metrics setting.
+                if (!font_options)
+                        font_options = builtin_font_options.get();
+
+                if (auto const ctx_font_options = pango_cairo_context_get_font_options(context.get())) {
+                        auto const merged_font_options =
+                                vte::take_freeable(cairo_font_options_copy(ctx_font_options));
+                        cairo_font_options_merge(merged_font_options.get(),
+                                                 font_options);
+                        pango_cairo_context_set_font_options(context.get(),
+                                                             merged_font_options.get());
+                } else {
+                        pango_cairo_context_set_font_options(context.get(), font_options);
+                }
+
+#if VTE_GTK == 4
+                // If hinting font metrics, also make sure to round glyph positions
+                // to integers.  See issue#2573.
+                if (auto const ctx_font_options = pango_cairo_context_get_font_options(context.get());
+                    ctx_font_options &&
+                    cairo_version() >= CAIRO_VERSION_ENCODE(1, 17, 4)) {
+                        auto const hint_metrics = cairo_font_options_get_hint_metrics(ctx_font_options);
+                        pango_context_set_round_glyph_positions(context.get(),
+                                                                hint_metrics == CAIRO_HINT_METRICS_ON);
+                } else {
+                        pango_context_set_round_glyph_positions(context.get(), false);
+                }
+#endif /* VTE_GTK == 4 */
         }
 
 	if (G_UNLIKELY(s_font_info_for_context == nullptr))
@@ -396,30 +447,32 @@ FontInfo::create_for_context(vte::glib::RefPtr<PangoContext> context,
 FontInfo*
 FontInfo::create_for_screen(GdkScreen* screen,
                             PangoFontDescription const* desc,
-                            PangoLanguage* language)
+                            PangoLanguage* language,
+                            cairo_font_options_t const* font_options)
 {
 	auto settings = gtk_settings_get_for_screen(screen);
 	auto fontconfig_timestamp = guint{};
 	g_object_get (settings, "gtk-fontconfig-timestamp", &fontconfig_timestamp, nullptr);
 	return create_for_context(vte::glib::take_ref(gdk_pango_context_get_for_screen(screen)),
-                                  desc, language, fontconfig_timestamp);
+                                  desc, language, font_options, fontconfig_timestamp);
 }
 #endif /* VTE_GTK */
 
 FontInfo*
 FontInfo::create_for_widget(GtkWidget* widget,
-                            PangoFontDescription const* desc)
+                            PangoFontDescription const* desc,
+                            cairo_font_options_t const* font_options)
 {
 #if VTE_GTK == 3
 	auto screen = gtk_widget_get_screen(widget);
-	return create_for_screen(screen, desc, nullptr);
+	return create_for_screen(screen, desc, nullptr, font_options);
 #elif VTE_GTK == 4
         auto display = gtk_widget_get_display(widget);
         auto settings = gtk_settings_get_for_display(display);
         auto fontconfig_timestamp = guint{};
         g_object_get (settings, "gtk-fontconfig-timestamp", &fontconfig_timestamp, nullptr);
         return create_for_context(vte::glib::take_ref(gtk_widget_create_pango_context(widget)),
-                                  desc, nullptr, fontconfig_timestamp);
+                                  desc, nullptr, font_options, fontconfig_timestamp);
         // FIXMEgtk4: this uses a per-widget context, while the gtk3 code uses a per-screen
         // one. That means there may be a lot less sharing and a lot more FontInfo's around?
 #endif
@@ -437,7 +490,7 @@ FontInfo::get_unistr_info(vteunistr c)
 
 	auto ufi = &uinfo->m_ufi;
 
-	g_string_set_size(m_string, 0);
+	g_string_truncate(m_string, 0);
 	_vte_unistr_append_to_string(c, m_string);
 	pango_layout_set_text(m_layout.get(), m_string->str, m_string->len);
 	pango_layout_get_extents(m_layout.get(), NULL, &logical);
@@ -447,6 +500,8 @@ FontInfo::get_unistr_info(vteunistr c)
 	line = pango_layout_get_line_readonly(m_layout.get(), 0);
 
 	uinfo->has_unknown_chars = pango_layout_get_unknown_glyphs_count(m_layout.get()) != 0;
+
+#if VTE_GTK == 3
 	/* we use PangoLayoutRun rendering unless there is exactly one run in the line. */
 	if (G_UNLIKELY (!line || !line->runs || line->runs->next))
 	{
@@ -497,10 +552,22 @@ FontInfo::get_unistr_info(vteunistr c)
 			ufi->using_pango_glyph_string.glyph_string = pango_glyph_string_copy (glyph_string);
 		}
 	}
+#elif VTE_GTK == 4
+        if (line != nullptr && line->runs != nullptr)
+        {
+                PangoGlyphItem *glyph_item = (PangoGlyphItem *)line->runs->data;
+                PangoGlyphString *glyph_string = glyph_item->glyphs;
+
+                uinfo->set_coverage(UnistrInfo::Coverage::USE_PANGO_GLYPH_STRING);
+
+		ufi->using_pango_glyph_string.font = glyph_item->item->analysis.font ? g_object_ref (glyph_item->item->analysis.font) : nullptr;
+                ufi->using_pango_glyph_string.glyph_string = pango_glyph_string_copy (glyph_string);
+        }
+#endif
 
         // Don't reset m_layout here; it'll get reset anyway when we next use it.
 
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
 	m_coverage_count[0]++;
 	m_coverage_count[uinfo->m_coverage]++;
 #endif

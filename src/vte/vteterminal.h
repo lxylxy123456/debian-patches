@@ -21,8 +21,11 @@
 #error "Only <vte/vte.h> can be included directly."
 #endif
 
+#include <stdint.h>
+
 #include <glib.h>
 #include <gio/gio.h>
+#include <cairo.h>
 #include <pango/pango.h>
 #include <gtk/gtk.h>
 
@@ -30,8 +33,13 @@
 #include "vtemacros.h"
 #include "vtepty.h"
 #include "vteregex.h"
+#include "vteuuid.h"
 
 G_BEGIN_DECLS
+
+#define VTE_TYPE_EVENT_CONTEXT (vte_event_context_get_type())
+
+typedef struct _VteEventContext VteEventContext;
 
 #define VTE_TYPE_TERMINAL            (vte_terminal_get_type())
 #define VTE_TERMINAL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), VTE_TYPE_TERMINAL, VteTerminal))
@@ -114,23 +122,29 @@ struct _VteTerminalClass {
         gpointer _extra_padding[3];
 #endif /* _VTE_GTK == 3 */
 
-        /* Add new vfuncs here, and subtract from the padding below. */
+        /*< protected >*/
+        void (*setup_context_menu)(VteTerminal* terminal,
+                                   VteEventContext const* context);
+
+        gboolean (* termprops_changed)(VteTerminal* terminal,
+                                       int const* props,
+                                       int n_props);
+
+        void (* termprop_changed)(VteTerminal* terminal,
+                                  char const* prop);
+
+        /* Add new vfuncs just above, and subtract from the padding below. */
 
         /* Padding for future expansion. */
 #if _VTE_GTK == 3
-        gpointer _padding[13];
+        gpointer _padding[10];
 #elif _VTE_GTK == 4
-        gpointer _padding[16];
+        gpointer _padding[13];
 #endif /* _VTE_GTK */
 
 // FIXMEgtk4 use class private data instead
         VteTerminalClassPrivate *priv;
 };
-
-typedef gboolean (*VteSelectionFunc)(VteTerminal *terminal,
-                                     glong column,
-                                     glong row,
-                                     gpointer data) _VTE_GNUC_NONNULL(1);
 
 /* The widget's type. */
 _VTE_PUBLIC
@@ -237,6 +251,12 @@ _VTE_PUBLIC
 gdouble vte_terminal_get_font_scale(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 
 _VTE_PUBLIC
+void vte_terminal_set_font_options(VteTerminal *terminal,
+                                   cairo_font_options_t const* font_options) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+_VTE_PUBLIC
+cairo_font_options_t const* vte_terminal_get_font_options(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
 void vte_terminal_set_cell_width_scale(VteTerminal *terminal,
                                        double scale) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 _VTE_PUBLIC
@@ -263,13 +283,17 @@ _VTE_PUBLIC
 void vte_terminal_set_scroll_on_output(VteTerminal *terminal,
                                        gboolean scroll) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 _VTE_PUBLIC
+void vte_terminal_set_scroll_on_insert(VteTerminal *terminal,
+                                       gboolean scroll) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+_VTE_PUBLIC
+gboolean vte_terminal_get_scroll_on_insert(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+_VTE_PUBLIC
 gboolean vte_terminal_get_scroll_on_output(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 _VTE_PUBLIC
 void vte_terminal_set_scroll_on_keystroke(VteTerminal *terminal,
 					  gboolean scroll) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 _VTE_PUBLIC
 gboolean vte_terminal_get_scroll_on_keystroke(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
-
 _VTE_PUBLIC
 void vte_terminal_set_enable_fallback_scrolling(VteTerminal *terminal,
                                                 gboolean enable) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
@@ -360,7 +384,12 @@ gboolean vte_terminal_get_has_selection(VteTerminal *terminal) _VTE_CXX_NOEXCEPT
 
 _VTE_PUBLIC
 char* vte_terminal_get_text_selected(VteTerminal* terminal,
-                                     VteFormat format) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+                                     VteFormat format) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1) G_GNUC_MALLOC;
+
+_VTE_PUBLIC
+char* vte_terminal_get_text_selected_full(VteTerminal* terminal,
+                                          VteFormat format,
+                                          gsize* length) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1) G_GNUC_MALLOC;
 
 /* Set what happens when the user strikes backspace or delete. */
 _VTE_PUBLIC
@@ -369,6 +398,13 @@ void vte_terminal_set_backspace_binding(VteTerminal *terminal,
 _VTE_PUBLIC
 void vte_terminal_set_delete_binding(VteTerminal *terminal,
 				     VteEraseBinding binding) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+/* Accessibility */
+_VTE_PUBLIC
+void vte_terminal_set_enable_a11y(VteTerminal *terminal,
+                                  gboolean enable_a11y) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+_VTE_PUBLIC
+gboolean vte_terminal_get_enable_a11y(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 
 /* BiDi and shaping */
 _VTE_PUBLIC
@@ -396,24 +432,19 @@ void vte_terminal_reset(VteTerminal *terminal,
                         gboolean clear_tabstops,
 			gboolean clear_history) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 
-/* Read the contents of the terminal, using a callback function to determine
- * if a particular location on the screen (0-based) is interesting enough to
- * include.  Each byte in the returned string will have a corresponding
- * VteCharAttributes structure in the passed GArray, if the array was not %NULL.
- * Note that it will have one entry per byte, not per character, so indexes
- * should match up exactly. */
 _VTE_PUBLIC
-char *vte_terminal_get_text(VteTerminal *terminal,
-			    VteSelectionFunc is_selected,
-			    gpointer user_data,
-			    GArray *attributes) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1) G_GNUC_MALLOC;
+char* vte_terminal_get_text_format(VteTerminal* terminal,
+                                   VteFormat format) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1) G_GNUC_MALLOC;
+
 _VTE_PUBLIC
-char *vte_terminal_get_text_range(VteTerminal *terminal,
-				  glong start_row, glong start_col,
-				  glong end_row, glong end_col,
-				  VteSelectionFunc is_selected,
-				  gpointer user_data,
-				  GArray *attributes) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1) G_GNUC_MALLOC;
+char* vte_terminal_get_text_range_format(VteTerminal* terminal,
+                                         VteFormat format,
+                                         long start_row,
+                                         long start_col,
+                                         long end_row,
+                                         long end_col,
+                                         gsize* length) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1) G_GNUC_MALLOC;
+
 _VTE_PUBLIC
 void vte_terminal_get_cursor_position(VteTerminal *terminal,
 				      glong *column,
@@ -543,12 +574,6 @@ _VTE_PUBLIC
 glong vte_terminal_get_row_count(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 _VTE_PUBLIC
 glong vte_terminal_get_column_count(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
-_VTE_PUBLIC
-const char *vte_terminal_get_window_title(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
-_VTE_PUBLIC
-const char *vte_terminal_get_current_directory_uri(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
-_VTE_PUBLIC
-const char *vte_terminal_get_current_file_uri(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 
 /* misc */
 _VTE_PUBLIC
@@ -565,6 +590,9 @@ void vte_terminal_set_clear_background(VteTerminal* terminal,
 _VTE_PUBLIC
 void vte_terminal_get_color_background_for_draw(VteTerminal* terminal,
                                                 GdkRGBA* color) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+void vte_terminal_set_suppress_legacy_signals(VteTerminal* terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 
 /* Writing contents out */
 _VTE_PUBLIC
@@ -583,6 +611,224 @@ void vte_terminal_set_enable_sixel(VteTerminal *terminal,
 
 _VTE_PUBLIC
 gboolean vte_terminal_get_enable_sixel(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+void vte_terminal_set_xalign(VteTerminal* terminal,
+                             VteAlign align) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+VteAlign vte_terminal_get_xalign(VteTerminal* terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+void vte_terminal_set_yalign(VteTerminal* terminal,
+                             VteAlign align) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+VteAlign vte_terminal_get_yalign(VteTerminal* terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+void vte_terminal_set_xfill(VteTerminal* terminal,
+                            gboolean fill) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_xfill(VteTerminal* terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+void vte_terminal_set_yfill(VteTerminal* terminal,
+                            gboolean fill) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_yfill(VteTerminal* terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+void vte_terminal_set_enable_legacy_osc777(VteTerminal* terminal,
+                                           gboolean enable) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_enable_legacy_osc777(VteTerminal* terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+void vte_terminal_set_context_menu_model(VteTerminal* terminal,
+                                         GMenuModel* model) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+GMenuModel* vte_terminal_get_context_menu_model(VteTerminal* terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+void vte_terminal_set_context_menu(VteTerminal* terminal,
+                                   GtkWidget* menu) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+GtkWidget* vte_terminal_get_context_menu(VteTerminal* terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+GType vte_event_context_get_type(void);
+
+#if _VTE_GTK == 3
+
+_VTE_PUBLIC
+GdkEvent* vte_event_context_get_event(VteEventContext const* context) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+#elif _VTE_GTK == 4
+
+_VTE_PUBLIC
+gboolean vte_event_context_get_coordinates(VteEventContext const* context,
+                                           double* x,
+                                           double* y) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+#endif /* VTE_GTK */
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_bool(VteTerminal* terminal,
+                                        char const* prop,
+                                        gboolean* valuep) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_bool_by_id(VteTerminal* terminal,
+                                              int prop,
+                                              gboolean* valuep) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_int(VteTerminal* terminal,
+                                       char const* prop,
+                                       int64_t* valuep) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_int_by_id(VteTerminal* terminal,
+                                             int prop,
+                                             int64_t* valuep) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_uint(VteTerminal* terminal,
+                                        char const* prop,
+                                        uint64_t* valuep) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_uint_by_id(VteTerminal* terminal,
+                                              int prop,
+                                              uint64_t* valuep) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_double(VteTerminal* terminal,
+                                          char const* prop,
+                                          double* valuep) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_double_by_id(VteTerminal* terminal,
+                                                int prop,
+                                                double* valuep) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_rgba(VteTerminal* terminal,
+                                        char const* prop,
+                                        GdkRGBA* color) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_rgba_by_id(VteTerminal* terminal,
+                                              int prop,
+                                              GdkRGBA* color) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+char const* vte_terminal_get_termprop_string(VteTerminal* terminal,
+                                             char const* prop,
+                                             size_t* size) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+char const* vte_terminal_get_termprop_string_by_id(VteTerminal* terminal,
+                                                   int prop,
+                                                   size_t* size) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+char* vte_terminal_dup_termprop_string(VteTerminal* terminal,
+                                       char const* prop,
+                                       size_t* size) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+char* vte_terminal_dup_termprop_string_by_id(VteTerminal* terminal,
+                                             int prop,
+                                             size_t* size) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+uint8_t const* vte_terminal_get_termprop_data(VteTerminal* terminal,
+                                              char const* prop,
+                                              size_t* size) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2, 3);
+
+_VTE_PUBLIC
+uint8_t const* vte_terminal_get_termprop_data_by_id(VteTerminal* terminal,
+                                                    int prop,
+                                                    size_t* size) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 3);
+
+_VTE_PUBLIC
+GBytes* vte_terminal_ref_termprop_data_bytes(VteTerminal* terminal,
+                                             char const* prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+GBytes* vte_terminal_ref_termprop_data_bytes_by_id(VteTerminal* terminal,
+                                                   int prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+VteUuid* vte_terminal_dup_termprop_uuid(VteTerminal* terminal,
+                                        char const* prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+VteUuid* vte_terminal_dup_termprop_uuid_by_id(VteTerminal* terminal,
+                                              int prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+GUri* vte_terminal_ref_termprop_uri(VteTerminal* terminal,
+                                    char const* prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+GUri* vte_terminal_ref_termprop_uri_by_id(VteTerminal* terminal,
+                                          int prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_PUBLIC
+cairo_surface_t* vte_terminal_ref_termprop_image_surface(VteTerminal* terminal,
+                                                         char const* prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+cairo_surface_t* vte_terminal_ref_termprop_image_surface_by_id(VteTerminal* terminal,
+                                                               int prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+#if _VTE_GTK == 3
+
+_VTE_PUBLIC
+GdkPixbuf* vte_terminal_ref_termprop_image_pixbuf(VteTerminal* terminal,
+                                                  char const* prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+GdkPixbuf* vte_terminal_ref_termprop_image_pixbuf_by_id(VteTerminal* terminal,
+                                                        int prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+#elif _VTE_GTK == 4
+
+_VTE_PUBLIC
+GdkTexture* vte_terminal_ref_termprop_image_texture(VteTerminal* terminal,
+                                                    char const* prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+GdkTexture* vte_terminal_ref_termprop_image_texture_by_id(VteTerminal* terminal,
+                                                          int prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+#endif /* _VTE_GTK */
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_value(VteTerminal* terminal,
+                                         char const* prop,
+                                         GValue* gvalue) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2, 3);
+
+_VTE_PUBLIC
+gboolean vte_terminal_get_termprop_value_by_id(VteTerminal* terminal,
+                                               int prop,
+                                               GValue* gvalue) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 3);
+
+_VTE_PUBLIC
+GVariant* vte_terminal_ref_termprop_variant(VteTerminal* terminal,
+                                            char const* prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1, 2);
+
+_VTE_PUBLIC
+GVariant* vte_terminal_ref_termprop_variant_by_id(VteTerminal* terminal,
+                                                  int prop) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(VteTerminal, g_object_unref)
 

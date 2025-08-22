@@ -40,7 +40,7 @@ using namespace vte::base;
  * VteRing: A buffer ring
  */
 
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
 void
 Ring::validate() const
 {
@@ -49,11 +49,11 @@ Ring::validate() const
 			m_start, m_end - m_start, m_end,
 			m_max, m_end - m_writable);
 
-	g_assert_cmpuint(m_start, <=, m_writable);
-	g_assert_cmpuint(m_writable, <=, m_end);
+	vte_assert_cmpuint(m_start, <=, m_writable);
+	vte_assert_cmpuint(m_writable, <=, m_end);
 
-	g_assert_cmpuint(m_end - m_start, <=, m_max);
-	g_assert_cmpuint(m_end - m_writable, <=, m_mask);
+	vte_assert_cmpuint(m_end - m_start, <=, m_max);
+	vte_assert_cmpuint(m_end - m_writable, <=, m_mask);
 }
 #else
 #define validate(...) do { } while(0)
@@ -239,7 +239,7 @@ Ring::get_hyperlink_idx_no_update_current(char const* hyperlink)
         }
 
         /* All allocated slots are in use. Gotta allocate a new one */
-        g_assert_cmpuint(m_hyperlink_highest_used_idx + 1, ==, m_hyperlinks->len);
+        vte_assert_cmpuint(m_hyperlink_highest_used_idx + 1, ==, m_hyperlinks->len);
 
         /* VTE_HYPERLINK_COUNT_MAX should be big enough for this not to happen under
            normal circumstances. Anyway, it's cheap to protect against extreme ones. */
@@ -257,7 +257,7 @@ Ring::get_hyperlink_idx_no_update_current(char const* hyperlink)
         str = g_string_new_len (hyperlink, len);
         g_ptr_array_add(m_hyperlinks, str);
 
-        g_assert_cmpuint(m_hyperlink_highest_used_idx + 1, ==, m_hyperlinks->len);
+        vte_assert_cmpuint(m_hyperlink_highest_used_idx + 1, ==, m_hyperlinks->len);
 
         return idx;
 }
@@ -301,9 +301,10 @@ Ring::freeze_row(row_t position,
 	memset(&record, 0, sizeof(record));
 	record.text_start_offset = _vte_stream_head(m_text_stream);
 	record.attr_start_offset = _vte_stream_head(m_attr_stream);
+        record.width = row->len;
 	record.is_ascii = 1;
 
-	g_string_set_size (buffer, 0);
+	g_string_truncate (buffer, 0);
 	for (i = 0, cell = row->cells; i < row->len; i++, cell++) {
 		VteCellAttr attr;
 		int num_chars;
@@ -448,7 +449,7 @@ Ring::thaw_row(row_t position,
 				if (!_vte_stream_read (m_attr_stream, record.attr_start_offset, (char *) &attr_change, sizeof (attr_change)))
 					return;
 				record.attr_start_offset += sizeof (attr_change);
-                                g_assert_cmpuint (attr_change.attr.hyperlink_length, <=, VTE_HYPERLINK_TOTAL_LENGTH_MAX);
+                                vte_assert_cmpuint (attr_change.attr.hyperlink_length, <=, VTE_HYPERLINK_TOTAL_LENGTH_MAX);
                                 if (attr_change.attr.hyperlink_length && !_vte_stream_read (m_attr_stream, record.attr_start_offset, hyperlink_readbuf, attr_change.attr.hyperlink_length))
                                         return;
                                 hyperlink_readbuf[attr_change.attr.hyperlink_length] = '\0';
@@ -528,7 +529,7 @@ Ring::thaw_row(row_t position,
 			/* Check the previous attr record. If its text ends where truncating, this attr record also needs to be removed. */
                         guint16 hyperlink_length;
                         if (_vte_stream_read (m_attr_stream, attr_stream_truncate_at - 2, (char *) &hyperlink_length, 2)) {
-                                g_assert_cmpuint (hyperlink_length, <=, VTE_HYPERLINK_TOTAL_LENGTH_MAX);
+                                vte_assert_cmpuint (hyperlink_length, <=, VTE_HYPERLINK_TOTAL_LENGTH_MAX);
                                 if (_vte_stream_read (m_attr_stream, attr_stream_truncate_at - 2 - hyperlink_length - sizeof (attr_change), (char *) &attr_change, sizeof (attr_change))) {
                                         if (records[0].text_start_offset == attr_change.text_end_offset) {
                                                 _vte_debug_print (VTE_DEBUG_RING, "... at attribute change\n");
@@ -546,7 +547,7 @@ Ring::thaw_row(row_t position,
                                         m_last_attr.hyperlink_idx = get_hyperlink_idx(hyperlink_readbuf);
                                 }
                                 if (_vte_stream_read (m_attr_stream, attr_stream_truncate_at - 2, (char *) &hyperlink_length, 2)) {
-                                        g_assert_cmpuint (hyperlink_length, <=, VTE_HYPERLINK_TOTAL_LENGTH_MAX);
+                                        vte_assert_cmpuint (hyperlink_length, <=, VTE_HYPERLINK_TOTAL_LENGTH_MAX);
                                         if (_vte_stream_read (m_attr_stream, attr_stream_truncate_at - 2 - hyperlink_length - sizeof (attr_change), (char *) &attr_change, sizeof (attr_change))) {
                                                 m_last_attr_text_start_offset = attr_change.text_end_offset;
                                         } else {
@@ -629,6 +630,51 @@ Ring::is_soft_wrapped(row_t position)
         return record.soft_wrapped;
 }
 
+/* Returns whether the given visual row contains the beginning of a prompt, i.e.
+ * contains a prompt character which is immediately preceded by either a hard newline
+ * or a non-prompt character (possibly at the end of previous, soft wrapped row).
+ *
+ * This way we catch soft wrapped multiline prompts at their first line only,
+ * and catch prompts that do not begin at the beginning of a row.
+ *
+ * FIXME extend support for deliberately multiline (hard wrapped) prompts:
+ * https://gitlab.gnome.org/GNOME/vte/-/issues/2681#note_1904004
+ *
+ * FIXME this is very slow, it unnecessarily reads text_stream
+ * in which we're not interested at all. Implement a faster algorithm. */
+bool
+Ring::contains_prompt_beginning(row_t position)
+{
+        const VteRowData *row = index(position);
+        if (row == NULL || row->len == 0) {
+                return false;
+        }
+
+        /* First check the places where the previous character is also readily available. */
+        int col = 0;
+        while (col < row->len && row->cells[col].attr.shellintegration() == ShellIntegrationMode::ePROMPT) {
+                col++;
+        }
+        while (col < row->len && row->cells[col].attr.shellintegration() != ShellIntegrationMode::ePROMPT) {
+                col++;
+        }
+        if (col < row->len) {
+                return true;
+        }
+
+        /* Finally check the first character where we might need to look at the previous row. */
+        if (row->cells[0].attr.shellintegration() == ShellIntegrationMode::ePROMPT) {
+                row = index(position - 1);
+                if (row == NULL ||
+                    !row->attr.soft_wrapped ||
+                    (row->len >= 1 /* this is guaranteed beucase soft_wrapped */ &&
+                     row->cells[row->len - 1].attr.shellintegration() != ShellIntegrationMode::ePROMPT)) {
+                        return true;
+                }
+        }
+        return false;
+}
+
 /*
  * Returns the hyperlink idx at the given position.
  *
@@ -688,13 +734,6 @@ Ring::get_hyperlink_at_position(row_t position,
         return idx;
 }
 
-VteRowData*
-Ring::index_writable(row_t position)
-{
-	ensure_writable(position);
-	return get_writable_index(position);
-}
-
 void
 Ring::freeze_one_row()
 {
@@ -714,7 +753,7 @@ Ring::thaw_one_row()
 {
 	VteRowData* row;
 
-	g_assert_cmpuint(m_start, <, m_writable);
+	vte_assert_cmpuint(m_start, <, m_writable);
 
 	ensure_writable_room();
 
@@ -734,12 +773,15 @@ Ring::discard_one_row()
 	if (G_UNLIKELY(m_start == m_writable)) {
 		reset_streams(m_writable);
 	} else if (m_start < m_writable) {
-		RowRecord record;
-		_vte_stream_advance_tail(m_row_stream, m_start * sizeof (record));
-		if (G_LIKELY(read_row_record(&record, m_start))) {
-			_vte_stream_advance_tail(m_text_stream, record.text_start_offset);
-			_vte_stream_advance_tail(m_attr_stream, record.attr_start_offset);
-		}
+                /* Advance the tail sometimes. Not always, in order to slightly improve performance. */
+                if (m_start % 256 == 0) {
+                        RowRecord record;
+                        _vte_stream_advance_tail(m_row_stream, m_start * sizeof (record));
+                        if (G_LIKELY(read_row_record(&record, m_start))) {
+                                _vte_stream_advance_tail(m_text_stream, record.text_start_offset);
+                                _vte_stream_advance_tail(m_attr_stream, record.attr_start_offset);
+                        }
+                }
 	} else {
 		m_writable = m_start;
 	}
@@ -797,19 +839,6 @@ Ring::ensure_writable_room()
 		new_array[i & new_mask] = old_array[i & old_mask];
 
 	g_free (old_array);
-}
-
-void
-Ring::ensure_writable(row_t position)
-{
-	if (G_LIKELY(position >= m_writable))
-		return;
-
-	_vte_debug_print(VTE_DEBUG_RING, "Ensure writable %lu.\n", position);
-
-        //FIXMEchpe surely this can be optimised
-	while (position < m_writable)
-		thaw_one_row();
 }
 
 /**
@@ -883,8 +912,8 @@ Ring::insert(row_t position, guint8 bidi_flags)
 	ensure_writable(position);
 	ensure_writable_room();
 
-	g_assert_cmpuint (position, >=, m_writable);
-	g_assert_cmpuint (position, <=, m_end);
+	vte_assert_cmpuint (position, >=, m_writable);
+	vte_assert_cmpuint (position, <=, m_end);
 
         //FIXMEchpe WTF use better data structures!
 	tmp = *get_writable_index(m_end);
@@ -1011,7 +1040,7 @@ Ring::frozen_row_column_to_text_offset(row_t position,
 		/* go on */
 	}
 
-	g_assert_cmpuint(position, <, m_writable);
+	vte_assert_cmpuint(position, <, m_writable);
 	if (!read_row_record(&records[0], position))
 		return false;
 	if ((position + 1) * sizeof (records[0]) < _vte_stream_head(m_row_stream)) {
@@ -1086,7 +1115,7 @@ Ring::frozen_row_text_offset_to_column(row_t position,
 		return true;
 	}
 
-	g_assert_cmpuint(position, <, m_writable);
+	vte_assert_cmpuint(position, <, m_writable);
 	if (!read_row_record(&records[0], position))
 		return false;
 	if ((position + 1) * sizeof (records[0]) < _vte_stream_head(m_row_stream)) {
@@ -1106,8 +1135,8 @@ Ring::frozen_row_text_offset_to_column(row_t position,
          * if the ring ends in a soft wrapped line; see bug 181), the position we're about to
          * locate can be anywhere in the string, including just after its last character,
          * but not beyond that. */
-        g_assert_cmpuint(offset->text_offset, >=, records[0].text_start_offset);
-        g_assert_cmpuint(offset->text_offset, <=, records[0].text_start_offset + buffer->len);
+        vte_assert_cmpuint(offset->text_offset, >=, records[0].text_start_offset);
+        vte_assert_cmpuint(offset->text_offset, <=, records[0].text_start_offset + buffer->len);
 
 	row = index(position);
 
@@ -1212,6 +1241,7 @@ Ring::rewrap(column_t columns,
 	old_row_index = m_start + 1;
 	while (paragraph_start_text_offset < _vte_stream_head(m_text_stream)) {
 		/* Find the boundaries of the next paragraph */
+                gsize paragraph_width = 0;
 		gboolean prev_record_was_soft_wrapped = FALSE;
 		gboolean paragraph_is_ascii = TRUE;
                 guint8 paragraph_bidi_flags = old_record.bidi_flags;
@@ -1224,6 +1254,7 @@ Ring::rewrap(column_t columns,
                                  old_row_index - 1,
                                  paragraph_start_text_offset);
 		while (old_row_index <= m_end) {
+                        paragraph_width += old_record.width;
 			prev_record_was_soft_wrapped = old_record.soft_wrapped;
 			paragraph_is_ascii = paragraph_is_ascii && old_record.is_ascii;
 			if (G_LIKELY (old_row_index < m_end)) {
@@ -1247,7 +1278,6 @@ Ring::rewrap(column_t columns,
                                  paragraph_end_text_offset,
 				prev_record_was_soft_wrapped ? "  soft_wrapped" : "",
 				paragraph_len, paragraph_is_ascii);
-
 		/* Wrap the paragraph */
 		if (attr_change.text_end_offset <= text_offset) {
 			/* Attr change at paragraph boundary, advance to next attr. */
@@ -1278,7 +1308,22 @@ Ring::rewrap(column_t columns,
 			}
 			runlength = MIN(paragraph_len, attr_change.text_end_offset - text_offset);
 
-			if (G_UNLIKELY (attr_change.attr.columns() == 0)) {
+                        if (paragraph_width <= (gsize) columns) {
+                                /* Quick shortcut code path if the entire paragraph fits in one row. */
+                                text_offset += runlength;
+                                paragraph_len -= runlength;
+                                /* The setting of "col" here is hacky. This very code here is potentially executed
+                                   multiple times within a single paragraph, if it has attribute changes. The code above
+                                   that reads the next attribute record has to iterate through those changes. Yet, we
+                                   don't want to waste time tracking those attribute changes and finding their
+                                   corresponding text offsets, we don't even want to read the text, as we won't need
+                                   that. We rely on the fact that "paragraph_width" and "columns" are constants
+                                   thoughout the wrapping of a particular paragraph, hence if this branch is hit once
+                                   then it is hit every time; also "col" is unused then in this loop and only needs to
+                                   have the correct value after we leave the loop. So each time simply set "col"
+                                   straight away to its final value. */
+                                col = paragraph_width;
+                        } else if (G_UNLIKELY (attr_change.attr.columns() == 0)) {
 				/* Combining characters all fit in the current row */
 				text_offset += runlength;
 				paragraph_len -= runlength;
@@ -1286,6 +1331,7 @@ Ring::rewrap(column_t columns,
 				while (runlength) {
 					if (col >= columns - attr_change.attr.columns() + 1) {
 						/* Wrap now, write the soft wrapped row's record */
+                                                new_record.width = col;
 						new_record.soft_wrapped = 1;
 						_vte_stream_append(new_row_stream, (char const* ) &new_record, sizeof (new_record));
 						_vte_debug_print(VTE_DEBUG_RING,
@@ -1305,7 +1351,6 @@ Ring::rewrap(column_t columns,
 						new_record.text_start_offset = text_offset;
 						new_record.attr_start_offset = attr_offset;
 						col = 0;
-
 					}
 					if (paragraph_is_ascii) {
 						/* Shortcut for quickly wrapping ASCII (excluding TAB) text.
@@ -1335,6 +1380,7 @@ Ring::rewrap(column_t columns,
 
 		/* Write the record of the paragraph's last row. */
 		/* Hard wrapped, except maybe at the end of the very last paragraph */
+                new_record.width = col;
 		new_record.soft_wrapped = prev_record_was_soft_wrapped;
 		_vte_stream_append(new_row_stream, (char const* ) &new_record, sizeof (new_record));
 		_vte_debug_print(VTE_DEBUG_RING,
@@ -1370,8 +1416,11 @@ Ring::rewrap(column_t columns,
 		if (new_markers[i].row == -1)
 			new_markers[i].row = markers[i]->row - old_ring_end + m_end;
 		/* Convert byte offset into visual column */
-		if (!frozen_row_text_offset_to_column(new_markers[i].row, &marker_text_offsets[i], &new_markers[i].col))
-			goto err;
+                if (!frozen_row_text_offset_to_column(new_markers[i].row, &marker_text_offsets[i], &new_markers[i].col)) {
+                        /* This really shouldn't happen. It's too late to "goto err", the old stream is closed, the ring is updated.
+                         * It would be a bit cumbersome to refactor the code to still revert here. Choose a simple solution. */
+                        new_markers[i].col = 0;
+                }
 		_vte_debug_print(VTE_DEBUG_RING,
 				"Marker #%d new coords:  text_offset %" G_GSIZE_FORMAT "  fragment_cells %d  eol_cells %d  ->  row %ld  col %ld\n",
 				i, marker_text_offsets[i].text_offset, marker_text_offsets[i].fragment_cells,
@@ -1387,7 +1436,7 @@ Ring::rewrap(column_t columns,
 	return;
 
 err:
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
 	_vte_debug_print(VTE_DEBUG_RING,
 			"Error while rewrapping\n");
 	g_assert_not_reached();
@@ -1412,7 +1461,7 @@ Ring::write_row(GOutputStream* stream,
 
 	/* Simple version of the loop in freeze_row().
 	 * TODO Should unify one day */
-	g_string_set_size (buffer, 0);
+	g_string_truncate (buffer, 0);
 	for (i = 0, cell = row->cells; i < row->len; i++, cell++) {
 		if (G_LIKELY (!cell->attr.fragment()))
 			_vte_unistr_append_to_string (cell->c, buffer);

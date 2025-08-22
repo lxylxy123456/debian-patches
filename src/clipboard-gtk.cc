@@ -28,6 +28,7 @@
 #include <utility>
 
 #define MIME_TYPE_TEXT_PLAIN_UTF8 "text/plain;charset=utf-8"
+#define MIME_TYPE_TEXT_HTML_UTF8  "text/html;charset=utf-8"
 #define MIME_TYPE_TEXT_HTML_UTF16 "text/html"
 
 namespace vte::platform {
@@ -112,16 +113,26 @@ private:
                                 break;
 
                         case ClipboardFormat::HTML: {
-                                auto [html, len] = text_to_utf16_mozilla(*str);
+                                auto const target = gtk_selection_data_get_target(data);
 
-                                // This makes yet another copy of the data... :(
-                                if (html) {
+                                if (target == gdk_atom_intern_static_string(MIME_TYPE_TEXT_HTML_UTF8)) {
+                                        // This makes yet another copy of the data... :(
                                         gtk_selection_data_set(data,
-                                                               gtk_selection_data_get_target(data),
-                                                               // or gdk_atom_intern_static_string("text/html"),
-                                                               16,
-                                                               reinterpret_cast<guchar const*>(html.get()),
-                                                               len);
+                                                               target,
+                                                               8,
+                                                               reinterpret_cast<guchar const*>(str->data()),
+                                                               str->size());
+                                } else if (target == gdk_atom_intern_static_string(MIME_TYPE_TEXT_HTML_UTF16)) {
+                                        auto [html, len] = text_to_utf16_mozilla(*str);
+
+                                        // This makes yet another copy of the data... :(
+                                        if (html) {
+                                                gtk_selection_data_set(data,
+                                                                       target,
+                                                                       16,
+                                                                       reinterpret_cast<guchar const*>(html.get()),
+                                                                       len);
+                                        }
                                 }
                                 break;
                         }
@@ -195,7 +206,11 @@ private:
                                 gtk_target_list_add_text_targets(list.get(),
                                                                  vte::to_integral(ClipboardFormat::TEXT));
                                 gtk_target_list_add(list.get(),
-                                                    gdk_atom_intern_static_string("text/html"),
+                                                    gdk_atom_intern_static_string(MIME_TYPE_TEXT_HTML_UTF8),
+                                                    0,
+                                                    vte::to_integral(ClipboardFormat::HTML));
+                                gtk_target_list_add(list.get(),
+                                                    gdk_atom_intern_static_string(MIME_TYPE_TEXT_HTML_UTF16),
                                                     0,
                                                     vte::to_integral(ClipboardFormat::HTML));
 
@@ -301,7 +316,9 @@ public:
                 auto task = vte::glib::take_ref(g_task_new(m_native, cancellable, callback, user_data));
                 g_task_set_priority(task.get(), io_priority);
                 g_task_set_source_tag(task.get(), &task_tag);
+#if GLIB_CHECK_VERSION(2, 60, 0)
                 g_task_set_name(task.get(), "vte-content-provider-write-async");
+#endif
 
                 auto const format = format_from_mime_type(mime_type);
                 if (format == ClipboardFormat::INVALID)
@@ -324,15 +341,21 @@ public:
                         }
 
                         case ClipboardFormat::HTML: {
-                                auto [html, len] = m_offer->text_to_utf16_mozilla(*str);
+                                auto const type = std::string_view{mime_type};
+                                if (type == MIME_TYPE_TEXT_HTML_UTF8) {
+                                        bytes = vte::take_freeable(g_bytes_new_with_free_func(g_strndup(str->data(), str->size()),
+                                                                                              str->size(),
+                                                                                              g_free, nullptr));
+                                } else if (type == MIME_TYPE_TEXT_HTML_UTF16) {
+                                        auto [html, len] = m_offer->text_to_utf16_mozilla(*str);
 
-                                // This makes yet another copy of the data... :(
-                                if (html) {
-                                        bytes = vte::take_freeable(g_bytes_new_with_free_func(html.release(), len, g_free, nullptr));
-                                        break;
-                                } else {
-                                        return g_task_return_new_error(task.get(), G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
-                                                                       "Invalid data");
+                                        if (html) {
+                                                bytes = vte::take_freeable(g_bytes_new_with_free_func(html.release(), len, g_free, nullptr));
+                                                break;
+                                        } else {
+                                                return g_task_return_new_error(task.get(), G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
+                                                                               "Invalid data");
+                                        }
                                 }
 
                                 break;
@@ -411,6 +434,8 @@ private:
                         break;
                 case ClipboardFormat::HTML:
                         gdk_content_formats_builder_add_mime_type(builder.get(),
+                                                                  MIME_TYPE_TEXT_HTML_UTF8);
+                        gdk_content_formats_builder_add_mime_type(builder.get(),
                                                                   MIME_TYPE_TEXT_HTML_UTF16);
                         break;
                 case ClipboardFormat::INVALID:
@@ -426,7 +451,8 @@ private:
         {
                 if (mime_type == MIME_TYPE_TEXT_PLAIN_UTF8)
                         return ClipboardFormat::TEXT;
-                else if (mime_type == MIME_TYPE_TEXT_HTML_UTF16)
+                else if (mime_type == MIME_TYPE_TEXT_HTML_UTF8 ||
+                         mime_type == MIME_TYPE_TEXT_HTML_UTF16)
                         return ClipboardFormat::HTML;
                 else
                         return ClipboardFormat::INVALID;

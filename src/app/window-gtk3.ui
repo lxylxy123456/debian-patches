@@ -106,50 +106,6 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="show_close_button">True</property>
-        <property name="decoration_layout">:close</property>
-        <child>
-          <object class="GtkButton" id="copy_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="tooltip_text" translatable="yes">Copy</property>
-            <property name="action_name">win.copy</property>
-            <property name="action_target">"text"</property>
-            <property name="focus_on_click">False</property>
-            <child>
-              <object class="GtkImage" id="image2">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_name">edit-copy-symbolic</property>
-                <property name="use_fallback">True</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="paste_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="tooltip_text" translatable="yes">Paste</property>
-            <property name="action_name">win.paste</property>
-            <property name="focus_on_click">False</property>
-            <child>
-              <object class="GtkImage" id="image3">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_name">edit-paste-symbolic</property>
-                <property name="use_fallback">True</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
-        </child>
         <child>
           <object class="GtkToggleButton" id="find_button">
             <property name="visible">True</property>
@@ -166,7 +122,22 @@
             </child>
           </object>
           <packing>
-            <property name="position">4</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage" id="progress_image">
+            <property name="visible">False</property>
+            <property name="can_focus">False</property>
+            <property name="receives_default">False</property>
+            <property name="focus_on_click">False</property>
+            <property name="use_fallback">False</property>
+            <property name="pixel_size">16</property>
+            <property name="hexpand">False</property>
+            <property name="vexpand">False</property>
+          </object>
+          <packing>
+            <property name="position">3</property>
           </packing>
         </child>
         <child type="title">

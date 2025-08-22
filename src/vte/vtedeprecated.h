@@ -138,12 +138,39 @@ _VTE_DEPRECATED
 _VTE_PUBLIC
 const char *vte_terminal_get_encoding(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 
+typedef gboolean (*VteSelectionFunc)(VteTerminal *terminal,
+                                     glong column,
+                                     glong row,
+                                     gpointer data) _VTE_GNUC_NONNULL(1) _VTE_DEPRECATED;
+
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+_VTE_DEPRECATED
+_VTE_PUBLIC
+char *vte_terminal_get_text(VteTerminal *terminal,
+			    VteSelectionFunc is_selected,
+			    gpointer user_data,
+			    GArray *attributes) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1) G_GNUC_MALLOC;
+G_GNUC_END_IGNORE_DEPRECATIONS
+
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+_VTE_DEPRECATED
+_VTE_PUBLIC
+char *vte_terminal_get_text_range(VteTerminal *terminal,
+				  glong start_row, glong start_col,
+				  glong end_row, glong end_col,
+				  VteSelectionFunc is_selected,
+				  gpointer user_data,
+				  GArray *attributes) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1) G_GNUC_MALLOC;
+G_GNUC_END_IGNORE_DEPRECATIONS
+
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 _VTE_DEPRECATED
 _VTE_PUBLIC
 char *vte_terminal_get_text_include_trailing_spaces(VteTerminal *terminal,
 						    VteSelectionFunc is_selected,
 						    gpointer user_data,
 						    GArray *attributes) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1) G_GNUC_MALLOC;
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 _VTE_DEPRECATED
 _VTE_PUBLIC
@@ -184,6 +211,18 @@ struct _VteCharAttributes {
 	PangoColor fore, back;
 	guint underline:1, strikethrough:1, columns:4;
 } _VTE_DEPRECATED;
+
+_VTE_DEPRECATED
+_VTE_PUBLIC
+const char *vte_terminal_get_window_title(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_DEPRECATED
+_VTE_PUBLIC
+const char *vte_terminal_get_current_directory_uri(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+
+_VTE_DEPRECATED
+_VTE_PUBLIC
+const char *vte_terminal_get_current_file_uri(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 
 G_END_DECLS
 

@@ -133,7 +133,7 @@ public:
         Timer(callback_type callback,
               char const* name)
                 : m_callback(callback)
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
                 , m_name(name)
 #endif
         {
@@ -208,7 +208,7 @@ public:
 
 private:
         callback_type m_callback{};
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
         char const* m_name{nullptr};
 #endif
         guint m_source_id{0};
@@ -241,7 +241,7 @@ private:
 
         inline void set_source_name() const noexcept
         {
-                #ifdef VTE_DEBUG
+                #if VTE_DEBUG
                 g_source_set_name_by_id(m_source_id, m_name);
                 #endif
         }
@@ -267,7 +267,7 @@ private:
 };
 
 bool set_error_from_exception(GError** error
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
                               , char const* func = __builtin_FUNCTION()
                               , char const* filename = __builtin_FILE()
                               , int const line = __builtin_LINE()
@@ -278,8 +278,27 @@ bool set_error_from_exception(GError** error
 
 namespace vte {
 
+VTE_DECLARE_FREEABLE(GArray, g_array_unref);
 VTE_DECLARE_FREEABLE(GBytes, g_bytes_unref);
+VTE_DECLARE_FREEABLE(GChecksum, g_checksum_free);
+VTE_DECLARE_FREEABLE(GKeyFile, g_key_file_unref);
 VTE_DECLARE_FREEABLE(GOptionContext, g_option_context_free);
+VTE_DECLARE_FREEABLE(GString, g_autoptr_cleanup_gstring_free);
+VTE_DECLARE_FREEABLE(GUri, g_uri_unref);
 VTE_DECLARE_FREEABLE(GVariant, g_variant_unref);
 
 } // namespace vte
+
+namespace vte::glib {
+
+inline char*
+release_to_string(vte::Freeable<GString> str,
+                  gsize* length = nullptr) noexcept
+{
+        if (length)
+                *length = str.get()->len;
+
+        return g_string_free(str.release(), false);
+}
+
+} // namespace vte::glib

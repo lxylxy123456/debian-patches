@@ -74,8 +74,8 @@ public:
         //FIXMEchpe rename this to at()
         //FIXMEchpe use references not pointers
         VteRowData const* index(row_t position); /* const? */
-        VteRowData* index_writable(row_t position);
         bool is_soft_wrapped(row_t position);
+        bool contains_prompt_beginning(row_t position);
 
         void hyperlink_maybe_gc(row_t increment);
         hyperlink_idx_t get_hyperlink_idx(char const* hyperlink);
@@ -99,9 +99,14 @@ public:
                             GCancellable* cancellable,
                             GError** error);
 
+        inline VteRowData* index_writable(row_t position) {
+                ensure_writable(position);
+                return get_writable_index(position);
+        }
+
 private:
 
-        #ifdef VTE_DEBUG
+        #if VTE_DEBUG
         void validate() const;
         #endif
 
@@ -120,9 +125,10 @@ private:
         typedef struct _RowRecord {
                 size_t text_start_offset;  /* offset where text of this row begins */
                 size_t attr_start_offset;  /* offset of the first character's attributes */
-                int soft_wrapped: 1;      /* end of line is not '\n' */
-                int is_ascii: 1;          /* for rewrapping speedup: guarantees that line contains 32..126 bytes only. Can be 0 even when ascii only. */
-                guint8 bidi_flags: 4;
+                uint32_t width: 16;        /* for rewrapping speedup: the number of character cells (columns) */
+                uint32_t is_ascii: 1;      /* for rewrapping speedup: guarantees that line contains 32..126 bytes only. Can be 0 even when ascii only. */
+                uint32_t soft_wrapped: 1;  /* end of line is not '\n' */
+                uint32_t bidi_flags: 4;
         } RowRecord;
 
         static_assert(std::is_standard_layout_v<RowRecord> && std::is_trivial_v<RowRecord>, "Ring::RowRecord is not POD");
@@ -166,8 +172,15 @@ private:
                        GCancellable* cancellable,
                        GError** error);
 
-        void ensure_writable(row_t position);
         void ensure_writable_room();
+
+        inline void ensure_writable(row_t position) {
+                if G_UNLIKELY (position < m_writable) {
+                        //FIXMEchpe surely this can be optimised
+                        while (position < m_writable)
+                                thaw_one_row();
+                }
+        }
 
         void freeze_one_row();
         void maybe_freeze_one_row();
@@ -232,35 +245,3 @@ private:
 }; /* namespace base */
 
 }; /* namespace vte */
-
-G_BEGIN_DECLS
-
-/* temp compat API */
-
-typedef vte::base::Ring VteRing;
-
-static inline bool _vte_ring_contains(VteRing *ring, gulong position) { return ring->contains(position); }
-static inline glong _vte_ring_delta(VteRing *ring) { return ring->delta(); }
-static inline glong _vte_ring_length(VteRing *ring) { return ring->length(); }
-static inline glong _vte_ring_next(VteRing *ring) { return ring->next(); }
-static inline const VteRowData *_vte_ring_index (VteRing *ring, gulong position) { return ring->index(position); }
-static inline VteRowData *_vte_ring_index_writable (VteRing *ring, gulong position) { return ring->index_writable(position); }
-static inline void _vte_ring_hyperlink_maybe_gc (VteRing *ring, gulong increment) { ring->hyperlink_maybe_gc(increment); }
-static inline auto _vte_ring_get_hyperlink_idx (VteRing *ring, const char *hyperlink) { return ring->get_hyperlink_idx(hyperlink); }
-static inline auto _vte_ring_get_hyperlink_at_position (VteRing *ring, gulong position, int col, bool update_hover_idx, const char **hyperlink) { return ring->get_hyperlink_at_position(position, col, update_hover_idx, hyperlink); }
-static inline long _vte_ring_reset (VteRing *ring) { return ring->reset(); }
-static inline void _vte_ring_resize (VteRing *ring, gulong max_rows) { ring->resize(max_rows); }
-static inline void _vte_ring_shrink (VteRing *ring, gulong max_len) { ring->shrink(max_len); }
-static inline VteRowData *_vte_ring_insert (VteRing *ring, gulong position, guint8 bidi_flags) { return ring->insert(position, bidi_flags); }
-static inline VteRowData *_vte_ring_append (VteRing *ring, guint8 bidi_flags) { return ring->append(bidi_flags); }
-static inline void _vte_ring_remove (VteRing *ring, gulong position) { ring->remove(position); }
-static inline void _vte_ring_drop_scrollback (VteRing *ring, gulong position) { ring->drop_scrollback(position); }
-static inline void _vte_ring_set_visible_rows (VteRing *ring, gulong rows) { ring->set_visible_rows(rows); }
-static inline void _vte_ring_rewrap (VteRing *ring, glong columns, VteVisualPosition **markers) { ring->rewrap(columns, markers); }
-static inline gboolean _vte_ring_write_contents (VteRing *ring,
-                                                 GOutputStream *stream,
-                                                 VteWriteFlags flags,
-                                                 GCancellable *cancellable,
-                                                 GError **error) { return ring->write_contents(stream, flags, cancellable, error); }
-
-G_END_DECLS

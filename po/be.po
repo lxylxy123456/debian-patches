@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vte.master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/vte/issues\n"
-"POT-Creation-Date: 2022-10-21 16:29+0000\n"
-"PO-Revision-Date: 2022-10-23 21:12+0300\n"
+"POT-Creation-Date: 2020-05-27 19:17+0000\n"
+"PO-Revision-Date: 2021-08-19 14:57+0300\n"
 "Last-Translator: Launchpad translators\n"
 "Language-Team: Belarusian <i18n-bel-googlegroups.com>\n"
 "Language: be\n"
@@ -16,43 +16,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0\n"
 
-#: src/vte.cc:7628
+#: src/vte.cc:7763
 msgid "WARNING"
 msgstr "ПАПЯРЭДЖАННЕ"
 
-#: src/vte.cc:7630
+#: src/vte.cc:7765
 msgid "GnuTLS not enabled; data will be written to disk unencrypted!"
 msgstr "GnuTLS не ўключаны; даныя будуць запісаны на дыск незашыфраванымі!"
 
-#: src/spawn.cc:124
+#: src/spawn.cc:111
 #, c-format
 msgid "Failed to set pipe nonblocking: %s"
 msgstr "Не ўдалося наладзіць канал без блакіравання: %s"
 
-#: src/spawn.cc:169
+#: src/spawn.cc:155
 #, c-format
 msgid "poll error: %s"
 msgstr "памылка апытання: %s"
 
-#: src/spawn.cc:176
+#: src/spawn.cc:161
 msgid "Operation timed out"
 msgstr "Скончыўся тэрмін чакання аперацыі"
 
-#: src/spawn.cc:186
+#: src/spawn.cc:171
 msgid "Operation was cancelled"
 msgstr "Аперацыя скасавана"
 
-#: src/spawn.cc:204
+#: src/spawn.cc:189
 #, c-format
 msgid "Failed to read from child pipe (%s)"
-msgstr "Не ўдалося прачытаць даныя з канала-нашчадка (%s)"
+msgstr "Не ўдалося прачытаць даныя з канала нашчадка (%s)"
 
-#: src/spawn.cc:639
+#: src/spawn.cc:576
 #, c-format
 msgid "Failed to change to directory “%s”: %s"
 msgstr "Не ўдалося змяніць на каталог «%s»: %s"
 
-#: src/spawn.cc:708
+#: src/spawn.cc:645
 #, c-format
 msgid "Failed to execute child process “%s”: "
 msgstr "Не ўдалося выканаць працэс-нашчадак «%s»: "

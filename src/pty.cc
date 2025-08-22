@@ -41,7 +41,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
-#ifdef HAVE_SYS_SYSLIMITS_H
+#if __has_include(<sys/syslimits.h>)
 #include <sys/syslimits.h>
 #endif
 #include <signal.h>
@@ -51,14 +51,19 @@
 #include <string.h>
 #include <termios.h>
 #include <unistd.h>
-#ifdef HAVE_UTIL_H
+#if __has_include(<util.h>)
 #include <util.h>
 #endif
-#ifdef HAVE_PTY_H
+#if __has_include(<pty.h>)
 #include <pty.h>
 #endif
-#if defined(__sun) && defined(HAVE_STROPTS_H)
+#if defined(__sun) && __has_include(<stropts.h>)
 #include <stropts.h>
+#define HAVE_STROPTS_H
+#endif
+#ifdef __NetBSD__
+#include <sys/param.h>
+#include <sys/sysctl.h>
 #endif
 #include <glib.h>
 #include <gio/gio.h>
@@ -253,15 +258,6 @@ Pty::child_setup() const noexcept
             peer_fd != STDERR_FILENO) {
                 close(peer_fd);
 	}
-
-        /* Now set the TERM environment variable */
-        /* FIXME: Setting environment here seems to have no effect, the merged envp2 will override on exec.
-         * By the way, we'd need to set the one from there, if any. */
-        g_setenv("TERM", VTE_TERMINFO_NAME, TRUE);
-
-        char version[7];
-        g_snprintf (version, sizeof (version), "%u", VTE_VERSION_NUMERIC);
-        g_setenv ("VTE_VERSION", version, TRUE);
 }
 
 /*
@@ -422,6 +418,27 @@ _vte_pty_open_posix(void)
 #ifndef __linux__
         /* Other kernels may not support CLOEXEC or NONBLOCK above, so try to fall back */
         bool need_cloexec = false, need_nonblocking = false;
+
+#ifdef __NetBSD__
+        // NetBSD is a special case: prior to 9.99.101, posix_openpt() will not return
+        // EINVAL for unknown/unsupported flags but instead silently ignore these flags
+        // and just return a valid PTY but without the NONBLOCK | CLOEXEC flags set.
+        // So we need to manually apply these flags there. See issue #2575.
+        int mib[2], osrev;
+        size_t len;
+
+        mib[0] = CTL_KERN;
+        mib[1] = KERN_OSREV;
+        len = sizeof(osrev);
+        sysctl(mib, 2, &osrev, &len, NULL, 0);
+        if (osrev < 999010100) {
+                need_cloexec = need_nonblocking = true;
+                _vte_debug_print(VTE_DEBUG_PTY,
+                                 "NetBSD < 9.99.101, forcing fallback "
+                                 "for NONBLOCK and CLOEXEC.\n");
+        }
+#else
+
         if (!fd && errno == EINVAL) {
                 /* Try without NONBLOCK and apply the flag afterward */
                 need_nonblocking = true;
@@ -432,6 +449,7 @@ _vte_pty_open_posix(void)
                         fd = posix_openpt(O_RDWR | O_NOCTTY);
                 }
         }
+#endif /* __NetBSD__ */
 #endif /* !linux */
 
         if (!fd) {

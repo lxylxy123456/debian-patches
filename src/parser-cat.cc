@@ -496,7 +496,7 @@ private:
         {
                 auto const sgr = seq.param(idx);
 
-                /* Simplified and adapted from Terminal::seq_parse_sgr_color() */
+                /* Simplified and adapted from sgr.hh */
                 if (seq.param_nonfinal(idx)) {
                         /* Colon version */
                         auto const param = seq.param(++idx);

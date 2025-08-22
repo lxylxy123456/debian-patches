@@ -19,6 +19,20 @@
 
 #include <cstdint>
 
+#include "debug.h"
+
+enum ShellIntegrationMode {
+        /* Command output, selected by OSC 133;C ST.
+         * This is the default mode, the one reset operations reset to,
+         * so it's safer and easier to make this number 0.
+         * Also presumably attr_stream compresses better this way. */
+        eNORMAL = 0,
+        /* Shell prompt, selected by OSC 133;A ST. */
+        ePROMPT,
+        /* The command typed by the user, selected by OSC 133;B ST. */
+        eCOMMAND,
+};
+
 #define VTE_ATTR_VALUE_MASK(bits)      ((1U << (bits)) - 1U)
 #define VTE_ATTR_MASK(shift,bits)      (VTE_ATTR_VALUE_MASK(bits) << (shift))
 
@@ -47,9 +61,9 @@
 #define VTE_ATTR_ITALIC_MASK           (VTE_ATTR_MASK(VTE_ATTR_ITALIC_SHIFT, VTE_ATTR_ITALIC_BITS))
 #define VTE_ATTR_ITALIC                (1U << VTE_ATTR_ITALIC_SHIFT)
 
-/* 0: none, 1: single, 2: double, 3: curly */
+/* 0: none, 1: single, 2: double, 3: curly, 4: dotted, 5: dashed */
 #define VTE_ATTR_UNDERLINE_SHIFT       (VTE_ATTR_ITALIC_SHIFT + VTE_ATTR_ITALIC_BITS)
-#define VTE_ATTR_UNDERLINE_BITS        (2)
+#define VTE_ATTR_UNDERLINE_BITS        (3)
 #define VTE_ATTR_UNDERLINE_MASK        (VTE_ATTR_MASK(VTE_ATTR_UNDERLINE_SHIFT, VTE_ATTR_UNDERLINE_BITS))
 #define VTE_ATTR_UNDERLINE_VALUE_MASK  (VTE_ATTR_VALUE_MASK(VTE_ATTR_UNDERLINE_BITS))
 #define VTE_ATTR_UNDERLINE(v)          ((v) << VTE_ATTR_UNDERLINE_SHIFT)
@@ -85,6 +99,13 @@
 #define VTE_ATTR_INVISIBLE_MASK        (VTE_ATTR_MASK(VTE_ATTR_INVISIBLE_SHIFT, VTE_ATTR_INVISIBLE_BITS))
 #define VTE_ATTR_INVISIBLE             (1U << VTE_ATTR_INVISIBLE_SHIFT)
 
+/* Holds an enum ShellIntegrationMode */
+#define VTE_ATTR_SHELLINTEGRATION_SHIFT        (VTE_ATTR_INVISIBLE_SHIFT + VTE_ATTR_INVISIBLE_BITS)
+#define VTE_ATTR_SHELLINTEGRATION_BITS         (2)
+#define VTE_ATTR_SHELLINTEGRATION_MASK         (VTE_ATTR_MASK(VTE_ATTR_SHELLINTEGRATION_SHIFT, VTE_ATTR_SHELLINTEGRATION_BITS))
+#define VTE_ATTR_SHELLINTEGRATION_VALUE_MASK   (VTE_ATTR_VALUE_MASK(VTE_ATTR_SHELLINTEGRATION_BITS))
+#define VTE_ATTR_SHELLINTEGRATION(v)           ((v) << VTE_ATTR_SHELLINTEGRATION_SHIFT)
+
 /* Used internally only */
 #define VTE_ATTR_BOXED_SHIFT           (31)
 #define VTE_ATTR_BOXED_BITS            (1)
@@ -101,12 +122,16 @@
                                         VTE_ATTR_BLINK_MASK | \
                                         VTE_ATTR_INVISIBLE_MASK)
 
+/* All SGR settable attributes */
+#define VTE_ATTR_ALL_SGR_MASK          (VTE_ATTR_ALL_MASK | \
+                                        VTE_ATTR_DIM_MASK)
+
 #define VTE_ATTR_NONE                  (0U)
 #define VTE_ATTR_DEFAULT               (VTE_ATTR_COLUMNS(1))
 
-static inline void vte_attr_set_bool(uint32_t* attr,
-                                     uint32_t mask,
-                                     bool value)
+static inline constexpr void vte_attr_set_bool(uint32_t* attr,
+                                               uint32_t mask,
+                                               bool value)
 {
         if (value)
                 *attr |= mask;
@@ -114,12 +139,12 @@ static inline void vte_attr_set_bool(uint32_t* attr,
                 *attr &= ~mask;
 }
 
-static inline void vte_attr_set_value(uint32_t* attr,
-                                      uint32_t mask,
-                                      unsigned int shift,
-                                      uint32_t value)
+static inline constexpr void vte_attr_set_value(uint32_t* attr,
+                                                uint32_t mask,
+                                                unsigned int shift,
+                                                uint32_t value)
 {
-        g_assert_cmpuint(value << shift, <=, mask); /* assurance */
+        vte_assert_cmpuint(value << shift, <=, mask); /* assurance */
         *attr = (*attr & ~mask) | ((value << shift) & mask /* assurance */);
 }
 

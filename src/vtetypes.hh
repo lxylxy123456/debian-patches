@@ -25,7 +25,7 @@
 #include <cstdint>
 #include <memory>
 
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
 #define IFDEF_DEBUG(str) str
 #else
 #define IFDEF_DEBUG(str)
@@ -192,6 +192,10 @@ namespace color {
 
                 inline bool operator == (rgb const& rhs) const {
                         return red == rhs.red && green == rhs.green && blue == rhs.blue;
+                }
+
+                inline GdkRGBA rgba(double alpha = 1.0) const {
+                        return GdkRGBA{red/65535.f, green/65535.f, blue/65535.f, (float)alpha};
                 }
 
                 IFDEF_DEBUG(char const* to_string() const);

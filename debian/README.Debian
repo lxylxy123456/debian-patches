@@ -1,11 +1,23 @@
-vte3 (1:0.34.6-2) unstable; urgency=low
+vte2.91 for Debian
+==================
 
-  * To make new tabs opened within Gnome Terminal have the same
-    working directory as the current tab, it is necessary for the shell
-    running in the terminal to cooperate. For this, vte installs a bash
-    shell script that you must source in your ~/.bashrc.
+Making new tabs keep the working directory of the current tab
+-------------------------------------------------------------
 
-    For example, you can put this at the end of your ~/.bashrc:
-    [[ -s "/etc/profile.d/vte.sh" ]] && . "/etc/profile.d/vte.sh"
+Several vte2.91-based terminal emulators aim to open new tabs in the same
+working directory as the current tab, but this does not work automatically
+and some extra configuration is needed.
 
- -- Fabian Greffrath <fabian+debian@greffrath.com>  Wed, 12 Jun 2013 21:31:51 +0200
+For bash users, add to ~/.bashrc or /etc/bash.bashrc:
+
+    if [ -e /etc/profile.d/vte-2.91.sh ]; then
+        . /etc/profile.d/vte-2.91.sh
+    fi
+
+For zsh users, add the same code to ~/.zshrc or /etc/zsh/zshrc.
+
+This is needed because of a limitation of Debian's interactive shells:
+/etc/profile.d is only loaded by login shells (it is not loaded by
+interactive non-login shells such as those that are typically run by
+terminal emulators), and there is no similar mechanism for interactive
+shell initialization like bashrc.d (#675008, #894999) and zshrc.d (#776663).

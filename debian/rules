@@ -6,6 +6,7 @@ UDEB_PKG := $(LIB_PKG)-udeb
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 export DEB_LDFLAGS_MAINT_APPEND = -Wl,-O1 -Wl,-z,defs
+export DPKG_GENSYMBOLS_CHECK_LEVEL = 4
 include /usr/share/dpkg/default.mk
 
 %:
@@ -48,6 +49,7 @@ ifneq ($(filter %-udeb,$(binaries)),)
 	dh_auto_install --builddirectory=build-udeb \
 		--destdir=debian/tmp/udeb
 	rm debian/tmp/udeb/usr/bin/vte-2.91
+	rm debian/tmp/udeb/usr/bin/vte-2.91-gtk4
 	rm debian/tmp/udeb/usr/libexec/vte-urlencode-cwd
 endif
 	mv debian/tmp/deb/etc/profile.d/vte.sh \
@@ -59,22 +61,25 @@ ifneq ($(filter %-udeb,$(binaries)),)
 	dh_auto_clean --builddirectory=build-udeb
 endif
 
-override_dh_clean:
-	rm -f debian/libvte-2.91-common.install.kfreebsd
+execute_before_dh_clean:
 	rm -f debian/libvte-2.91-common.install.hurd
-	dh_clean
 
 override_dh_auto_test:
 	dh_auto_test --builddirectory=build-deb
 
 override_dh_makeshlibs:
-	dh_makeshlibs -p$(LIB_PKG) --add-udeb=$(UDEB_PKG) -V -- -c4
+	dh_makeshlibs -p$(LIB_PKG) --add-udeb=$(UDEB_PKG)
 	dh_makeshlibs --remaining-packages
 
 override_dh_install:
-	grep -E -v 'lib/systemd' debian/libvte-2.91-common.install > debian/libvte-2.91-common.install.kfreebsd
 	grep -E -v 'lib/systemd' debian/libvte-2.91-common.install > debian/libvte-2.91-common.install.hurd
 ifneq ($(filter %-udeb,$(binaries)),)
 	dh_install -p$(UDEB_PKG) --sourcedir=debian/tmp/udeb
 endif
 	dh_install --remaining-packages --sourcedir=debian/tmp/deb
+
+# Don't install the test apps currently. These could go in a separate binary package
+override_dh_missing:
+	dh_missing -X usr/share/applications -X usr/share/xdg-terminals
+
+override_dh_gnome_clean:

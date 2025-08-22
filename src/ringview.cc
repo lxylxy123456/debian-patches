@@ -74,7 +74,7 @@ RingView::pause()
 void
 RingView::resume()
 {
-        g_assert_cmpint (m_len, >=, 1);
+        vte_assert_cmpint (m_len, >=, 1);
 
         /* +16: A bit of arbitrary heuristics to likely prevent a quickly following
          * realloc for the required context lines. */
@@ -162,8 +162,8 @@ RingView::set_rows(vte::grid::row_t start, vte::grid::row_t len)
 VteRowData const*
 RingView::get_row(vte::grid::row_t row) const
 {
-        g_assert_cmpint(row, >=, m_top);
-        g_assert_cmpint(row, <, m_top + m_rows_len);
+        vte_assert_cmpint(row, >=, m_top);
+        vte_assert_cmpint(row, <, m_top + m_rows_len);
 
         return m_rows[row - m_top];
 }
@@ -239,7 +239,7 @@ RingView::update()
                         }
                 }
 
-                row_data = _vte_ring_contains(m_ring, row) ? m_ring->index(row) : nullptr;
+                row_data = m_ring->contains(row) ? m_ring->index(row) : nullptr;
                 if (G_LIKELY (row_data != nullptr)) {
                         _vte_row_data_copy (row_data, m_rows[m_rows_len]);
                         /* Make sure that the extracted data is not wider than the screen,
@@ -291,16 +291,6 @@ RingView::update()
         }
 
         m_invalid = false;
-}
-
-BidiRow const* RingView::get_bidirow(vte::grid::row_t row) const
-{
-        g_assert_cmpint (row, >=, m_start);
-        g_assert_cmpint (row, <, m_start + m_len);
-        g_assert_false (m_invalid);
-        g_assert_false (m_paused);
-
-        return m_bidirows[row - m_start];
 }
 
 /* For internal use by BidiRunner. Get where the BiDi mapping for the given row

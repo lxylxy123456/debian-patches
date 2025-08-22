@@ -19,6 +19,8 @@
 
 namespace vte {
 
+class uuid;
+
 namespace base {
 
 class Pty;
@@ -36,10 +38,18 @@ class Widget;
 
 } // namespace platform
 
+namespace terminal {
+
+enum class TermpropType;
+class Termprop;
+
+} // namespace terminal
+
 namespace view {
 
 class FontInfo;
 class DrawingContext;
+struct Rectangle;
 
 } // namespace view
 

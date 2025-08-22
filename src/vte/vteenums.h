@@ -206,13 +206,137 @@ typedef enum /*< skip >*/ {
  * An enumeration type that can be used to specify how the terminal
  * uses extra allocated space.
  *
- * Since: 0.68
+ * Since: 0.76
  */
 typedef enum {
         VTE_ALIGN_START       = 0U,
         VTE_ALIGN_CENTER      = 1U,
-        /* VTE_ALIGN_BASELINE    = 2U, */
-        VTE_ALIGN_END         = 3U,
+        VTE_ALIGN_END         = 2U,
 } VteAlign;
+
+/*
+ * VteUuidFormat:
+ * @VTE_UUID_FORMAT_SIMPLE: simple format
+ * @VTE_UUID_FORMAT_BRACED: braced format
+ * @VTE_UUID_FORMAT_URN: urn format
+ * @VTE_UUID_FORMAT_ANY: any format of the above
+ *
+ * An enumeration that specifies the format of an UUID.
+ *
+ * Since: 0.78
+ */
+typedef enum /*< flags >*/ {
+        VTE_UUID_FORMAT_SIMPLE = 1u << 0,
+        VTE_UUID_FORMAT_BRACED = 1u << 1,
+        VTE_UUID_FORMAT_URN = 1u << 2,
+        VTE_UUID_FORMAT_ANY = 0x7u,
+} VteUuidFormat;
+
+/**
+ * VtePropertyFlags:
+ * @VTE_PROPERTY_FLAG_NONE: no flags, default
+ * @VTE_PROPERTY_FLAG_EPHEMERAL: denotes an ephemeral termprop
+ *
+ * A flags type.
+ *
+ * Since: 0.78
+ */
+typedef enum /*< flags >*/ {
+        VTE_PROPERTY_FLAG_NONE = 0u,
+        VTE_PROPERTY_FLAG_EPHEMERAL = 1u << 0,
+} VtePropertyFlags;
+
+/**
+ * VtePropertyType:
+ * @VTE_PROPERTY_VALUELESS: no value, use for signalling
+ * @VTE_PROPERTY_BOOL: a bool
+ * @VTE_PROPERTY_INT: a signed 64-bit integer
+ * @VTE_PROPERTY_UINT: an unsigned 64-bit integer
+ * @VTE_PROPERTY_DOUBLE: a finite double-precision floating point number
+ * @VTE_PROPERTY_RGB: a color
+ * @VTE_PROPERTY_RGBA: a color with alpha
+ * @VTE_PROPERTY_STRING: a string
+ * @VTE_PROPERTY_DATA: binary data
+ * @VTE_PROPERTY_UUID: a UUID
+ * @VTE_PROPERTY_URI: a URI
+ * @VTE_PROPERTY_IMAGE: an image. Since: 0.80
+ *
+ * An enumeration type describing types of properties.
+ *
+ * Since: 0.78
+ */
+typedef enum {
+        VTE_PROPERTY_INVALID = -1, /*< skip >*/
+        VTE_PROPERTY_VALUELESS = 0,
+        VTE_PROPERTY_BOOL,
+        VTE_PROPERTY_INT,
+        VTE_PROPERTY_UINT,
+        VTE_PROPERTY_DOUBLE,
+        VTE_PROPERTY_RGB,
+        VTE_PROPERTY_RGBA,
+        VTE_PROPERTY_STRING,
+        VTE_PROPERTY_DATA,
+        VTE_PROPERTY_UUID,
+        VTE_PROPERTY_URI,
+        VTE_PROPERTY_IMAGE,
+} VtePropertyType;
+
+/**
+ * VtePropertyId:
+ * @VTE_PROPERTY_ID_CURRENT_DIRECTORY_URI: the ID of the %VTE_TERMPROP_CURRENT_DIRECTORY_URI termprop
+ * @VTE_PROPERTY_ID_CURRENT_FILE_URI: the ID of the %VTE_TERMPROP_CURRENT_FILE_URI termprop
+ * @VTE_PROPERTY_ID_XTERM_TITLE: the ID of the %VTE_TERMPROP_XTERM_TITLE termprop
+ * @VTE_PROPERTY_ID_CONTAINER_NAME: the ID of the %VTE_TERMPROP_CONTAINER_NAME termprop
+ * @VTE_PROPERTY_ID_CONTAINER_RUNTIME: the ID of the %VTE_TERMPROP_CONTAINER_RUNTIME termprop
+ * @VTE_PROPERTY_ID_CONTAINER_UID: the ID of the %VTE_TERMPROP_CONTAINER_UID termprop
+ * @VTE_PROPERTY_ID_SHELL_PRECMD: the ID of the %VTE_TERMPROP_SHELL_PRECMD termprop
+ * @VTE_PROPERTY_ID_SHELL_PREEXEC: the ID of the %VTE_TERMPROP_SHELL_PREEXEC termprop
+ * @VTE_PROPERTY_ID_SHELL_POSTEXEC: the ID of the %VTE_TERMPROP_SHELL_POSTEXEC termprop
+ * @VTE_PROPERTY_ID_PROGRESS_HINT: the ID of the %VTE_TERMPROP_PROGRESS_HINT termprop. Since: 0.80
+ * @VTE_PROPERTY_ID_PROGRESS_VALUE: the ID of the %VTE_TERMPROP_PROGRESS_VALUE termprop. Since: 0.80
+ * @VTE_PROPERTY_ID_ICON_COLOR: the ID of the %VTE_TERMPROP_ICON_COLOR termprop. Since: 0.80
+ * @VTE_PROPERTY_ID_ICON_IMAGE: the ID of the %VTE_TERMPROP_ICON_IMAGE termprop. Since: 0.80
+ *
+ * An enum containing the IDs of the always-installed termprops.
+ *
+ * Since: 0.78
+ */
+typedef enum {
+        VTE_PROPERTY_ID_CURRENT_DIRECTORY_URI = 0,
+        VTE_PROPERTY_ID_CURRENT_FILE_URI,
+        VTE_PROPERTY_ID_XTERM_TITLE,
+        VTE_PROPERTY_ID_CONTAINER_NAME,
+        VTE_PROPERTY_ID_CONTAINER_RUNTIME,
+        VTE_PROPERTY_ID_CONTAINER_UID,
+        VTE_PROPERTY_ID_SHELL_PRECMD,
+        VTE_PROPERTY_ID_SHELL_PREEXEC,
+        VTE_PROPERTY_ID_SHELL_POSTEXEC,
+        VTE_PROPERTY_ID_PROGRESS_HINT,
+        VTE_PROPERTY_ID_PROGRESS_VALUE,
+        VTE_PROPERTY_ID_ICON_COLOR,
+        VTE_PROPERTY_ID_ICON_IMAGE,
+	_VTE_PROPERTY_ID_MAX = 0x7ffffff, /*< skip >*/
+} VtePropertyId;
+
+/**
+ * VteProgressHint:
+ * @VTE_PROGRESS_HINT_INACTIVE: no progress current
+ * @VTE_PROGRESS_HINT_ACTIVE: progress is normal
+ * @VTE_PROGRESS_HINT_ERROR: progress is aborted by an error
+ * @VTE_PROGRESS_HINT_INDETERMINATE: progress is indeterminate
+ * @VTE_PROGRESS_HINT_PAUSED: progress is paused
+ *
+ * An enum describing how to interpret progress state, for the
+ * %VTE_TERMPROP_PROGRESS_HINT termprop.
+ *
+ * Since: 0.80
+ */
+typedef enum {
+        VTE_PROGRESS_HINT_INACTIVE = 0,
+        VTE_PROGRESS_HINT_ACTIVE = 1,
+        VTE_PROGRESS_HINT_ERROR = 2,
+        VTE_PROGRESS_HINT_INDETERMINATE = 3,
+        VTE_PROGRESS_HINT_PAUSED = 4,
+} VteProgressHint;
 
 G_END_DECLS

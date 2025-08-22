@@ -9,6 +9,8 @@
 set -eux
 
 mode=dynamic
+[ -n "$1" ]
+lib=$1
 
 getopt_temp="$(getopt -o '' --long 'static' -n debian/tests/build -- "$@")"
 eval set -- "$getopt_temp"
@@ -63,7 +65,7 @@ case "$mode" in
 esac
 
 # shellcheck disable=SC2046
-"${CROSS_COMPILE}gcc" $cflags -o "$mode" example.c $("${CROSS_COMPILE}pkg-config" $pcflags --cflags --libs vte-2.91)
+"${CROSS_COMPILE}gcc" $cflags -o "$mode" example.c $("${CROSS_COMPILE}pkg-config" $pcflags --cflags --libs "$lib")
 echo "build ($mode): OK"
 [ -x "$mode" ]
 "./$mode"

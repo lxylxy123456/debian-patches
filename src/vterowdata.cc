@@ -24,6 +24,8 @@
 
 #include <string.h>
 
+#include <algorithm>
+#include <iterator>
 #include <type_traits>
 
 /* This will be true now that VteCell is POD, but make sure it'll be true
@@ -100,7 +102,7 @@ _vte_row_data_fini (VteRowData *row)
 	row->cells = NULL;
 }
 
-static inline gboolean
+static inline bool
 _vte_row_data_ensure (VteRowData *row, gulong len)
 {
 	VteCells *cells = _vte_cells_for_cell_array (row->cells);
@@ -113,6 +115,12 @@ _vte_row_data_ensure (VteRowData *row, gulong len)
 	row->cells = _vte_cells_realloc (cells, len)->cells;
 
 	return TRUE;
+}
+
+bool
+_vte_row_data_ensure_len (VteRowData *row, gulong len)
+{
+        return _vte_row_data_ensure(row, len);
 }
 
 void
@@ -153,13 +161,21 @@ void _vte_row_data_remove (VteRowData *row, gulong col)
 void _vte_row_data_fill (VteRowData *row, const VteCell *cell, gulong len)
 {
 	if (row->len < len) {
-		gulong i;
-
 		if (G_UNLIKELY (!_vte_row_data_ensure (row, len)))
 			return;
 
-		for (i = row->len; i < len; i++)
-			row->cells[i] = *cell;
+		std::fill_n(&row->cells[row->len], len - row->len, *cell);
+		row->len = len;
+	}
+}
+
+/* This leaves the new cells uninitialized, potentially containing random data.
+ * It's the caller's responsibility to initialize them. */
+void _vte_row_data_expand (VteRowData *row, gulong len)
+{
+	if (row->len < len) {
+		if (G_UNLIKELY (!_vte_row_data_ensure (row, len)))
+			return;
 
 		row->len = len;
 	}
@@ -177,6 +193,25 @@ void _vte_row_data_copy (const VteRowData *src, VteRowData *dst)
         dst->len = src->len;
         dst->attr = src->attr;
         memcpy(dst->cells, src->cells, src->len * sizeof (src->cells[0]));
+}
+
+void _vte_row_data_fill_cells(VteRowData* row,
+                              gulong start_idx,
+                              VteCell const* fill_cell,
+                              VteCell const* cells,
+                              gulong len)
+{
+        auto const needlen = start_idx + len;
+        if (!_vte_row_data_ensure(row, needlen))
+                return;
+
+        // Fill up to start_idx with @fill_cell
+        _vte_row_data_fill(row, fill_cell, start_idx);
+        // ... then copy the cells over ...
+        std::copy_n(cells, len, &row->cells[start_idx]);
+        // ... and adjust the row length
+        if (row->len < needlen)
+                row->len = needlen;
 }
 
 /* Get the length, ignoring trailing empty cells (with a custom background color). */

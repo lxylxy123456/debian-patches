@@ -21,6 +21,8 @@
 #include <cstdint>
 #include <cstring>
 
+#include "debug.h"
+
 #include "vtedefines.hh"
 
 namespace vte {
@@ -139,8 +141,8 @@ public:
         {
                 /* We want an even number of blocks */
                 auto const new_capacity = ((size + 8 * sizeof(storage_t) - 1) / (8 * sizeof(storage_t)) + 1) & ~1;
-                g_assert_cmpuint(new_capacity % 2, ==, 0);
-                g_assert_cmpuint(new_capacity * 8 * sizeof(storage_t), >=, size);
+                vte_assert_cmpuint(new_capacity % 2, ==, 0);
+                vte_assert_cmpuint(new_capacity * 8 * sizeof(storage_t), >=, size);
 
                 if (new_capacity > m_capacity) {
                         auto const new_capacity_bytes = new_capacity * sizeof(storage_t);
@@ -200,18 +202,18 @@ public:
                                    int count = 1,
                                    position_t endpos = npos) const noexcept
         {
-                while (count-- && position < m_size)
+                while (count-- && position < m_size && position < endpos)
                         position = next_position(position);
-                return position < m_size ? position : endpos;
+                return position < endpos ? position : endpos;
         }
 
         inline position_t get_previous(position_t position,
                                        int count = 1,
                                        position_t endpos = npos) const noexcept
         {
-                while (count-- && position != npos)
+                while (count-- && position != npos && (endpos == npos || position > endpos))
                         position = previous_position(position);
-                return position != npos ? position : endpos;
+                return (position != npos && (endpos == npos || position > endpos)) ? position : endpos;
         }
 };
 

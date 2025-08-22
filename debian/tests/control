@@ -1,3 +1,7 @@
-Tests: build
+Test-Command: debian/tests/build vte-2.91
 Depends: build-essential, libvte-2.91-dev
+Restrictions: allow-stderr superficial
+
+Test-Command: debian/tests/build vte-2.91-gtk4
+Depends: build-essential, libvte-2.91-gtk4-dev
 Restrictions: allow-stderr superficial

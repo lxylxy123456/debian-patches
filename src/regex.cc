@@ -22,6 +22,7 @@
 #include "vte/vteregex.h"
 
 #include <cassert>
+#include <version>
 
 namespace vte {
 
@@ -86,12 +87,20 @@ Regex*
 Regex::compile(Regex::Purpose purpose,
                std::string_view const& pattern,
                uint32_t flags,
+               uint32_t extra_flags,
+               size_t* error_offset,
                GError** error)
 {
         assert(error == nullptr || *error == nullptr);
 
         if (!check_pcre_config_unicode(error))
                 return nullptr;
+
+        auto context = vte::Freeable<pcre2_compile_context_8>{};
+        if (extra_flags) {
+                context = vte::take_freeable(pcre2_compile_context_create_8(nullptr));
+                pcre2_set_compile_extra_options_8(context.get(), extra_flags);
+        }
 
         int errcode;
         PCRE2_SIZE erroffset;
@@ -103,10 +112,13 @@ Regex::compile(Regex::Purpose purpose,
                                                        PCRE2_NEVER_BACKSLASH_C |
                                                        PCRE2_USE_OFFSET_LIMIT,
                                                        &errcode, &erroffset,
-                                                       nullptr));
+                                                       context.get()));
 
         if (!code) {
                 set_gerror_from_pcre_error(errcode, error);
+                if (error_offset)
+                        *error_offset = erroffset;
+
                 g_prefix_error(error, "Failed to compile pattern to regex at offset %" G_GSIZE_FORMAT ":",
                                erroffset);
                 return nullptr;
@@ -189,6 +201,57 @@ Regex::substitute(std::string_view const& subject,
 {
         assert (!(flags & PCRE2_SUBSTITUTE_OVERFLOW_LENGTH));
 
+#if defined(__cpp_lib_string_resize_and_overwrite) && __cpp_lib_string_resize_and_overwrite >= 202110l
+        std::string outbuf;
+        auto r = 0;
+        PCRE2_SIZE outlen = 2048;
+        outbuf.resize_and_overwrite
+                (outlen,
+                 [&](char* data,
+                     size_t len) constexpr noexcept -> size_t {
+                         // Note that on success, outlen excludes the trailing NUL
+                         r = pcre2_substitute_8(code(),
+                                                (PCRE2_SPTR8)subject.data(), subject.size(),
+                                                0 /* start offset */,
+                                                flags | PCRE2_SUBSTITUTE_OVERFLOW_LENGTH,
+                                                nullptr /* match data */,
+                                                nullptr /* match context */,
+                                                (PCRE2_SPTR8)replacement.data(), replacement.size(),
+                                                (PCRE2_UCHAR8*)data, &outlen);
+                         return r >= 0 ? outlen : 0;
+                 });
+
+        if (r >= 0)
+                return outbuf;
+
+        if (r == PCRE2_ERROR_NOMEMORY) {
+                // The buffer was not large enough; allocated a buffer of the
+                // required size and try again. Note that as opposed to the successful
+                // call to pcre2_substitute_8() above, in the error case outlen *includes*
+                // the trailing NUL.
+                assert(outlen > 0);
+                outbuf.resize_and_overwrite
+                        (outlen - 1,
+                         [&](char* data,
+                             size_t len) constexpr noexcept -> size_t {
+                                 // Note that on success, outlen excludes the trailing NUL
+                                 r = pcre2_substitute_8(code(),
+                                                        (PCRE2_SPTR8)subject.data(), subject.size(),
+                                                        0 /* start offset */,
+                                                        flags,
+                                                        nullptr /* match data */,
+                                                        nullptr /* match context */,
+                                                        (PCRE2_SPTR8)replacement.data(), replacement.size(),
+                                                        (PCRE2_UCHAR8*)data, &outlen);
+                                 return r >= 0 ? outlen : 0;
+                         });
+
+                if (r >= 0)
+                        return outbuf;
+        }
+
+#else // not C++23
+
         char outbuf[2048];
         PCRE2_SIZE outlen = sizeof(outbuf) - 1;
         auto r = pcre2_substitute_8(code(),
@@ -215,7 +278,7 @@ Regex::substitute(std::string_view const& subject,
                 r = pcre2_substitute_8(code(),
                                        (PCRE2_SPTR8)subject.data(), subject.size(),
                                        0 /* start offset */,
-                                       flags | PCRE2_SUBSTITUTE_OVERFLOW_LENGTH,
+                                       flags,
                                        nullptr /* match data */,
                                        nullptr /* match context */,
                                        (PCRE2_SPTR8)replacement.data(), replacement.size(),
@@ -226,6 +289,7 @@ Regex::substitute(std::string_view const& subject,
                         return outbuf2;
                 }
        }
+#endif // C++23
 
         set_gerror_from_pcre_error(r, error);
         return std::nullopt;

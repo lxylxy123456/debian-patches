@@ -31,6 +31,7 @@
 #include "vteregex.h"
 #include "vteterminal.h"
 #include "vtetypebuiltins.h"
+#include "vteuuid.h"
 #include "vteversion.h"
 
 #if !defined(VTE_DISABLE_DEPRECATED) || defined(VTE_COMPILATION)

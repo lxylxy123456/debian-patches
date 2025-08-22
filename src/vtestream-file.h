@@ -81,18 +81,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <zlib.h>
-
-#ifdef WITH_GNUTLS
-# include <gnutls/gnutls.h>
-# include <gnutls/crypto.h>
-#endif
+#include <lz4.h>
 
 #include "vteutils.h"
 
+#if WITH_GNUTLS
+# include <gnutls/gnutls.h>
+# include <gnutls/crypto.h>
+#else
+#undef WITH_GNUTLS
+#endif
+
 G_BEGIN_DECLS
 
-#ifdef WITH_GNUTLS
+#if WITH_GNUTLS
 /* Currently the code requires that a stream cipher (e.g. GCM) is used
  * which can encrypt any amount of data without need for padding. */
 # define VTE_CIPHER_ALGORITHM    GNUTLS_CIPHER_AES_256_GCM
@@ -126,11 +128,11 @@ typedef guint8 _vte_overwrite_counter_t;
 
 /******************************************************************************************/
 
-#ifndef HAVE_EXPLICIT_BZERO
+#if !HAVE_EXPLICIT_BZERO
 #define explicit_bzero(s, n) memset((s), 0, (n))
 #endif
 
-#ifndef HAVE_PREAD
+#if !HAVE_PREAD
 #define pread _pread
 static inline gsize
 pread (int fd, char *data, gsize len, gsize offset)
@@ -141,7 +143,7 @@ pread (int fd, char *data, gsize len, gsize offset)
 }
 #endif
 
-#ifndef HAVE_PWRITE
+#if !HAVE_PWRITE
 #define pwrite _pwrite
 static inline gsize
 pwrite (int fd, char *data, gsize len, gsize offset)
@@ -367,10 +369,40 @@ static GType _vte_snake_get_type (void);
 G_DEFINE_TYPE (VteSnake, _vte_snake, G_TYPE_OBJECT)
 
 static void
+_vte_snake_verify (VteSnake *snake)
+{
+#ifdef VTE_DEBUG
+        int i;
+
+        g_assert_cmpuint (snake->tail, <=, snake->head);
+
+        g_assert_cmpuint (snake->tail, ==, snake->segment[0].st_tail);
+        for (i = 1; i < VTE_SNAKE_SEGMENTS(snake); i++) {
+                g_assert_cmpuint (snake->segment[i].st_tail, ==, snake->segment[i - 1].st_head);
+        }
+        g_assert_cmpuint (snake->head, ==, snake->segment[VTE_SNAKE_SEGMENTS(snake) - 1].st_head);
+
+        if (snake->tail == snake->head) {
+                g_assert_cmpuint (snake->state, ==, 1);
+        } else {
+                for (i = 0; i < VTE_SNAKE_SEGMENTS(snake); i++) {
+                        g_assert_cmpuint (snake->segment[i].st_tail, <, snake->segment[i].st_head);
+                }
+        }
+
+        for (i = 0; i < VTE_SNAKE_SEGMENTS(snake); i++) {
+                g_assert_cmpuint (snake->segment[i].st_head - snake->segment[i].st_tail, ==, snake->segment[i].fd_head - snake->segment[i].fd_tail);
+        }
+#endif
+}
+
+static void
 _vte_snake_init (VteSnake *snake)
 {
         snake->fd = -1;
         snake->state = 1;
+
+        _vte_snake_verify(snake);
 }
 
 static void
@@ -410,6 +442,8 @@ _vte_snake_reset (VteSnake *snake, gsize offset)
                 /* Never retreat the head: bug 748484. */
                 _vte_snake_advance_tail (snake, offset);
         }
+
+        _vte_snake_verify(snake);
 }
 
 /*
@@ -507,6 +541,8 @@ _vte_snake_write (VteSnake *snake, gsize offset, const char *data, gsize len)
                 _file_try_punch_hole (snake->fd, fd_offset, VTE_SNAKE_BLOCKSIZE);
         }
         _file_write (snake->fd, data, len, fd_offset);
+
+        _vte_snake_verify(snake);
 }
 
 /*
@@ -532,7 +568,7 @@ _vte_snake_advance_tail (VteSnake *snake, gsize offset)
                         _file_try_punch_hole (snake->fd, snake->segment[0].fd_tail, offset - snake->tail);
                         snake->segment[0].fd_tail += offset - snake->tail;
                         snake->segment[0].st_tail = snake->tail = offset;
-                        return;
+                        break;
                 } else {
                         /* Drop the entire first segment. */
                         switch (snake->state) {
@@ -560,9 +596,11 @@ _vte_snake_advance_tail (VteSnake *snake, gsize offset)
                                 break;
                         }
                 }
+                snake->tail = snake->segment[0].st_tail;
         }
-        g_assert_cmpuint (snake->segment[0].st_tail, ==, offset);
-        snake->tail = offset;
+
+        g_assert_cmpuint (snake->tail, ==, offset);
+        _vte_snake_verify(snake);
 }
 
 static gsize
@@ -737,7 +775,7 @@ static int
 _vte_boa_compressBound (unsigned int len)
 {
 #ifndef VTESTREAM_MAIN
-        return compressBound(len);
+        return LZ4_compressBound(len);
 #else
         return 2 * len;
 #endif
@@ -748,12 +786,9 @@ static unsigned int
 _vte_boa_compress (char *dst, unsigned int dstlen, const char *src, unsigned int srclen)
 {
 #ifndef VTESTREAM_MAIN
-        uLongf dstlen_ulongf = dstlen;
-        unsigned int z_ret;
-
-        z_ret = compress2 ((Bytef *) dst, &dstlen_ulongf, (const Bytef *) src, srclen, 1);
-        g_assert_cmpuint (z_ret, ==, Z_OK);
-        return dstlen_ulongf;
+        int len = LZ4_compress_default (src, dst, srclen, dstlen);
+        g_assert_cmpuint (len, >=, 0);
+        return len;
 #else
         /* Fake compression for unit testing:
          * Each char gets prefixed by a repetition count. This prefix is omitted if it would be the
@@ -786,12 +821,9 @@ static unsigned int
 _vte_boa_uncompress (char *dst, unsigned int dstlen, const char *src, unsigned int srclen)
 {
 #ifndef VTESTREAM_MAIN
-        uLongf dstlen_ulongf = dstlen;
-        unsigned int z_ret;
-
-        z_ret = uncompress ((Bytef *) dst, &dstlen_ulongf, (const Bytef *) src, srclen);
-        g_assert_cmpuint (z_ret, ==, Z_OK);
-        return dstlen_ulongf;
+        int len = LZ4_decompress_safe (src, dst, srclen, dstlen);
+        g_assert_cmpint (len, >=, 0);
+        return len;
 #else
         /* Fake decompression for unit testing; see above. */
         unsigned int len = 0, repeat = 0;
@@ -1444,6 +1476,16 @@ test_snake (void)
         snake_write (snake, 60, "Giraffe");
         assert_file (snake->fd, "Giraffe.......................Ferret....");
         assert_snake (snake, 2, 50, 70, "Ferret....Giraffe...");
+
+        /* Stay in state 2 */
+        snake_write (snake, 70, "Horse");
+        assert_file (snake->fd, "Giraffe...Horse...............Ferret....");
+        assert_snake (snake, 2, 50, 80, "Ferret....Giraffe...Horse.....");
+
+        /* State 2 -> 1. Advance tail across state change, bug 2699 */
+        _vte_snake_advance_tail (snake, 70);
+        assert_file (snake->fd, "..........Horse.....");
+        assert_snake (snake, 1, 70, 80, "Horse.....");
 
         /* Reset, back to state 1 */
         _vte_snake_reset (snake, 250);

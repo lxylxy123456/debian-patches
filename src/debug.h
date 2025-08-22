@@ -86,13 +86,13 @@ _vte_debug_on(guint flags)
 	return (_vte_debug_flags & flags) != 0;
 }
 
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
 #define _VTE_DEBUG_IF(flags) if (G_UNLIKELY (_vte_debug_on (flags)))
 #else
 #define _VTE_DEBUG_IF(flags) if (0)
 #endif
 
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
 #if defined(__GNUC__) && G_HAVE_GNUC_VARARGS
 #define _vte_debug_print(flags, fmt, ...) \
 	G_STMT_START { _VTE_DEBUG_IF(flags) g_printerr(fmt, ##__VA_ARGS__); } G_STMT_END
@@ -117,6 +117,20 @@ _vte_debug_tf(bool v) noexcept
 {
         return v ? "true" : "false";
 }
+
+#ifdef G_DISABLE_ASSERT
+# define vte_assert_cmpint(a,op,b) G_STMT_START {} G_STMT_END
+# define vte_assert_cmpuint(a,op,b) G_STMT_START {} G_STMT_END
+# define vte_assert_cmphex(a,op,b) G_STMT_START {} G_STMT_END
+# define vte_assert_true(v) G_STMT_START {} G_STMT_END
+# define vte_assert_false(v) G_STMT_START {} G_STMT_END
+#else
+# define vte_assert_cmpint(a,op,b) g_assert_cmpint(a,op,b)
+# define vte_assert_cmpuint(a,op,b) g_assert_cmpuint(a,op,b)
+# define vte_assert_cmphex(a,op,b) g_assert_cmphex(a,op,b)
+# define vte_assert_true(v) g_assert_true(v)
+# define vte_assert_false(v) g_assert_false(v)
+#endif
 
 G_END_DECLS
 

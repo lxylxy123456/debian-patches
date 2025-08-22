@@ -46,7 +46,7 @@ inline constexpr auto to_integral(E e) noexcept
         return static_cast<std::underlying_type_t<E>>(e);
 }
 
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
 void log_exception(char const* func = __builtin_FUNCTION(),
                    char const* filename = __builtin_FILE(),
                    int const line = __builtin_LINE()) noexcept;
@@ -68,3 +68,32 @@ template <typename T, typename D, D func>
 using FreeablePtr = std::unique_ptr<T, FreeablePtrDeleter<T, D, func>>;
 
 } // namespace vte
+
+#define VTE_CXX_DEFINE_BITMASK(Type) \
+  inline constexpr Type \
+  operator&(Type lhs, Type rhs) noexcept \
+  { return (Type)(vte::to_integral(lhs) & vte::to_integral(rhs)); } \
+  \
+  inline constexpr Type \
+  operator~(Type v) noexcept \
+  { return (Type)~vte::to_integral(v); }        \
+  \
+  inline constexpr Type \
+  operator|(Type lhs, Type rhs) noexcept \
+  { return (Type)(vte::to_integral(lhs) | vte::to_integral(rhs)); } \
+  \
+  inline constexpr Type \
+  operator^(Type lhs, Type rhs) noexcept \
+  { return (Type)(vte::to_integral(lhs) ^ vte::to_integral(rhs)); } \
+  \
+  inline constexpr Type& \
+  operator&=(Type& lhs, Type rhs) noexcept \
+  { return lhs = lhs & rhs; } \
+  \
+  inline constexpr Type& \
+  operator|=(Type& lhs, Type rhs) noexcept \
+  { return lhs = lhs | rhs; } \
+  \
+  inline constexpr Type& \
+  operator^=(Type& lhs, Type rhs) noexcept \
+  { return lhs = lhs ^ rhs; }

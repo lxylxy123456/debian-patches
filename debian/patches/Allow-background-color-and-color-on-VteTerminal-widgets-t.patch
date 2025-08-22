@@ -13,18 +13,18 @@ Last-Update: 2021-11-08
  1 file changed, 22 insertions(+), 6 deletions(-)
 
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index 591c127..87375f3 100644
+index dd3b17c..86cd453 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
-@@ -92,6 +92,7 @@ template<typename T>
- constexpr bool check_enum_value(T value) noexcept;
+@@ -130,6 +130,7 @@ sanitise_widget_size_request(int* minimum,
+ }
  
  struct _VteTerminalClassPrivate {
 +        GtkStyleProvider *fallback_style_provider;
          GtkStyleProvider *style_provider;
  };
  
-@@ -851,6 +852,9 @@ try
+@@ -981,6 +982,9 @@ try
  	_vte_debug_print(VTE_DEBUG_LIFECYCLE, "vte_terminal_init()\n");
  
          context = gtk_widget_get_style_context(&terminal->widget);
@@ -34,7 +34,7 @@ index 591c127..87375f3 100644
          gtk_style_context_add_provider (context,
                                          VTE_TERMINAL_GET_CLASS (terminal)->priv->style_provider,
                                          VTE_TERMINAL_CSS_PRIORITY);
-@@ -2353,6 +2357,24 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -2963,6 +2967,24 @@ vte_terminal_class_init(VteTerminalClass *klass)
  
          klass->priv = G_TYPE_CLASS_GET_PRIVATE (klass, VTE_TYPE_TERMINAL, VteTerminalClassPrivate);
  
@@ -59,7 +59,7 @@ index 591c127..87375f3 100644
          klass->priv->style_provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
  #if VTE_GTK == 3
          auto err = vte::glib::Error{};
-@@ -2363,12 +2385,6 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -2973,12 +2995,6 @@ vte_terminal_class_init(VteTerminalClass *klass)
          gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (klass->priv->style_provider),
                                           "VteTerminal, " VTE_TERMINAL_CSS_NAME " {\n"
                                           "padding: 1px 1px 1px 1px;\n"

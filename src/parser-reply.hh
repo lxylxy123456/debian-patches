@@ -34,16 +34,20 @@ _VTE_REPLY(XTERM_SMGRAPHICS_REPORT,                   CSI, 'S', WHAT, NONE,  ) /
 _VTE_REPLY(DECDA1R,                                   CSI, 'c', WHAT, NONE,  ) /* DA1 report */
 _VTE_REPLY(DECDA2R,                                   CSI, 'c', GT,   NONE,  ) /* DA2 report */
 _VTE_REPLY(SGR,                                       CSI, 'm', NONE, NONE,  ) /* SGR */
+_VTE_REPLY(DECSGR,                                    CSI, 'm', WHAT, NONE,  ) /* DECSGR */
 _VTE_REPLY(XTERM_MOUSE_EXT_SGR_REPORT_BUTTON_RELEASE, CSI, 'm', LT,   NONE,  ) /* XTERM SGR mouse mode button release report */
 _VTE_REPLY(DSR,                                       CSI, 'n', NONE, NONE,  ) /* device status report */
 _VTE_REPLY(DECDSR,                                    CSI, 'n', WHAT, NONE,  ) /* device status report */
 _VTE_REPLY(DECSCUSR,                                  CSI, 'q', NONE, SPACE, ) /* set-cursor-style */
 _VTE_REPLY(DECSRC,                                    CSI, 'q', NONE, MULT,  ) /* secure reset confirmation */
-_VTE_REPLY(DECSTBM,                                   CSI, 'r', NONE, NONE,  ) /* set-top-and-bottom-margins */
+_VTE_REPLY(DECSTBM,                                   CSI, 'r', NONE, NONE,  ) /* set top and bottom margins */
+_VTE_REPLY(DECSLRM,                                   CSI, 's', NONE, NONE,  ) /* set left and right margins */
+_VTE_REPLY(DECSLPP,                                   CSI, 't', NONE, NONE,  ) /* set lines per page */
 _VTE_REPLY(XTERM_WM,                                  CSI, 't', NONE, NONE,  ) /* XTERM WM report */
-_VTE_REPLY(DECRPDE,                                   CSI, 'w', NONE, DQUOTE,) /* report displayed extent */
 _VTE_REPLY(DECRPKT,                                   CSI, 'v', NONE, COMMA, ) /* report key type */
+_VTE_REPLY(DECRPDE,                                   CSI, 'w', NONE, DQUOTE,) /* report displayed extent */
 _VTE_REPLY(DECREPTPARM,                               CSI, 'x', NONE, NONE,  ) /* report terminal parameters */
+_VTE_REPLY(DECSACE,                                   CSI, 'x', NONE, MULT,  ) /* report DECSACE  */
 _VTE_REPLY(DECPKMFR,                                  CSI, 'y', NONE, PLUS,  ) /* program key free memory report */
 _VTE_REPLY(DECRPM_ECMA,                               CSI, 'y', NONE, CASH,  ) /* report ECMA mode */
 _VTE_REPLY(DECRPM_DEC,                                CSI, 'y', WHAT, CASH,  ) /* report private mode */
@@ -55,8 +59,9 @@ _VTE_REPLY(DECRPSS,     DCS, 'r', NONE, CASH,  ) /* report state or setting */
 _VTE_REPLY(DECTSR,      DCS, 's', NONE, CASH,  ) /* terminal state report */
 _VTE_REPLY(DECCTR,      DCS, 's', NONE, CASH,  _VTE_REPLY_PARAMS({2})) /* color table report */
 _VTE_REPLY(DECAUPSS,    DCS, 'u', NONE, BANG,  ) /* assign user preferred supplemental set */
-_VTE_REPLY(DECCIR,      DCS, 'u', NONE, CASH,  _VTE_REPLY_PARAMS({1})) /* cursor information report */
+_VTE_REPLY(DECPSR,      DCS, 'u', NONE, CASH,  ) /* presentation state report */
 _VTE_REPLY(DECRPTUI,    DCS, '|', NONE, BANG,  _VTE_REPLY_STRING("7E565445") /* "~VTE" */) /* report terminal unit ID */
+_VTE_REPLY(XTERM_DSR,   DCS, '|', GT,   NONE,  ) /* xterm terminal version report */
 _VTE_REPLY(DECRPFK,     DCS, '}', NONE, DQUOTE,) /* report function key */
 _VTE_REPLY(DECCKSR,     DCS, '~', NONE, BANG,  ) /* memory checksum report */
 _VTE_REPLY(DECRPAK,     DCS, '~', NONE, DQUOTE,) /* report all modifiers/alphanumeric key */

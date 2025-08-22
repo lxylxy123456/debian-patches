@@ -30,7 +30,7 @@ option(
 )
 
 option(
-  'debugg', # for some reason, 'debug' is "reserved"
+  'dbg', # for some reason, 'debug' is "reserved"
   type: 'boolean',
   value: false,
   description: 'Enable extra debugging functionality',
@@ -81,7 +81,7 @@ option(
 option(
   'gtk4',
   type: 'boolean',
-  value: false,
+  value: true,
   description: 'Enable GTK+ 4.0 widget',
 )
 

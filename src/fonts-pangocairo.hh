@@ -24,6 +24,7 @@
 #include <pango/pangocairo.h>
 #include <gtk/gtk.h>
 
+#include "cairo-glue.hh"
 #include "pango-glue.hh"
 #include "refptr.hh"
 #include "vteunistr.h"
@@ -154,9 +155,13 @@ public:
                 enum class Coverage : uint8_t {
                         /* in increasing order of speed */
                         UNKNOWN = 0u,           /* we don't know about the character yet    */
+#if VTE_GTK == 3
                         USE_PANGO_LAYOUT_LINE,  /* use a PangoLayoutLine for the character  */
                         USE_PANGO_GLYPH_STRING, /* use a PangoGlyphString for the character */
-                        USE_CAIRO_GLYPH         /* use a cairo_glyph_t for the character    */
+                        USE_CAIRO_GLYPH,        /* use a cairo_glyph_t for the character    */
+#elif VTE_GTK == 4
+                        USE_PANGO_GLYPH_STRING,
+#endif
                 };
 
                 uint8_t m_coverage{uint8_t(Coverage::UNKNOWN)};
@@ -168,20 +173,22 @@ public:
 
                 // FIXME: use std::variant<std::monostate, RefPtr<PangoLayoutLine>, ...> ?
                 union unistr_font_info {
+#if VTE_GTK == 3
                         /* Coverage::USE_PANGO_LAYOUT_LINE */
                         struct {
                                 PangoLayoutLine *line;
                         } using_pango_layout_line;
-                        /* Coverage::USE_PANGO_GLYPH_STRING */
-                        struct {
-                                PangoFont *font;
-                                PangoGlyphString *glyph_string;
-                        } using_pango_glyph_string;
                         /* Coverage::USE_CAIRO_GLYPH */
                         struct {
                                 cairo_scaled_font_t *scaled_font;
                                 unsigned int glyph_index;
                         } using_cairo_glyph;
+#endif
+                        /* Coverage::USE_PANGO_GLYPH_STRING */
+                        struct {
+                                PangoFont *font;
+                                PangoGlyphString *glyph_string;
+                        } using_pango_glyph_string;
                 } m_ufi;
 
                 UnistrInfo() noexcept = default;
@@ -192,6 +199,7 @@ public:
                         default:
                         case Coverage::UNKNOWN:
                                 break;
+#if VTE_GTK == 3
                         case Coverage::USE_PANGO_LAYOUT_LINE:
                                 /* we hold a manual reference on layout */
                                 g_object_unref (m_ufi.using_pango_layout_line.line->layout);
@@ -199,16 +207,17 @@ public:
                                 pango_layout_line_unref (m_ufi.using_pango_layout_line.line);
                                 m_ufi.using_pango_layout_line.line = NULL;
                                 break;
+                        case Coverage::USE_CAIRO_GLYPH:
+                                cairo_scaled_font_destroy (m_ufi.using_cairo_glyph.scaled_font);
+                                m_ufi.using_cairo_glyph.scaled_font = NULL;
+                                break;
+#endif
                         case Coverage::USE_PANGO_GLYPH_STRING:
                                 if (m_ufi.using_pango_glyph_string.font)
                                         g_object_unref (m_ufi.using_pango_glyph_string.font);
                                 m_ufi.using_pango_glyph_string.font = NULL;
                                 pango_glyph_string_free (m_ufi.using_pango_glyph_string.glyph_string);
                                 m_ufi.using_pango_glyph_string.glyph_string = NULL;
-                                break;
-                        case Coverage::USE_CAIRO_GLYPH:
-                                cairo_scaled_font_destroy (m_ufi.using_cairo_glyph.scaled_font);
-                                m_ufi.using_cairo_glyph.scaled_font = NULL;
                                 break;
                         }
                 }
@@ -260,7 +269,7 @@ private:
         // FIXME: use std::string
 	GString* m_string{nullptr};
 
-#ifdef VTE_DEBUG
+#if VTE_DEBUG
 	/* profiling info */
 	int m_coverage_count[4]{0, 0, 0, 0};
 #endif
@@ -268,20 +277,20 @@ private:
         static FontInfo* create_for_context(vte::glib::RefPtr<PangoContext> context,
                                             PangoFontDescription const* desc,
                                             PangoLanguage* language,
+                                            cairo_font_options_t const* font_options,
                                             guint fontconfig_timestamp);
 #if VTE_GTK == 3
         static FontInfo *create_for_screen(GdkScreen* screen,
                                            PangoFontDescription const* desc,
-                                           PangoLanguage* language);
+                                           PangoLanguage* language,
+                                           cairo_font_options_t const* font_options);
 #endif
 
 public:
 
         static FontInfo *create_for_widget(GtkWidget* widget,
-                                           PangoFontDescription const* desc);
-
-private:
-        static inline GHashTable* s_font_info_for_context{nullptr};
+                                           PangoFontDescription const* desc,
+                                           cairo_font_options_t const* font_options);
 
 }; // class FontInfo
 

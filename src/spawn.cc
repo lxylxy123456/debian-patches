@@ -39,7 +39,7 @@
 
 #include "glib-glue.hh"
 
-#ifdef WITH_SYSTEMD
+#if WITH_SYSTEMD
 #include "systemd.hh"
 #endif
 
@@ -91,6 +91,15 @@ make_pipe(int flags,
           vte::libc::FD& write_fd,
           vte::glib::Error& error)
 {
+#if !GLIB_CHECK_VERSION(2, 78, 0)
+        if constexpr (O_CLOEXEC != FD_CLOEXEC) {
+                if (flags & O_CLOEXEC) {
+                        flags &= ~O_CLOEXEC;
+                        flags |= FD_CLOEXEC;
+                }
+        }
+#endif // !glib 2.78
+
         int fds[2] = { -1, -1 };
         if (!g_unix_open_pipe(fds, flags, error))
                 return false;
@@ -529,7 +538,7 @@ SpawnOperation::~SpawnOperation()
 bool
 SpawnOperation::prepare(vte::glib::Error& error)
 {
-#ifndef WITH_SYSTEMD
+#if !WITH_SYSTEMD
         if (context().require_systemd_scope()) {
                 error.set_literal(G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
                                   "systemd not available");
@@ -549,7 +558,7 @@ SpawnOperation::prepare(vte::glib::Error& error)
 
         auto child_report_error_pipe_read = vte::libc::FD{};
         auto child_report_error_pipe_write = vte::libc::FD{};
-        if (!make_pipe(FD_CLOEXEC,
+        if (!make_pipe(O_CLOEXEC,
                        child_report_error_pipe_read,
                        child_report_error_pipe_write,
                        error))
@@ -713,7 +722,7 @@ SpawnOperation::run(vte::glib::Error& error) noexcept
 
         /* Spawn succeeded */
 
-#ifdef WITH_SYSTEMD
+#if WITH_SYSTEMD
         if (context().systemd_scope() &&
             !vte::systemd::create_scope_for_pid_sync(m_pid,
                                                      m_timeout, // FIXME: recalc timeout

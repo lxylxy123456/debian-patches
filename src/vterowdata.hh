@@ -78,8 +78,17 @@ void _vte_row_data_insert (VteRowData *row, gulong col, const VteCell *cell);
 void _vte_row_data_append (VteRowData *row, const VteCell *cell);
 void _vte_row_data_remove (VteRowData *row, gulong col);
 void _vte_row_data_fill (VteRowData *row, const VteCell *cell, gulong len);
+void _vte_row_data_expand (VteRowData *row, gulong len);
 void _vte_row_data_shrink (VteRowData *row, gulong max_len);
 void _vte_row_data_copy (const VteRowData *src, VteRowData *dst);
+void _vte_row_data_fill_cells(VteRowData* row,
+                              gulong start_idx,
+                              VteCell const* fill_cell, // for filling
+                              VteCell const* cells,
+                              gulong len);
+bool _vte_row_data_ensure_len (VteRowData* row,
+                               gulong len);
+
 guint16 _vte_row_data_nonempty_length (const VteRowData *row);
 
 G_END_DECLS

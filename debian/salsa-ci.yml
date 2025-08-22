@@ -1,0 +1,7 @@
+---
+include:
+  - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/recipes/debian.yml
+
+variables:
+# Possibly https://bugs.debian.org/976175
+  SALSA_CI_DISABLE_BLHC: 1

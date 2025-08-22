@@ -45,7 +45,7 @@ pastify_string(std::string_view str,
                bool c1)
 {
         auto rv = std::string{};
-        rv.reserve((str.size() + 1 + insert_brackets) ? 12 : 0);
+        rv.reserve(str.size() + 1 + (insert_brackets ? 12 : 0));
 
         if (insert_brackets) {
                 if (c1)
@@ -59,7 +59,7 @@ pastify_string(std::string_view str,
 
         auto next_char = [&str](size_t pos) constexpr noexcept -> unsigned char
         {
-                return pos + 1 < str.size() ? str[pos + 1] : 0;
+                return (pos + 1) < str.size() ? str[pos + 1] : 0;
         };
 
         while (str.size() != 0) {

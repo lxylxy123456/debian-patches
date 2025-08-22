@@ -44,6 +44,85 @@
 
 #define VTE_CELL_ATTR_COMMON_BYTES      12  /* The number of common bytes in VteCellAttr and VteStreamCellAttr */
 
+typedef struct VteCellAttr VteCellAttr;
+
+/*
+ * VteCellAttrReverseMask: A class that stores SGR attributes and
+ * stores a mask that when applied to a VteCellAttr reverses its
+ * attributes.
+ *
+ * When adding new attributes, keep in sync with VteCellAttr.
+ */
+
+#define CELL_ATTR_BOOL(lname,uname) \
+        inline constexpr void set_##lname(bool value) \
+        { \
+                attr ^= value ? VTE_ATTR_##uname##_MASK : 0;      \
+        }
+
+#define CELL_ATTR_UINT(lname,uname) \
+        inline constexpr void set_##lname(unsigned int value) \
+        { \
+                attr ^= value ? VTE_ATTR_##uname(1) : 0;  \
+        } \
+        \
+        inline constexpr uint32_t lname() const \
+        { \
+                return vte_attr_get_value(attr, VTE_ATTR_##uname##_VALUE_MASK, VTE_ATTR_##uname##_SHIFT); \
+        }
+
+typedef struct _VTE_GNUC_PACKED VteCellAttrReverseMask {
+
+        uint32_t attr{0u};
+        // Colours cannot be 'reversed' so don't bother storing them
+
+        /* Methods */
+
+        explicit constexpr operator bool() const noexcept
+        {
+                return attr != 0;
+        }
+
+        inline constexpr void unset(uint32_t mask)
+        {
+                // no-op
+        }
+
+#define CELL_ATTR_COLOR(name,mask) \
+        inline void set_##name(uint32_t value) \
+        { \
+        } \
+        \
+        inline constexpr uint32_t name() const \
+        { \
+                return 0; \
+        }
+
+        CELL_ATTR_COLOR(fore, VTE_COLOR_TRIPLE_FORE_MASK)
+        CELL_ATTR_COLOR(back, VTE_COLOR_TRIPLE_BACK_MASK)
+        CELL_ATTR_COLOR(deco, VTE_COLOR_TRIPLE_DECO_MASK)
+#undef CELL_ATTR_COLOR
+
+        CELL_ATTR_BOOL(bold, BOLD)
+        CELL_ATTR_BOOL(italic, ITALIC)
+        CELL_ATTR_UINT(underline, UNDERLINE)
+        CELL_ATTR_BOOL(strikethrough, STRIKETHROUGH)
+        CELL_ATTR_BOOL(overline, OVERLINE)
+        CELL_ATTR_BOOL(reverse, REVERSE)
+        CELL_ATTR_BOOL(blink, BLINK)
+        CELL_ATTR_BOOL(dim, DIM)
+        CELL_ATTR_BOOL(invisible, INVISIBLE)
+
+        inline constexpr void reset_sgr_attributes() noexcept
+        {
+                attr ^= VTE_ATTR_ALL_SGR_MASK;
+        }
+
+} VteCellAttrReverseMask;
+
+#undef CELL_ATTR_BOOL
+#undef CELL_ATTR_UINT
+
 /*
  * VteCellAttr: A single cell style attributes
  *
@@ -53,7 +132,7 @@
  */
 
 #define CELL_ATTR_BOOL(lname,uname) \
-        inline void set_##lname(bool value) \
+        inline constexpr void set_##lname(bool value) \
         { \
                 vte_attr_set_bool(&attr, VTE_ATTR_##uname##_MASK, value); \
         } \
@@ -64,7 +143,7 @@
         }
 
 #define CELL_ATTR_UINT(lname,uname) \
-        inline void set_##lname(unsigned int value) \
+        inline constexpr void set_##lname(unsigned int value) \
         { \
                 vte_attr_set_value(&attr, VTE_ATTR_##uname##_MASK, VTE_ATTR_##uname##_SHIFT, value); \
         } \
@@ -74,7 +153,7 @@
                 return vte_attr_get_value(attr, VTE_ATTR_##uname##_VALUE_MASK, VTE_ATTR_##uname##_SHIFT); \
         }
 
-typedef struct _VTE_GNUC_PACKED VteCellAttr {
+struct _VTE_GNUC_PACKED VteCellAttr {
         uint32_t attr;
 
 	/* 4-byte boundary (8-byte boundary in VteCell) */
@@ -145,8 +224,17 @@ typedef struct _VTE_GNUC_PACKED VteCellAttr {
         CELL_ATTR_BOOL(blink, BLINK)
         CELL_ATTR_BOOL(dim, DIM)
         CELL_ATTR_BOOL(invisible, INVISIBLE)
+        CELL_ATTR_UINT(shellintegration, SHELLINTEGRATION)
         /* ATTR_BOOL(boxed, BOXED) */
-} VteCellAttr;
+
+        inline void reset_sgr_attributes()
+        {
+                vte_attr_set_value(&attr, VTE_ATTR_ALL_SGR_MASK, 0 /* shift */, 0 /* value */);
+                m_colors = vte_color_triple_init();
+        }
+
+}; // class VteCellAttr
+
 static_assert(sizeof (VteCellAttr) == 16, "VteCellAttr has wrong size");
 static_assert(offsetof (VteCellAttr, hyperlink_idx) == VTE_CELL_ATTR_COMMON_BYTES, "VteCellAttr layout is wrong");
 

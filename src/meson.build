@@ -18,9 +18,25 @@ subdir('vte')
 
 src_inc = include_directories('.')
 
-a11y_sources = files(
+a11y_gtk3_sources = files(
   'vteaccess.cc',
   'vteaccess.h',
+)
+
+a11y_gtk4_sources = files(
+  'vteaccess-gtk4.cc',
+  'vteaccess-gtk4.h',
+)
+
+cairo_glue_sources = files(
+  'cairo-glue.hh',
+)
+
+color_sources = files(
+  'color.hh',
+  'color-names.hh',
+  'color-parser.cc',
+  'color-parser.hh',
 )
 
 debug_sources = files(
@@ -52,6 +68,10 @@ icu_sources = files(
 
 libc_glue_sources = files(
   'libc-glue.hh',
+)
+
+minifont_coverage_sources = files(
+  'minifont.cc',
 )
 
 modes_sources = files(
@@ -144,31 +164,50 @@ systemd_sources = files(
   'systemd.hh',
 )
 
+termprop_sources = files(
+  'termprops.hh',
+)
+
+unicode_width_sources = files(
+  'unicode-width.hh',
+)
+
 utf8_sources = files(
   'utf8.cc',
   'utf8.hh',
+)
+
+uuid_sources = files(
+  'uuid.cc',
+  'uuid.hh',
+)
+
+vte_uuid_sources = files(
+  'vteuuid.cc',
+  'vteuuidinternal.hh',
 )
 
 vte_glue_sources = files(
   'vte-glue.hh',
 )
 
-libvte_common_sources = config_sources + debug_sources + glib_glue_sources + gtk_glue_sources + libc_glue_sources + modes_sources + pango_glue_sources + parser_sources + pastify_sources + pcre2_glue_sources + pty_sources + refptr_sources + regex_sources + std_glue_sources + utf8_sources + vte_glue_sources + files(
+libvte_common_sources = cairo_glue_sources + color_sources + config_sources + debug_sources + glib_glue_sources + gtk_glue_sources + libc_glue_sources + modes_sources + pango_glue_sources + parser_sources + pastify_sources + pcre2_glue_sources + pty_sources + refptr_sources + regex_sources + std_glue_sources + termprop_sources + utf8_sources + uuid_sources + vte_uuid_sources + vte_glue_sources + files(
   'attr.hh',
   'bidi.cc',
   'bidi.hh',
+  'box-drawing.hh',
   'buffer.h',
-  'cairo-glue.hh',
   'caps.hh',
   'cell.hh',
   'chunk.cc',
   'chunk.hh',
   'clipboard-gtk.cc',
   'clipboard-gtk.hh',
+  'color-palette.hh',
   'color-triple.hh',
   'cxx-utils.hh',
-  'drawing-cairo.cc',
-  'drawing-cairo.hh',
+  'drawing-context.cc',
+  'drawing-context.hh',
   'fonts-pangocairo.cc',
   'fonts-pangocairo.hh',
   'gobject-glue.hh',
@@ -178,14 +217,21 @@ libvte_common_sources = config_sources + debug_sources + glib_glue_sources + gtk
   'minifont.hh',
   'missing.cc',
   'missing.hh',
+  'osc-colors.hh',
+  'osc-colors.cc',
   'reaper.cc',
   'reaper.hh',
+  'rect.hh',
   'ring.cc',
   'ring.hh',
   'ringview.cc',
   'ringview.hh',
+  'scheduler.cc',
+  'scheduler.h',
+  'sgr.hh',
   'spawn.cc',
   'spawn.hh',
+  'unicode-width.hh',
   'utf8.cc',
   'utf8.hh',
   'vte.cc',
@@ -214,6 +260,16 @@ libvte_common_sources = config_sources + debug_sources + glib_glue_sources + gtk
   'widget.hh',
 )
 
+libvte_gtk3_drawing_sources = files(
+  'drawing-cairo.cc',
+  'drawing-cairo.hh',
+)
+
+libvte_gtk4_drawing_sources = files(
+  'drawing-gsk.cc',
+  'drawing-gsk.hh',
+)
+
 if get_option('icu')
   libvte_common_sources += icu_sources
 endif
@@ -227,18 +283,6 @@ libvte_common_doc_sources = files(
   'vtegtk.cc',
   'vtepty.cc',
   'vteregex.cc',
-)
-
-# FIXMEchpe this should use files('...') (allowed as per docs, afaict), but that crashes meson
-generate_box_drawing = find_program('box_drawing_generate.sh')
-
-libvte_common_sources += custom_target(
-  'box-drawing',
-  input: 'box_drawing.txt',
-  output: 'box_drawing.h',
-  capture: true,
-  command: [generate_box_drawing, '@INPUT@'],
-  install: false,
 )
 
 libvte_common_sources += gnome.compile_resources(
@@ -256,6 +300,7 @@ libvte_common_sources += gnome.genmarshal(
 )
 
 libvte_common_public_deps = [
+  cairo_dep,
   gio_dep,
   glib_dep,
   gobject_dep,
@@ -263,14 +308,16 @@ libvte_common_public_deps = [
 ]
 
 libvte_common_deps = libvte_common_public_deps + [
+  cairo_gobject_dep,
+  fast_float_dep,
   fribidi_dep,
   gnutls_dep,
   icu_dep,
   pcre2_dep,
   libm_dep,
+  liblz4_dep,
   pthreads_dep,
   systemd_dep,
-  zlib_dep,
 ]
 
 incs = [
@@ -286,13 +333,40 @@ libvte_common_cppflags = [
 ]
 
 if get_option('gtk3')
-  libvte_gtk3_sources = libvte_common_sources + libvte_gtk3_public_headers + libvte_gtk3_enum_sources
-  libvte_gtk3_cppflags = libvte_common_cppflags + gtk3_version_cppflags + ['-DVTE_GTK=3',]
+
+   minifont_coverage_gtk3_preprocessed_sources = cxx.preprocess(
+    minifont_coverage_sources,
+    compile_args: [
+      '-fdirectives-only',
+      '-DMINIFONT_COVERAGE',
+      '-DVTE_GTK=3',
+    ],
+    include_directories: [
+      top_inc,
+    ],
+  )
+
+  minifont_coverage_gtk3_sources = custom_target(
+    'minifont-coverage-gtk3.inc',
+    input: minifont_coverage_gtk3_preprocessed_sources,
+    capture: false,
+    command: [
+      python,
+      files('minifont-coverage.py'),
+      '--output', '@OUTPUT@',
+      '@INPUT@',
+    ],
+    install: false,
+    output: 'minifont-coverage-gtk3.inc',
+  )
+
+  libvte_gtk3_sources = libvte_common_sources + libvte_gtk3_public_headers + libvte_gtk3_enum_sources + libvte_gtk3_drawing_sources + minifont_coverage_gtk3_sources
+  libvte_gtk3_cppflags = libvte_common_cppflags + gtk3_version_cppflags + ['-DVTE_GTK=3',] + release_args
   libvte_gtk3_deps = libvte_common_deps + [gtk3_dep,]
   libvte_gtk3_public_deps = libvte_common_public_deps + [gtk3_dep,]
 
   if get_option('a11y')
-    libvte_gtk3_sources += a11y_sources
+    libvte_gtk3_sources += a11y_gtk3_sources
   endif
 
   libvte_gtk3 = shared_library(
@@ -325,10 +399,51 @@ if get_option('gtk3')
 endif
 
 if get_option('gtk4')
-  libvte_gtk4_sources = libvte_common_sources + libvte_gtk4_public_headers + libvte_gtk4_enum_sources + graphene_glue_sources
-  libvte_gtk4_cppflags = libvte_common_cppflags + gtk4_version_cppflags + ['-DVTE_GTK=4',]
+
+  libvte_gtk4_resources_data = files(
+  )
+
+  libvte_gtk4_resources_sources = gnome.compile_resources(
+    'vteresources-gtk4.cc',
+    'vte-gtk4.gresource.xml',
+    c_name: 'vte',
+    dependencies: libvte_gtk4_resources_data,
+  )
+
+  minifont_coverage_gtk4_preprocessed_sources = cxx.preprocess(
+    minifont_coverage_sources,
+    compile_args: [
+      '-fdirectives-only',
+      '-DMINIFONT_COVERAGE',
+      '-DVTE_GTK=4',
+    ],
+    include_directories: [
+      top_inc,
+    ],
+  )
+
+  minifont_coverage_gtk4_sources = custom_target(
+    'minifont-coverage-gtk4.inc',
+    input: minifont_coverage_gtk4_preprocessed_sources,
+    capture: false,
+    command: [
+      python,
+      files('minifont-coverage.py'),
+      '--output', '@OUTPUT@',
+      '@INPUT@',
+    ],
+    install: false,
+    output: 'minifont-coverage-gtk4.inc',
+  )
+
+  libvte_gtk4_sources = libvte_common_sources + libvte_gtk4_public_headers + libvte_gtk4_enum_sources + libvte_gtk4_resources_sources + graphene_glue_sources + libvte_gtk4_drawing_sources + minifont_coverage_gtk4_sources
+  libvte_gtk4_cppflags = libvte_common_cppflags + gtk4_version_cppflags + ['-DVTE_GTK=4',] + release_args
   libvte_gtk4_deps = libvte_common_deps + [gtk4_dep,]
   libvte_gtk4_public_deps = libvte_common_public_deps + [gtk4_dep,]
+
+  if get_option('a11y')
+    libvte_gtk4_sources += a11y_gtk4_sources
+  endif
 
   libvte_gtk4 = shared_library(
     vte_gtk4_api_name,
@@ -503,6 +618,86 @@ xticker = executable(
 
 # Unit tests
 
+test_colors_sources = config_sources + debug_sources + glib_glue_sources + color_sources + files(
+  'color-test.cc',
+)
+
+test_colors = executable(
+  'test-colors',
+  cpp_args: ['-DVTE_GTK=0'],
+  dependencies: [
+    glib_dep,
+    fast_float_dep,
+  ],
+  include_directories: top_inc,
+  install: false,
+  sources: test_colors_sources,
+)
+
+test_minifont_common_sources = config_sources + files(
+  'minifont-test.cc'
+)
+
+if get_option('gtk3')
+  test_minifont_gtk3_sources = test_minifont_common_sources + minifont_coverage_gtk3_sources
+
+  test_minifont_gtk3_sources += custom_target(
+    'minifont-coverage-tests-gtk3.inc',
+    capture: false,
+    command: [
+      python,
+      files('minifont-coverage.py'),
+      '--output', '@OUTPUT@',
+      '--tests',
+      '@INPUT@',
+    ],
+    input: minifont_coverage_gtk3_preprocessed_sources,
+    install: false,
+    output: 'minifont-coverage-tests-gtk3.inc',
+  )
+
+  test_minifont_gtk3 = executable(
+    'test-minifont-gtk3',
+    cpp_args: [
+      '-DVTE_GTK=3',
+    ],
+    dependencies: [glib_dep],
+    include_directories: top_inc,
+    install: false,
+    sources: test_minifont_gtk3_sources,
+  )
+endif # gtk3
+
+if get_option('gtk4')
+  test_minifont_gtk4_sources = test_minifont_common_sources + minifont_coverage_gtk4_sources
+
+  test_minifont_gtk4_sources += custom_target(
+    'minifont-coverage-tests-gtk4.inc',
+    capture: false,
+    command: [
+      python,
+      files('minifont-coverage.py'),
+      '--output', '@OUTPUT@',
+      '--tests',
+      '@INPUT@',
+    ],
+    input: minifont_coverage_gtk4_preprocessed_sources,
+    install: false,
+    output: 'minifont-coverage-tests-gtk4.inc',
+  )
+
+  test_minifont_gtk4 = executable(
+    'test-minifont-gtk4',
+    cpp_args: [
+      '-DVTE_GTK=4',
+    ],
+    dependencies: [glib_dep],
+    include_directories: top_inc,
+    install: false,
+    sources: test_minifont_gtk4_sources,
+  )
+endif # gtk4
+
 test_modes_sources = config_sources + modes_sources + files(
   'modes-test.cc',
 )
@@ -579,7 +774,7 @@ test_stream_sources = config_sources + files(
 test_stream = executable(
   'test-stream',
   sources: test_stream_sources,
-  dependencies: [gio_dep, gnutls_dep, zlib_dep],
+  dependencies: [gio_dep, gnutls_dep, liblz4_dep],
   cpp_args: ['-DVTESTREAM_MAIN'],
   include_directories: top_inc,
   install: false,
@@ -598,6 +793,35 @@ test_tabstops = executable(
   install: false,
 )
 
+test_termprops_sources = cairo_glue_sources + color_sources + config_sources + debug_sources + glib_glue_sources + termprop_sources + uuid_sources + files(
+  'termprops-test.cc',
+)
+
+test_termprops = executable(
+  'test-termprops',
+  dependencies: [
+    glib_dep,
+    cairo_dep,
+    cairo_gobject_dep,
+    fast_float_dep,
+  ],
+  include_directories: top_inc,
+  install: false,
+  sources: test_termprops_sources,
+)
+
+test_unicode_width_sources = config_sources + unicode_width_sources + files(
+  'unicode-width-test.cc',
+)
+
+test_unicode_width = executable(
+  'test-unicode-width',
+  sources: test_unicode_width_sources,
+  dependencies: [glib_dep],
+  include_directories: top_inc,
+  install: false,
+)
+
 test_utf8_sources = config_sources + utf8_sources + files(
   'utf8-test.cc',
 )
@@ -605,6 +829,18 @@ test_utf8_sources = config_sources + utf8_sources + files(
 test_utf8 = executable(
   'test-utf8',
   sources: test_utf8_sources,
+  dependencies: [glib_dep],
+  include_directories: top_inc,
+  install: false,
+)
+
+test_uuid_sources = config_sources + debug_sources + glib_glue_sources + uuid_sources + files(
+  'uuid-test.cc',
+)
+
+test_uuid = executable(
+  'test-uuid',
+  sources: test_uuid_sources,
   dependencies: [glib_dep],
   include_directories: top_inc,
   install: false,
@@ -632,6 +868,7 @@ test_env = [
 
 # apparently there is no way to get a name back from an executable(), so it this ugly way
 test_units = [
+  ['colors', test_colors],
   ['modes', test_modes],
   ['parser', test_parser],
   ['pastify', test_pastify],
@@ -639,12 +876,22 @@ test_units = [
   ['refptr', test_refptr],
   ['stream', test_stream],
   ['tabstops', test_tabstops],
+  ['termprops', test_termprops],
+  ['unicode-width', test_unicode_width],
   ['utf8', test_utf8],
+  ['uuid', test_uuid],
 ]
 
 if get_option('gtk3')
   test_units += [
+    ['minifont-gtk3', test_minifont_gtk3],
     ['vtetypes', test_vtetypes],
+  ]
+endif
+
+if get_option('gtk4')
+  test_units += [
+    ['minifont-gtk4', test_minifont_gtk4],
   ]
 endif
 

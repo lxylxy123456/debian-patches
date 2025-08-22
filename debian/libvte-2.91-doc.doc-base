@@ -1,0 +1,12 @@
+Document: libvte-2.91-doc
+Title: Vte-2.91 Reference Manual
+Author: VTE developers
+Abstract: The VTE library provides a terminal emulator widget, VteTerminal, for
+ applications using the GTK toolkit.
+ .
+ This document provides an API reference for using VTE with GTK 3.
+Section: Programming/C
+
+Format: HTML
+Index: /usr/share/doc/vte-2.91/index.html
+Files: /usr/share/doc/vte-2.91/*.html
