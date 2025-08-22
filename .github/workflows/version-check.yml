@@ -1,7 +1,6 @@
 name: Version check
 
 on:
-  push: []
   schedule:
     - cron: '34 12 * * *'
 
