@@ -1,0 +1,255 @@
+libdrumstick (2.7.2-1) unstable; urgency=medium
+
+  * New upstream version 2.7.2
+  * Build with sonivox (Closes: #1017960)
+
+ -- Dennis Braun <d_braun@kabelmail.de>  Sun, 02 Oct 2022 22:47:25 +0200
+
+libdrumstick (2.7.1-1) unstable; urgency=medium
+
+  * New upstream version 2.7.1
+  * Sonivox has been removed from the source code, its disabled for now
+    as long as its not packaged in debian
+
+ -- Dennis Braun <d_braun@kabelmail.de>  Thu, 18 Aug 2022 16:20:27 +0200
+
+libdrumstick (2.6.1-1) unstable; urgency=medium
+
+  * New upstream version 2.6.1
+  * Bump Standards Version to 4.6.1
+
+ -- Dennis Braun <d_braun@kabelmail.de>  Mon, 23 May 2022 20:44:50 +0200
+
+libdrumstick (2.6.0-1) unstable; urgency=medium
+
+  * New upstream version 2.6.0
+
+ -- Dennis Braun <d_braun@kabelmail.de>  Sun, 17 Apr 2022 20:56:56 +0200
+
+libdrumstick (2.5.1-1) unstable; urgency=medium
+
+  * New upstream version 2.5.1
+  * Install new metainfo files
+  * d/copyright: Add metainfo files and FSFAP license
+  * d/copyright: Update years
+
+ -- Dennis Braun <d_braun@kabelmail.de>  Fri, 18 Feb 2022 22:43:53 +0100
+
+libdrumstick (2.5.0-1) unstable; urgency=medium
+
+  * New upstream version 2.5.0
+
+ -- Dennis Braun <d_braun@kabelmail.de>  Thu, 06 Jan 2022 13:00:23 +0100
+
+libdrumstick (2.4.1-1) unstable; urgency=medium
+
+  [ Sebastian Ramacher ]
+  * Remove trailing whitespaces
+
+  [ Dennis Braun ]
+  * New upstream version 2.4.1
+    + Big thanks to Pedro Lopez-Cabanillas for this version and help
+  * Remove the dfsg tag
+    + Revert the exclusion of 2 documentation images, was a wrong license
+  * Update d/control descriptions
+    + OVE file support has been removed and RMI file support has been added
+  * d/copyright:
+    + Update files licensed under CC-BY-SA-3.0-Unported
+    + List licenses at the end of the file for better overview
+    + Add files licensed under CC-BY-SA-4
+    + Refresh copyright years and entries
+    + Remove Rui Fan because OVE support has been removed
+  * d/rules:
+    + Fix typo s/deq/seq/g
+    + Remove override_dh_auto_configure, LIB_SUFFIX is not used anymore
+
+ -- Dennis Braun <d_braun@kabelmail.de>  Sat, 06 Nov 2021 23:59:02 +0100
+
+libdrumstick (2.4.0~dfsg0-1) unstable; urgency=medium
+
+  * New upstream version 2.4.0~dfsg0
+    Exclude 2 documentation images licensed under CC-BY-NC-SA
+
+ -- Dennis Braun <d_braun@kabelmail.de>  Sun, 10 Oct 2021 22:24:57 +0200
+
+libdrumstick (2.3.1-1) unstable; urgency=medium
+
+  * Upload to unstable
+  * New upstream version 2.3.1
+  * Bump Standards-Version to 4.6.0
+  * Add libdrumstick-rt-backends to libdrumstick-dev Depends for cmake files
+
+ -- Dennis Braun <d_braun@kabelmail.de>  Tue, 07 Sep 2021 22:03:03 +0200
+
+libdrumstick (2.0.0-1) experimental; urgency=medium
+
+  [ Olivier Humbert ]
+  * Update copyright (http->https)
+  * Update control (update re: provided binaries)
+  * Update control (definition)
+
+  [ Ondřej Nový ]
+  * Bump Standards-Version to 4.4.1
+
+  [ Dennis Braun ]
+  * New upstream version 2.0.0
+  * Update d/watch version to 4
+  * Add me as uploader
+  * Bump dh-compat to 13
+  * Bump S-V to 4.5.1
+  * Set RRR: no
+  * Update B-Ds: Add doxygen, graphviz and qttools5-dev
+  * Bump ABI version to libdrumstick-*2
+  * d/copyright: Change main license to GPLv3, bump copyright year
+  * Remove unnecessary d/docs file
+  * Add drumstick-data, libdrumstick-plugins and libdrumstick-widgets2 packages
+  * Update the install packages
+  * Remove unnecessary build flags from d/rules
+
+  [ Sebastian Ramacher ]
+  * debian/control:
+    - Remove ${shlibs:Depends} from libdrumstick-dev
+    - Add ${shlib:Depends} to drumstick-tools
+
+ -- Dennis Braun <d_braun@kabelmail.de>  Tue, 12 Jan 2021 21:42:42 +0100
+
+libdrumstick (1.1.3-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * debian/control: Add libfluidsynth-dev to B-D.
+
+ -- Sebastian Ramacher <sramacher@debian.org>  Thu, 05 Sep 2019 21:14:40 +0200
+
+libdrumstick (1.1.2-2) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+  * debian/copyright: Add missing copyright holders. (Closes: #935387)
+
+ -- Sebastian Ramacher <sramacher@debian.org>  Thu, 22 Aug 2019 18:19:32 +0200
+
+libdrumstick (1.1.2-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Ross Gammon ]
+  * New upstream release
+  * Drop gcc6 patch, included in this upstream version
+  * Refresh desktop patch, and drop parts applied upstream
+  * Update copyright file and add myself
+  * Desktop patch forwarded upstream
+  * Desktop patch applied upstream
+
+  [ Ondřej Nový ]
+  * d/copyright: Change Format URL to correct one
+  * d/control: Set Vcs-* to salsa.debian.org
+
+  [ Felipe Sateler ]
+  * Change maintainer address to debian-multimedia@lists.debian.org
+
+  [ Ondřej Nový ]
+  * d/watch: Use https protocol
+  * Use debhelper-compat instead of debian/compat
+
+  [ Sebastian Ramacher ]
+  * debian/: Split shared library package to match SONAMEs and add package for
+    realtime I/O backends.
+  * debian/rules:
+    - Use architecture.mk.
+    - Remove obsolete dh_strip override.
+    - Skip tests if /dev/snd/seq is not available.
+  * debian/control:
+    - Bump debhelper compat to 12.
+    - Bump Standards-Version.
+    - Add libpulse-dev to B-D (for eassynth).
+  * debian/: Remove obsolete *.dirs.
+  * debian/copyright: Update copyright years.
+
+ -- Sebastian Ramacher <sramacher@debian.org>  Sun, 18 Aug 2019 23:35:25 +0200
+
+libdrumstick (1.0.2-1) experimental; urgency=medium
+
+  [ Alessio Treglia ]
+  * New upstream version (Closes: #824771)
+
+  [ Ross Gammon ]
+  * Add myself to uploaders
+  * Update copyright years
+  * Update to Qt5 dependencies from Qt4
+  * Extend gcc6 patch for new upstream version
+  * Patch desktop file Exec key with %f
+  * Patch desktop files to provide keyword entries
+  * Rename library package due to SONAME bump
+  * Update lintian-override according to updated package name
+  * Add bindnow hardening option
+
+ -- Ross Gammon <rosco2@ubuntu.com>  Fri, 26 Aug 2016 22:09:28 +0200
+
+libdrumstick (0.5.0-4) unstable; urgency=medium
+
+  * Team upload.
+  * debian/control:
+    - Build-depend on debhelper 9.
+    - Build-depend on docbook-xml to prevent network access during the build.
+    - Drop build-dependency on autotools-dev.
+    - Remove obsolete DM-Upload-Allowed field.
+    - Use canonical Vcs urls.
+    - Remove libdrumstick-dbg in favour of dbysym packages.
+    - Bump standards to 3.9.8.
+  * debian/patches:
+    - Fix FTBFS with GCC 6. (Closes: #811736)
+    - Drop multiarch patches and use LIB_SUFFIX directly.
+  * debian/shlibs.local:
+    - Remove unused shlibs.local file.
+
+ -- James Cowgill <jcowgill@debian.org>  Sat, 23 Jul 2016 14:10:10 +0100
+
+libdrumstick (0.5.0-3) unstable; urgency=low
+
+  [ Adrian Knoth ]
+  * Replace old binutils patch with new one:
+    - The cmake maintainer suggested a different fix, so here's the new
+      approach. For details, see #615742.
+
+  [ Alessio Treglia ]
+  * Build for Multi-Arch.
+  * Remove missing_libs.patch, superseded by Adrian's new patch.
+  * Refresh patches.
+  * Bump Standards.
+  * Rewrite debian/copyright to comply with DEP-5.
+  * Add override to avoid Lintian's package-name-doesnt-match-sonames
+    warning.
+  * Include in libdrumstick-dbg only symbols coming from libdrumstick0;
+    this avoids installing drumstick-tools when one needs the -DBG just
+    to debug the libraries.
+
+ -- Alessio Treglia <alessio@debian.org>  Sun, 05 Feb 2012 21:13:53 +0100
+
+libdrumstick (0.5.0-2) unstable; urgency=low
+
+  [ Arnout ]
+  * Add Rui Fan as copyright holder to the OVE file format support.
+
+  [ Alessio Treglia ]
+  * Add patch to prevent FTBFS with newest toolchain (Closes: #615742).
+
+ -- Alessio Treglia <alessio@debian.org>  Mon, 28 Feb 2011 12:07:20 +0100
+
+libdrumstick (0.5.0-1) unstable; urgency=low
+
+  [ Adrian Knoth ]
+  * New upstream release.
+  * Include mime-type definition file.
+
+  [ Alessio Treglia ]
+  * Add Adrian to the Uploaders list.
+  * Allow DM uploads.
+
+ -- Adrian Knoth <adi@drcomp.erfurt.thur.de>  Thu, 09 Sep 2010 14:01:04 +0200
+
+libdrumstick (0.4.1-1) unstable; urgency=low
+
+  * Initial release (Closes: #579153)
+
+ -- Arnout Engelen <arnouten@bzzt.net>  Sat, 04 Sep 2010 17:50:31 +0200

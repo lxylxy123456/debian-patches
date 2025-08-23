@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS=hardening=+bindnow
+
+%:
+	dh $@ -Scmake
+
+override_dh_auto_test:
+	if -f /dev/snd/seq ; then dh_auto_test ; fi

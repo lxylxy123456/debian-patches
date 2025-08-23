@@ -1,0 +1,180 @@
+Source: libdrumstick
+Section: libs
+Priority: optional
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Uploaders:
+ Alessio Treglia <alessio@debian.org>,
+ Adrian Knoth <adi@drcomp.erfurt.thur.de>,
+ Arnout Engelen <arnouten@bzzt.net>,
+ Ross Gammon <rosco2@ubuntu.com>,
+ Dennis Braun <d_braun@kabelmail.de>
+Build-Depends:
+ cmake,
+ debhelper-compat (= 13),
+ docbook-xml,
+ docbook-xsl,
+ doxygen,
+ graphviz,
+ libasound2-dev,
+ libfluidsynth-dev (>= 1.1.1),
+ libpulse-dev,
+ libqt5svg5-dev,
+ libsonivox-dev,
+ qtbase5-dev,
+ qttools5-dev,
+ libx11-dev,
+ pkg-config,
+ xsltproc
+Standards-Version: 4.6.1
+Homepage: http://drumstick.sourceforge.net/
+Vcs-Git: https://salsa.debian.org/multimedia-team/libdrumstick.git
+Vcs-Browser: https://salsa.debian.org/multimedia-team/libdrumstick
+Rules-Requires-Root: no
+
+Package: libdrumstick-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends:
+ libdrumstick-alsa2 (= ${binary:Version}),
+ libdrumstick-file2 (= ${binary:Version}),
+ libdrumstick-rt-backends (= ${binary:Version}),
+ libdrumstick-rt2 (= ${binary:Version}),
+ libdrumstick-widgets2 (= ${binary:Version}),
+ ${misc:Depends}
+Description: Qt5/C++ wrapper for ALSA Sequencer (development files)
+ This library is a C++ wrapper around the ALSA library sequencer interface,
+ using Qt5 objects, idioms and style. ALSA sequencer provides software support
+ for MIDI technology on Linux. Complementary classes for RMI and WRK file
+ processing are also included.
+ .
+ This package provides the development files.
+
+Package: libdrumstick-alsa2
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: Qt5/C++ wrapper for ALSA Sequencer (shared library)
+ This library is a C++ wrapper around the ALSA library sequencer interface,
+ using Qt5 objects, idioms and style. ALSA sequencer provides software support
+ for MIDI technology on Linux. Complementary classes for RMI and WRK file
+ processing are also included.
+ .
+ This package provides the shared library.
+
+Package: libdrumstick-file2
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: File format support library for drumstick (shared library)
+ This library is a C++ wrapper around the ALSA library sequencer interface,
+ using Qt5 objects, idioms and style. ALSA sequencer provides software support
+ for MIDI technology on Linux. Complementary classes for RMI and WRK file
+ processing are also included.
+ .
+ This package contains the shared library for support of MIDI, Cakewalk and
+ RIFF MIDI file formats.
+
+Package: libdrumstick-plugins
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: Realtime MIDI I/O with pluggable backends (Qt designer plugins)
+ This library is a C++ wrapper around the ALSA library sequencer interface,
+ using Qt5 objects, idioms and style. ALSA sequencer provides software support
+ for MIDI technology on Linux. Complementary classes for RMI and WRK file
+ processing are also included.
+ .
+ This package contains the libdrumstick Qt designer plugins.
+
+Package: libdrumstick-rt2
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
+Recommends:
+ libdrumstick-rt-backends (= ${binary:Version}),
+ rtkit
+Description: Realtime MIDI I/O with pluggable backends (shared library)
+ This library is a C++ wrapper around the ALSA library sequencer interface,
+ using Qt5 objects, idioms and style. ALSA sequencer provides software support
+ for MIDI technology on Linux. Complementary classes for RMI and WRK file
+ processing are also included.
+ .
+ This package contains the shared library for realtime MIDI I/O with plugin
+ support.
+
+Package: libdrumstick-rt-backends
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: Realtime MIDI I/O backends
+ This library is a C++ wrapper around the ALSA library sequencer interface,
+ using Qt5 objects, idioms and style. ALSA sequencer provides software support
+ for MIDI technology on Linux. Complementary classes for RMI and WRK file
+ processing are also included.
+ .
+ This package contains the backends for realtime MIDI I/O.
+
+Package: libdrumstick-widgets2
+Architecture: any
+Multi-Arch: same
+Depends:
+ drumstick-data (= ${source:Version}),
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: Qt5/C++ wrapper for ALSA Sequencer (widgets)
+ This library is a C++ wrapper around the ALSA library sequencer interface,
+ using Qt5 objects, idioms and style. ALSA sequencer provides software support
+ for MIDI technology on Linux. Complementary classes for RMI and WRK file
+ processing are also included.
+ .
+ This package contains the shared drumstick widgets library.
+
+Package: drumstick-data
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends}
+Description: Qt5/C++ wrapper for ALSA Sequencer (data files)
+ This library is a C++ wrapper around the ALSA library sequencer interface,
+ using Qt5 objects, idioms and style. ALSA sequencer provides software support
+ for MIDI technology on Linux. Complementary classes for RMI and WRK file
+ processing are also included.
+ .
+ This package provides data files for drumstick-tools and libdrumstick-widgets2.
+
+Package: drumstick-tools
+Section: sound
+Architecture: any
+Depends:
+ drumstick-data (= ${source:Version}),
+ libdrumstick-plugins (= ${binary:Version}),
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: Qt5/C++ wrapper for ALSA Sequencer (utilities)
+ This library is a C++ wrapper around the ALSA library sequencer interface,
+ using Qt5 objects, idioms and style. ALSA sequencer provides software support
+ for MIDI technology on Linux. Complementary classes for RMI and WRK file
+ processing are also included.
+ .
+ This package provides utilities shipped with the library:
+  - drumstick-drumgrid: Simple Qt drum sequencer.
+  - drumstick-dumpmid: Write ALSA MIDI events to STDOUT.
+  - drumstick-dumprmi: Write MIDI events from a RIFF MIDI file to STDOUT.
+  - drumstick-dumpsmf: Write MIDI events from a MIDI file to STDOUT.
+  - drumstick-dumpwrk: Write MIDI events from a Cakewalk WRK file to STDOUT.
+  - drumstick-guiplayer: Simple Qt MIDI file player.
+  - drumstick-metronome: Headless MIDI metronome.
+  - drumstick-playsmf: Headless MIDI file player.
+  - drumstick-sysinfo: Display information about ALSA MIDI.
+  - drumstick-vpiano: Virtual Piano Keyboard GUI application.
