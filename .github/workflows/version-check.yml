@@ -36,6 +36,7 @@ jobs:
         echo "$(date)" >> run_dates_${{ matrix.debian_version }}.txt
         git config user.email "lxylxy123456@github-user"
         git config user.name "lxylxy123456"
+        git config pull.rebase false
         git add -A
         git commit -m 'Dummy commit by version-check.yml'
         git pull origin dummy --no-edit
