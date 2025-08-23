@@ -73,3 +73,16 @@ Thanks to https://gitlab.gnome.org/GNOME/vte/-/issues/347#note_1197315
 .. _vte2.91-0.70.3: https://github.com/lxylxy123456/debian-patches/tree/vte2.91-0.70.3
 .. _1b499c9f..53248a69: https://github.com/lxylxy123456/debian-patches/compare/1b499c9fe60bb30f1dfd5ab5a12b5b297ce22866..53248a69677d05d7600d61ccaabaeebe610eea50
 
+
+libdrumstick-widgets2: change keys' shape
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++--------+-------------------------+-----------------------+
+| Debian | Branch                  | Diff                  |
++========+=========================+=======================+
+|   12   | `libdrumstick_2.7.2-1`_ | `be7e8775..bbd0faaf`_ |
++--------+-------------------------+-----------------------+
+
+.. _libdrumstick_2.7.2-1: https://github.com/lxylxy123456/debian-patches/tree/libdrumstick_2.7.2-1
+.. _0ae70fc5..e0497cde: https://github.com/lxylxy123456/debian-patches/compare/0ae70fc518ab945509f74216379ad819d2f9870f..e0497cde2b5694f669c5fe837d811fbc31b8c605
+
