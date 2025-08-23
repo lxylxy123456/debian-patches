@@ -1,6 +1,6 @@
 /*
     Virtual Piano Widget for Qt
-    Copyright (C) 2008-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2008-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@ PianoKey::PianoKey(const QRectF &rect, const bool black, const int note)
 {
     m_brush = keyPalette.getColor(black ? 1 : 0);
     setAcceptedMouseButtons(Qt::NoButton);
+    setFlag(QGraphicsItem::ItemClipsChildrenToShape);
 }
 
 void PianoKey::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

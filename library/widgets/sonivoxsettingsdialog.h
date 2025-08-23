@@ -1,6 +1,6 @@
 /*
     Virtual Piano test using the MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,6 +50,7 @@ namespace widgets {
         void readSettings();
         void writeSettings();
         void chkDriverProperties(QSettings *settings);
+        void changeSoundFont(const QString& fileName);
 
         static const QString QSTR_PREFERENCES;
         static const QString QSTR_BUFFERTIME;
@@ -57,11 +58,15 @@ namespace widgets {
         static const QString QSTR_REVERBAMT;
         static const QString QSTR_CHORUSTYPE;
         static const QString QSTR_CHORUSAMT;
+        static const QString QSTR_SOUNDFONT;
+        static const QString QSTR_DATADIR;
+        static const QString QSTR_DATADIR2;
 
-    public slots:
+    public Q_SLOTS:
         void accept() override;
         void showEvent(QShowEvent *event) override;
         void restoreDefaults();
+        void showFileDialog();
 
     private:
         Ui::SonivoxSettingsDialog *ui;

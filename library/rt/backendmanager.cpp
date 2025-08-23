@@ -1,6 +1,6 @@
 /*
     Drumstick RT (realtime MIDI In/Out)
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,32 +49,44 @@ namespace drumstick { namespace rt {
 
     class BackendManager::BackendManagerPrivate {
     public:
-        QList<MIDIInput*> m_inputsList;
-        QList<MIDIOutput*> m_outputsList;
+        QList<QPluginLoader *> m_loaders;
+        QList<MIDIInput *> m_inputsList;
+        QList<MIDIOutput *> m_outputsList;
 
         QString m_inputBackend{QLatin1String("Network")};
-    #if defined(Q_OS_LINUX)
+#if defined(Q_OS_LINUX)
         QStringList m_outputBackends{QLatin1String("SonivoxEAS"),QLatin1String("FluidSynth"),QLatin1String("ALSA")};
-    #elif defined(Q_OS_DARWIN)
+#elif defined(Q_OS_DARWIN)
         QStringList m_outputBackends{QLatin1String("DLS Synth"),QLatin1String("FluidSynth"),QLatin1String("CoreMIDI")};
-    #elif defined(Q_OS_WINDOWS)
+#elif defined(Q_OS_WINDOWS)
         QStringList m_outputBackends{QLatin1String("Windows MM"),QLatin1String("FluidSynth")};
-    #elif defined(Q_OS_UNIX)
+#elif defined(Q_OS_UNIX)
         QStringList m_outputBackends{QLatin1String("FluidSynth"),QLatin1String("OSS")};
-    #else
+#else
         QStringList m_outputBackends{m_inputBackend};
-    #endif
+#endif
 
         ~BackendManagerPrivate()
         {
             clearLists();
         }
+
         void clearLists()
         {
+            // qDebug() << Q_FUNC_INFO << "loaders:" << m_loaders.count()
+            //          << "inputs:" << m_inputsList.count() << "outputs:" << m_outputsList.count();
+            while (!m_loaders.empty()) {
+                QPluginLoader* pluginLoader = m_loaders.takeFirst();
+                //qDebug() << "unloading:" << pluginLoader->fileName();
+                pluginLoader->unload();
+                delete pluginLoader;
+            }
             m_inputsList.clear();
             m_outputsList.clear();
+            m_loaders.clear();
         }
-        void appendDir(const QString& candidate, QStringList& result)
+
+        void appendDir(const QString &candidate, QStringList &result)
         {
             QDir checked(candidate.trimmed());
             //qDebug() << Q_FUNC_INFO << candidate << "exists:" << checked.exists();
@@ -82,13 +94,25 @@ namespace drumstick { namespace rt {
                 result << checked.absolutePath();
             }
         }
+
+        bool isLoaderNeeded(const QString &fileName)
+        {
+            auto it = std::find_if(m_loaders.constBegin(),
+                                   m_loaders.constEnd(),
+                                   [=](QPluginLoader *loader) {
+                                       return loader->fileName() == fileName;
+                                   });
+            return it == m_loaders.constEnd();
+        }
     };
 
     /**
      * @brief Constructor
      */
-    BackendManager::BackendManager(): d(new BackendManagerPrivate)
+    BackendManager::BackendManager()
+        : d{new BackendManagerPrivate}
     {
+        //qDebug() << Q_FUNC_INFO;
         QVariantMap defaultSettings {
             { QSTR_DRUMSTICKRT_PUBLICNAMEIN, QStringLiteral("MIDI In")},
             { QSTR_DRUMSTICKRT_PUBLICNAMEOUT, QStringLiteral("MIDI Out")}
@@ -100,7 +124,9 @@ namespace drumstick { namespace rt {
      * @brief Destructor
      */
     BackendManager::~BackendManager()
-    { }
+    {
+        //qDebug() << Q_FUNC_INFO;
+    }
 
     /**
      * @brief returns the paths where backends are searched
@@ -155,6 +181,7 @@ namespace drumstick { namespace rt {
      */
     void BackendManager::refresh(QSettings *settings)
     {
+        //qDebug() << Q_FUNC_INFO;
         QVariantMap tmpMap;
         settings->beginGroup(QSTR_DRUMSTICKRT_GROUP);
         const QStringList allKeys = settings->allKeys();
@@ -185,29 +212,32 @@ namespace drumstick { namespace rt {
         names << (name_in.isEmpty() ? QStringLiteral("MIDI In") : name_in);
         names << (name_out.isEmpty() ? QStringLiteral("MIDI Out") : name_out);
         paths << defaultPaths();
-        //qDebug() << Q_FUNC_INFO << "names:" << names;
-        //qDebug() << Q_FUNC_INFO << "paths:" << paths;
 
-        d->clearLists();
+        //qDebug() << Q_FUNC_INFO << "names:" << names << "paths:" << paths;
 
         // Dynamic backends
         foreach(const QString& dir, paths) {
             QDir pluginsDir(dir);
             foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-                if (QLibrary::isLibrary(fileName)) {
-                    QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
-                    QObject *obj = loader.instance();
+                auto absolutePath = pluginsDir.absoluteFilePath(fileName);
+                if (QLibrary::isLibrary(absolutePath) && d->isLoaderNeeded(absolutePath)) {
+                    QPluginLoader *loader = new QPluginLoader(absolutePath);
+                    //qDebug() << "plugin loader created:" << loader->fileName();
+                    d->m_loaders << loader;
+                    QObject *obj = loader->instance();
                     if (obj != nullptr) {
-                        MIDIInput *input = qobject_cast<MIDIInput*>(obj);
+                        MIDIInput *input = qobject_cast<MIDIInput *>(obj);
                         if (input != nullptr && !d->m_inputsList.contains(input)) {
+                            //qDebug() << "input plugin instantiated:" << name_in;
                             if (!name_in.isEmpty()) {
                                 input->setPublicName(name_in);
                             }
                             input->setExcludedConnections(names);
                             d->m_inputsList << input;
                         } else {
-                            MIDIOutput *output = qobject_cast<MIDIOutput*>(obj);
+                            MIDIOutput *output = qobject_cast<MIDIOutput *>(obj);
                             if (output != nullptr && !d->m_outputsList.contains(output)) {
+                                //qDebug() << "output plugin instantiated:" << name_out;
                                 if (!name_out.isEmpty()) {
                                     output->setPublicName(name_out);
                                 }

@@ -1,6 +1,6 @@
 ﻿/*
  Virtual Piano test using the MIDI Sequencer C++ library
- Copyright (C) 2006-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+ Copyright (C) 2006-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ void VPianoSettings::ResetDefaults()
         { BackendManager::QSTR_DRUMSTICKRT_PUBLICNAMEIN, QStringLiteral("Virtual Piano IN")},
         { BackendManager::QSTR_DRUMSTICKRT_PUBLICNAMEOUT, QStringLiteral("Virtual Piano OUT")}
     };
-    emit ValuesChanged();
+    Q_EMIT ValuesChanged();
 }
 
 void VPianoSettings::ReadSettings()
@@ -98,7 +98,7 @@ void VPianoSettings::internalRead(QSettings &settings)
             keys.append(it.key());
         }
     }
-    for(const QString& key : qAsConst(keys)) {
+    for (const QString &key : std::as_const(keys)) {
         QVariant defval = m_defaultsMap.contains(key) ? m_defaultsMap[key] : QString();
         m_settingsMap.insert(key, settings.value(key, defval));
     }
@@ -173,7 +173,7 @@ void VPianoSettings::internalRead(QSettings &settings)
     setInvertedKeys(settings.value("inverted_keys", false).toBool());
     settings.endGroup();
 
-    emit ValuesChanged();
+    Q_EMIT ValuesChanged();
 }
 
 void VPianoSettings::internalSave(QSettings &settings)

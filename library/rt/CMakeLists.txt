@@ -1,18 +1,20 @@
-# MIDI Sequencer C++ Library
-# Copyright (C) 2005-2022 Pedro Lopez-Cabanillas <plcl@users.sourceforge.net>
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#[===========================================================================[
+MIDI C++ Library
+Copyright (C) 2005-2024 Pedro Lopez-Cabanillas <plcl@users.sourceforge.net>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+#]===========================================================================]
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -67,6 +69,7 @@ target_include_directories(drumstick-rt PUBLIC
 
 target_compile_definitions(drumstick-rt
     PRIVATE LIBSUFFIX=${CMAKE_INSTALL_LIBDIR}
+    QT_NO_SIGNALS_SLOTS_KEYWORDS
 )
 
 target_link_libraries(drumstick-rt PRIVATE
@@ -75,7 +78,9 @@ target_link_libraries(drumstick-rt PRIVATE
 
 if(STATIC_DRUMSTICK)
     set_target_properties(drumstick-rt PROPERTIES
-        STATIC_LIB "libdrumstick-rt")
+        STATIC_LIB "libdrumstick-rt"
+        EXPORT_NAME RT
+    )
 else() # STATIC_DRUMSTICK
     set_target_properties(drumstick-rt PROPERTIES
         VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}

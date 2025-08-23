@@ -1,6 +1,6 @@
 /*
     SMF GUI Player test using the MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -107,7 +107,11 @@ GUIPlayer::GUIPlayer(QWidget *parent, Qt::WindowFlags flags)
     m_Client->open();
     m_Client->setPoolOutput(50); // small size, for near real-time pitchShift
     m_Client->setClientName("MIDI Player");
-    connect( m_Client, &MidiClient::eventReceived, this, &GUIPlayer::sequencerEvent, Qt::QueuedConnection );
+    connect(m_Client,
+            &MidiClient::eventReceived,
+            this,
+            &GUIPlayer::sequencerEvent,
+            static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection));
 
     m_Port = new MidiPort(this);
     m_Port->attach( m_Client );

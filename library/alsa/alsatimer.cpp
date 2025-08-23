@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -1291,7 +1291,7 @@ Timer::doEvents()
         if ( m_handler != nullptr )
             m_handler->handleTimerEvent(tr.val, msecs);
         else
-            emit timerExpired(tr.val, msecs);
+            Q_EMIT timerExpired(tr.val, msecs);
     }
 }
 

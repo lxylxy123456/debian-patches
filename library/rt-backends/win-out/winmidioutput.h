@@ -1,6 +1,6 @@
 /*
     Drumstick RT Windows Backend
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ namespace rt {
         virtual void close();
         virtual MIDIConnection currentConnection();
 
-    public slots:
+    public Q_SLOTS:
         virtual void sendNoteOff(int chan, int note, int vel);
         virtual void sendNoteOn(int chan, int note, int vel);
         virtual void sendKeyPressure(int chan, int note, int value);

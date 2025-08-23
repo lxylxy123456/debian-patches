@@ -1,6 +1,6 @@
 /*
     Drumstick RT Backend using the ALSA Sequencer
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ namespace rt {
 
         static const QString DEFAULT_PUBLIC_NAME;
 
-    public slots:
+    public Q_SLOTS:
         virtual void sendNoteOn(int chan, int note, int vel) override;
         virtual void sendNoteOff(int chan, int note, int vel) override;
         virtual void sendController(int chan, int control, int value) override;

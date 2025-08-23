@@ -1,5 +1,9 @@
 # Drumstick Libraries
 
+[![Linux Build and Test](https://github.com/pedrolcl/drumstick/actions/workflows/cmake.yml/badge.svg?branch=devel)](https://github.com/pedrolcl/drumstick/actions/workflows/cmake.yml)  
+
+[![Windows Build and Test](https://github.com/pedrolcl/drumstick/actions/workflows/cmake-win.yml/badge.svg)](https://github.com/pedrolcl/drumstick/actions/workflows/cmake-win.yml)  
+
 Drumstick is a set of MIDI libraries using C++/Qt idioms and style. Includes a C++ wrapper around the ALSA library sequencer interface: ALSA sequencer provides software support for MIDI technology on Linux. A complementary library provides classes for processing SMF (Standard MIDI files: .MID/.KAR), RIFF RMID (*.rmi) and Cakewalk (.WRK) file formats. A multiplatform realtime MIDI I/O library and a GUI Widgets libraries are also provided for Linux, Windows, and Mac OSX.
 
 Currently, there are four libraries designed to work together if/when needed:
@@ -9,7 +13,7 @@ Currently, there are four libraries designed to work together if/when needed:
 * **Drumstick::RT** is a realtime MIDI I/O library with pluggable backends. It uses Drumstick::ALSA on Linux, and other native frameworks on macOS and Windows.
 * **Drumstick::Widgets** contains MIDI widgets, including a Virtual Piano used by VMPK among other programs.
 
-**Drumstick::ALSA** was the first library developed under the Drumstick umbrella, and is available only on Linux, because ALSA Sequencer is an exclusive Linux technology. For realtime IO applications you can use the **Drumstick::RT** library which is multiplatform, and only depends on **Drumstick::ALSA** in Linux for its ALSA Sequencer backend. Other multiplatform backends are: Network/[ipMIDI](https://www.nerds.de/en/ipmidi.html) and [Fluidsynth](https://github.com/FluidSynth/fluidsynth).
+**Drumstick::ALSA** was the first library developed under the Drumstick umbrella, and is available only on Linux, because ALSA Sequencer is an exclusive Linux technology. For realtime I/O applications you can use the **Drumstick::RT** library which is multiplatform, and only depends on **Drumstick::ALSA** in Linux for its ALSA Sequencer backend. Other multiplatform backends are: Network/[ipMIDI](https://www.nerds.de/en/ipmidi.html) and [Fluidsynth](https://github.com/FluidSynth/fluidsynth). The [Sonivox](https://github.com/pedrolcl/sonivox) backend needs PulseAudio, which is available on most Unix systems.
 
 There are ten examples in the source tree, under the utils/ directory:
 
@@ -27,14 +31,37 @@ There are ten examples in the source tree, under the utils/ directory:
 And you can also see independent applications using this library:
 
 * [dmidiplayer](https://sourceforge.net/p/dmidiplayer): Multiplatform MIDI file player with many features.
+* [VMPK](https://sourceforge.net/p/vmpk): Multiplatform Virtual MIDI Piano Keyboard.
 * [kmetronome](https://sourceforge.net/p/kmetronome): MIDI metronome for Linux.
 * [kmidimon](https://sourceforge.net/p/kmidimon): MIDI monitor for Linux.
-* [VMPK](https://sourceforge.net/p/vmpk): Multiplatform Virtual MIDI Piano Keyboard.
 * [wrk2mid](https://sourceforge.net/p/wrk2mid): Command line utility to convert WRK files to SMF.
 
-Here is a diagram about the relationship between the libraries and the applications:
+Here is a diagram about the relationship between the libraries and applications:
 
 ![Drumstick ecosystem](doc/drumstick-ecosystem.png)
+
+Here is another view in table format of the relationships:
+
+|             | Drumstick::ALSA    | Drumstick::File    | Drumstick::RT      | Drumstick::Widgets |
+|-------------|:------------------:|:------------------:|:------------------:|:------------------:|
+|Utilities:   |                    |                    |                    |                    |
+| drumgrid    | :white_check_mark: | :x:                | :x:                | :x:                |
+| dumpmid     | :white_check_mark: | :x:                | :x:                | :x:                |
+| dumprmi     | :x:                | :white_check_mark: | :x:                | :x:                |
+| dumpsmf     | :x:                | :white_check_mark: | :x:                | :x:                |
+| dumpwrk     | :x:                | :white_check_mark: | :x:                | :x:                |
+| guiplayer   | :white_check_mark: | :white_check_mark: | :x:                | :x:                |
+| metronome   | :white_check_mark: | :x:                | :x:                | :x:                |
+| playsmf     | :white_check_mark: | :white_check_mark: | :x:                | :x:                |
+| sysinfo     | :white_check_mark: | :x:                | :x:                | :x:                |
+| vpiano      | :x:                | :x:                | :white_check_mark: | :white_check_mark: |
+|Applications:|                    |                    |                    |                    |
+| dmidiplayer | :x:                | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| VMPK        | :x:                | :x:                | :white_check_mark: | :white_check_mark: |
+| kmetronome  | :white_check_mark: | :x:                | :x:                | :x:                |
+| kmidimon    | :white_check_mark: | :white_check_mark: | :x:                | :x:                |
+| wrk2mid     | :x:                | :white_check_mark: | :x:                | :x:                |
+
 
 The main web site of this project is [drumstick.sourceforge.io](https://drumstick.sourceforge.io)
 

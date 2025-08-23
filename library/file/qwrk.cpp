@@ -1,6 +1,6 @@
 /*
     WRK File component
-    Copyright (C) 2010-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2010-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -1300,7 +1300,7 @@ void QWrk::processNewStream()
 
 void QWrk::processEndChunk()
 {
-    emit signalWRKEnd();
+    Q_EMIT signalWRKEnd();
 }
 
 int QWrk::readChunk()

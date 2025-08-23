@@ -1,6 +1,6 @@
 /*
     Virtual Piano Widget for Qt
-    Copyright (C) 2008-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2008-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -376,7 +376,7 @@ void PianoScene::displayKeyOn(PianoKey* key)
     key->setPressed(true);
     int n = key->getNote() + d->m_baseOctave*12 + d->m_transpose;
     QString s = QString("#%1 (%2)").arg(n).arg(d->noteName(key, false));
-    emit signalName(s);
+    Q_EMIT signalName(s);
     KeyLabel* lbl = dynamic_cast<KeyLabel*>(key->childItems().constFirst());
     if (lbl != nullptr) {
         lbl->setDefaultTextColor(d->m_foregroundPalette.getColor(key->isBlack() ? 3 : 2));
@@ -424,7 +424,7 @@ void PianoScene::showKeyOff( PianoKey* key, int vel)
 {
     Q_UNUSED(vel)
     key->setPressed(false);
-    emit signalName(QString());
+    Q_EMIT signalName(QString());
     KeyLabel* lbl = dynamic_cast<KeyLabel*>(key->childItems().constFirst());
     if (lbl != nullptr) {
         lbl->restoreColor();
@@ -496,7 +496,7 @@ void PianoScene::triggerNoteOn( const int note, const int vel )
         if (d->m_handler != nullptr) {
             d->m_handler->noteOn(n, vel);
         } else {
-            emit noteOn(n, vel);
+            Q_EMIT noteOn(n, vel);
         }
     }
 }
@@ -515,7 +515,7 @@ void PianoScene::triggerNoteOff( const int note, const int vel )
         if (d->m_handler != nullptr) {
             d->m_handler->noteOff(n, vel);
         } else {
-            emit noteOff(n, vel);
+            Q_EMIT noteOff(n, vel);
         }
     }
 }
@@ -823,7 +823,7 @@ void PianoScene::setKeyPressedColor(const QColor& color)
         d->m_hilightPalette = PianoPalette(PAL_SINGLE);
         d->m_hilightPalette.setColor(0, color);
         QBrush hilightBrush(color);
-        for (PianoKey* key : qAsConst(d->m_keys)) {
+        for (PianoKey *key : std::as_const(d->m_keys)) {
             key->setPressedBrush(hilightBrush);
         }
     }
@@ -836,7 +836,7 @@ void PianoScene::resetKeyPressedColor()
 {
     d->m_hilightPalette.resetColors();
     QBrush hilightBrush(getKeyPressedColor());
-    for (PianoKey* key : qAsConst(d->m_keys)) {
+    for (PianoKey *key : std::as_const(d->m_keys)) {
         key->setPressedBrush(hilightBrush);
     }
 }
@@ -855,7 +855,7 @@ int PianoScene::getMinNote() const
  */
 void PianoScene::hideOrShowKeys()
 {
-    for (PianoKey* key : qAsConst(d->m_keys)) {
+    for (PianoKey *key : std::as_const(d->m_keys)) {
         int n = d->m_baseOctave*12 + key->getNote() + d->m_transpose;
         bool b = !(n > d->m_maxNote) && !(n < d->m_minNote);
         key->setVisible(b);
@@ -961,7 +961,7 @@ QString PianoScene::noteName( PianoKey* key )
  */
 void PianoScene::refreshLabels()
 {
-    for (KeyLabel* lbl : qAsConst(d->m_labels)) {
+    for (KeyLabel *lbl : std::as_const(d->m_labels)) {
         PianoKey* key = dynamic_cast<PianoKey*>(lbl->parentItem());
         if (key != nullptr) {
             lbl->setVisible(false);
@@ -981,7 +981,7 @@ void PianoScene::refreshLabels()
  */
 void PianoScene::refreshKeys()
 {
-    for (PianoKey* key : qAsConst(d->m_keys)) {
+    for (PianoKey *key : std::as_const(d->m_keys)) {
         if (d->m_showColorScale && (d->m_backgroundPalette.paletteId() == PAL_SCALE)) {
             int degree = key->getNote() % 12;
             key->setBrush(d->m_backgroundPalette.getColor(degree));
@@ -1374,7 +1374,7 @@ bool PianoScene::showColorScale() const
 void PianoScene::setKeyPicture(const bool natural, const QPixmap &pix)
 {
     d->m_keyPix[int(natural)] = pix;
-    for (PianoKey* key : qAsConst(d->m_keys)) {
+    for (PianoKey *key : std::as_const(d->m_keys)) {
         if (key->isBlack() == !natural) {
             key->setPixmap(pix);
         }
@@ -1389,7 +1389,7 @@ QPixmap PianoScene::getKeyPicture(const bool natural)
 void PianoScene::setUseKeyPictures(const bool enable)
 {
     d->m_useKeyPix = enable;
-    for (PianoKey* key : qAsConst(d->m_keys)) {
+    for (PianoKey *key : std::as_const(d->m_keys)) {
         key->setUsePixmap(enable);
     }
 }

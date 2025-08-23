@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,6 +29,16 @@ namespace drumstick { namespace ALSA {
  * Classes managing ALSA Sequencer ports.
  */
 
+#if defined(DRUMSTICK_STATIC)
+#define DRUMSTICK_ALSA_EXPORT
+#else
+#if defined(drumstick_alsa_EXPORTS)
+#define DRUMSTICK_ALSA_EXPORT Q_DECL_EXPORT
+#else
+#define DRUMSTICK_ALSA_EXPORT Q_DECL_IMPORT
+#endif
+#endif
+
 class MidiClient;
 
 /**
@@ -38,7 +48,7 @@ class MidiClient;
  * @class PortInfo
  * Port information container
  */
-class DRUMSTICK_EXPORT PortInfo
+class DRUMSTICK_ALSA_EXPORT PortInfo
 {
     friend class MidiPort;
     friend class ClientInfo;
@@ -111,7 +121,7 @@ typedef QList<PortInfo> PortInfoList;
  *
  * This class represents an ALSA sequencer port.
  */
-class DRUMSTICK_EXPORT MidiPort : public QObject
+class DRUMSTICK_ALSA_EXPORT MidiPort : public QObject
 {
     Q_OBJECT
     friend class MidiClient;
@@ -168,11 +178,12 @@ public:
     void setTimestampReal(bool value);
     void setTimestampQueue(int queueId);
 
-signals:
+Q_SIGNALS:
     /**
-     * Signal emitted when an internal subscription is done.
+     * Signal emitted when an internal subscription is done. It is recommended to use Qt::UniqueConnection
+     * with this signal.
      * @param port MIDI port object pointer
-     * @param subs Subscription object pointer
+     * @param subs Subscription object pointer. Receiver gets the ownership of the Subscription pointer.
      */
     void subscribed(drumstick::ALSA::MidiPort* port, drumstick::ALSA::Subscription* subs);
     /**

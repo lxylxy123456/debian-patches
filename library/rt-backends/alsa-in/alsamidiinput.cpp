@@ -1,6 +1,6 @@
 /*
     Drumstick RT Backend using the ALSA Sequencer
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -139,7 +139,7 @@ namespace drumstick { namespace rt {
             m_clientFilter = !advanced;
             m_inputDevices.clear();
             m_inputDevices << MIDIConnection();
-            for (const PortInfo& p : qAsConst(inputs)) {
+            for (const PortInfo &p : std::as_const(inputs)) {
                 QString name = p.getClientName();
                 clientNames << name;
                 if (namesMap.contains(name)) {
@@ -157,7 +157,7 @@ namespace drumstick { namespace rt {
                     continue;
                 if ( name.startsWith(m_publicName) )
                     continue;
-                for (const QString& n : qAsConst(m_excludedNames)) {
+                for (const QString &n : std::as_const(m_excludedNames)) {
                     if (name.startsWith(n)) {
                         excluded = true;
                         break;
@@ -224,7 +224,7 @@ namespace drumstick { namespace rt {
                         if(m_out != nullptr && m_thruEnabled) {
                             m_out->sendNoteOff(n->getChannel(), n->getKey(), n->getVelocity());
                         }
-                        emit m_inp->midiNoteOff(n->getChannel(), n->getKey(), n->getVelocity());
+                        Q_EMIT m_inp->midiNoteOff(n->getChannel(), n->getKey(), n->getVelocity());
                     }
                     break;
                 case SND_SEQ_EVENT_NOTEON: {
@@ -232,7 +232,7 @@ namespace drumstick { namespace rt {
                         if(m_out != nullptr && m_thruEnabled) {
                             m_out->sendNoteOn(n->getChannel(), n->getKey(), n->getVelocity());
                         }
-                        emit m_inp->midiNoteOn(n->getChannel(), n->getKey(), n->getVelocity());
+                        Q_EMIT m_inp->midiNoteOn(n->getChannel(), n->getKey(), n->getVelocity());
                     }
                     break;
                 case SND_SEQ_EVENT_KEYPRESS: {
@@ -240,7 +240,7 @@ namespace drumstick { namespace rt {
                         if(m_out != nullptr && m_thruEnabled) {
                             m_out->sendKeyPressure(n->getChannel(), n->getKey(), n->getVelocity());
                         }
-                        emit m_inp->midiKeyPressure(n->getChannel(), n->getKey(), n->getVelocity());
+                        Q_EMIT m_inp->midiKeyPressure(n->getChannel(), n->getKey(), n->getVelocity());
                     }
                     break;
                 case SND_SEQ_EVENT_CONTROLLER:
@@ -249,7 +249,7 @@ namespace drumstick { namespace rt {
                         if(m_out != nullptr && m_thruEnabled) {
                             m_out->sendController(n->getChannel(), n->getParam(), n->getValue());
                         }
-                        emit m_inp->midiController(n->getChannel(), n->getParam(), n->getValue());
+                        Q_EMIT m_inp->midiController(n->getChannel(), n->getParam(), n->getValue());
                     }
                     break;
                 case SND_SEQ_EVENT_PGMCHANGE: {
@@ -257,7 +257,7 @@ namespace drumstick { namespace rt {
                         if(m_out != nullptr && m_thruEnabled) {
                             m_out->sendProgram(p->getChannel(), p->getValue());
                         }
-                        emit m_inp->midiProgram(p->getChannel(), p->getValue());
+                        Q_EMIT m_inp->midiProgram(p->getChannel(), p->getValue());
                     }
                     break;
                 case SND_SEQ_EVENT_CHANPRESS: {
@@ -265,7 +265,7 @@ namespace drumstick { namespace rt {
                         if(m_out != nullptr && m_thruEnabled) {
                             m_out->sendChannelPressure(n->getChannel(), n->getValue());
                         }
-                        emit m_inp->midiChannelPressure(n->getChannel(), n->getValue());
+                        Q_EMIT m_inp->midiChannelPressure(n->getChannel(), n->getValue());
                     }
                     break;
                 case SND_SEQ_EVENT_PITCHBEND: {
@@ -273,7 +273,7 @@ namespace drumstick { namespace rt {
                         if(m_out != nullptr && m_thruEnabled) {
                             m_out->sendPitchBend(n->getChannel(), n->getValue());
                         }
-                        emit m_inp->midiPitchBend(n->getChannel(), n->getValue());
+                        Q_EMIT m_inp->midiPitchBend(n->getChannel(), n->getValue());
                     }
                     break;
                 case SND_SEQ_EVENT_SYSEX: {
@@ -282,7 +282,7 @@ namespace drumstick { namespace rt {
                         if(m_out != nullptr && m_thruEnabled) {
                             m_out->sendSysex(data);
                         }
-                        emit m_inp->midiSysex(data);
+                        Q_EMIT m_inp->midiSysex(data);
                     }
                     break;
                 case SND_SEQ_EVENT_SYSTEM: {
@@ -292,9 +292,9 @@ namespace drumstick { namespace rt {
                             m_out->sendSystemMsg(status);
                         }
                         if (status < 0xF7)
-                            emit m_inp->midiSystemCommon(status);
+                            Q_EMIT m_inp->midiSystemCommon(status);
                         else if (status > 0xF7)
-                            emit m_inp->midiSystemRealtime(status);
+                            Q_EMIT m_inp->midiSystemRealtime(status);
                     }
                     break;
                 default:

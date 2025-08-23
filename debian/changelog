@@ -1,3 +1,51 @@
+libdrumstick (2.10.0-1) unstable; urgency=medium
+
+  * New upstream version 2.10.0
+
+ -- Dennis Braun <snd@debian.org>  Sun, 29 Dec 2024 17:48:28 +0100
+
+libdrumstick (2.9.1-1) unstable; urgency=medium
+
+  * New upstream version 2.9.1
+  * Bump Standards-Version to 4.7.0
+  * Change B-D pkg-config -> pkgconf
+
+ -- Dennis Braun <snd@debian.org>  Fri, 13 Sep 2024 20:50:03 +0200
+
+libdrumstick (2.9.0-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Rename libraries for 64-bit time_t transition.  Closes: #1062273
+
+ -- Benjamin Drung <bdrung@debian.org>  Wed, 28 Feb 2024 18:53:30 +0000
+
+libdrumstick (2.9.0-1) unstable; urgency=medium
+
+  * New upstream version 2.9.0
+  * Build with Qt6
+
+ -- Dennis Braun <snd@debian.org>  Sun, 14 Jan 2024 13:30:37 +0100
+
+libdrumstick (2.8.1-1) unstable; urgency=medium
+
+  * New upstream version 2.8.1
+
+ -- Dennis Braun <snd@debian.org>  Sun, 03 Sep 2023 17:07:51 +0200
+
+libdrumstick (2.8.0-1) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Use secure URI in Homepage field.
+  * Remove constraints unnecessary since buster (oldstable)
+
+  [ Dennis Braun ]
+  * New upstream version 2.8.0
+  * Change my email address
+  * Bump Standards-Version to 4.6.2
+  * Bump d/copyright years
+
+ -- Dennis Braun <snd@debian.org>  Mon, 03 Jul 2023 20:23:38 +0200
+
 libdrumstick (2.7.2-1) unstable; urgency=medium
 
   * New upstream version 2.7.2

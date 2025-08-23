@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -112,7 +112,7 @@ void DrumGridModel::changeCell(const QModelIndex &index)
 void DrumGridModel::changeCell(const QModelIndex &index, const QString& newValue)
 {
     m_lastValue = m_modelData[index.row()][index.column()] = newValue;
-    emit dataChanged(index, index);
+    Q_EMIT dataChanged(index, index);
 }
 
 QStringList DrumGridModel::patternData(int row)

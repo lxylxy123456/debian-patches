@@ -1,6 +1,6 @@
 /*
     Drumstick RT (realtime MIDI In/Out)
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -67,6 +67,8 @@ public:
     QString getLibVersion();
     bool getStatus();
 
+    Q_INVOKABLE void writeSettings(QSettings *settings);
+
     static const QString QSTR_FLUIDSYNTH_VERSION;
 
     static const QString QSTR_FLUIDSYNTH;
@@ -87,6 +89,16 @@ public:
     static const QString QSTR_DEFAULT_AUDIODRIVER;
     static const QString QSTR_BUFFERTIME;
 	static const QString QSTR_PULSEAUDIO;
+    static const QString QSTR_JACK;
+
+    static const QString QSTR_CHORUS_DEPTH;
+    static const QString QSTR_CHORUS_LEVEL;
+    static const QString QSTR_CHORUS_NR;
+    static const QString QSTR_CHORUS_SPEED;
+    static const QString QSTR_REVERB_DAMP;
+    static const QString QSTR_REVERB_LEVEL;
+    static const QString QSTR_REVERB_SIZE;
+    static const QString QSTR_REVERB_WIDTH;
 
     static const int DEFAULT_PERIODS;
     static const int DEFAULT_PERIODSIZE;
@@ -96,6 +108,16 @@ public:
     static const double DEFAULT_GAIN;
     static const int DEFAULT_POLYPHONY;
 
+    static constexpr qreal DEFAULT_REVERB_DAMP = 0.3;
+    static constexpr qreal DEFAULT_REVERB_LEVEL = 0.7;
+    static constexpr qreal DEFAULT_REVERB_SIZE = 0.5;
+    static constexpr qreal DEFAULT_REVERB_WIDTH = 0.8;
+
+    static constexpr qreal DEFAULT_CHORUS_DEPTH = 4.25;
+    static constexpr qreal DEFAULT_CHORUS_LEVEL = 0.6;
+    static constexpr int DEFAULT_CHORUS_NR = 3;
+    static constexpr qreal DEFAULT_CHORUS_SPEED = 0.2;
+
 private:
     void scanSoundFonts(const QDir &dir);
     void retrieveAudioDrivers();
@@ -103,7 +125,7 @@ private:
     void loadSoundFont();
     void retrieveDefaultSoundfont();
 
-    int m_sfid;
+    QList<int> m_sfids;
     MIDIConnection m_currentConnection;
     QString m_runtimeLibraryVersion;
     QString m_soundFont;
@@ -121,6 +143,17 @@ private:
     int fs_reverb { DEFAULT_REVERB };
     double fs_gain { DEFAULT_GAIN };
     int fs_polyphony { DEFAULT_POLYPHONY };
+
+    qreal fs_reverb_damp{DEFAULT_REVERB_DAMP};
+    qreal fs_reverb_level{DEFAULT_REVERB_LEVEL};
+    qreal fs_reverb_size{DEFAULT_REVERB_SIZE};
+    qreal fs_reverb_width{DEFAULT_REVERB_WIDTH};
+
+    qreal fs_chorus_depth{DEFAULT_CHORUS_DEPTH};
+    qreal fs_chorus_level{DEFAULT_CHORUS_LEVEL};
+    int fs_chorus_nr{DEFAULT_CHORUS_NR};
+    qreal fs_chorus_speed{DEFAULT_CHORUS_SPEED};
+
     bool m_status;
     QStringList m_diagnostics;
 };

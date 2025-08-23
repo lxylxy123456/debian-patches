@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,16 +16,19 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "errorcheck.h"
 #include <QCoreApplication>
 #include <QFile>
+#include <QMetaMethod>
 #include <QReadLocker>
 #include <QRegularExpression>
 #include <QThread>
 #include <QWriteLocker>
+
 #include <drumstick/alsaclient.h>
 #include <drumstick/alsaevent.h>
 #include <drumstick/alsaqueue.h>
+
+#include "errorcheck.h"
 
 #if defined(RTKIT_SUPPORT)
 #include <QDBusConnection>
@@ -587,6 +590,7 @@ MidiClient::getSequencerType()
 void
 MidiClient::doEvents()
 {
+    static const QMetaMethod receivedSignal = QMetaMethod::fromSignal(&MidiClient::eventReceived);
     do {
         int err = 0;
         snd_seq_event_t* evp = nullptr;
@@ -681,14 +685,16 @@ MidiClient::doEvents()
             } else {
                 // second, process the event listeners
                 if (d->m_eventsEnabled) {
-                   QObjectList::Iterator it;
+                    QObjectList::Iterator it;
                     for(it=d->m_listeners.begin(); it!=d->m_listeners.end(); ++it) {
                         QObject* sub = (*it);
                         QCoreApplication::postEvent(sub, event->clone());
                     }
                 } else {
                     // finally, process signals
-                    emit eventReceived(event->clone());
+                    if (isSignalConnected(receivedSignal)) {
+                        Q_EMIT eventReceived(event->clone());
+                    }
                 }
             }
             delete event;

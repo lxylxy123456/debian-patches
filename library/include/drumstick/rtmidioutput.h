@@ -1,6 +1,6 @@
 /*
     Drumstick MIDI realtime input-output
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,6 +30,16 @@
  * @file rtmidioutput.h
  * Realtime MIDI output interface
  */
+
+#if defined(DRUMSTICK_STATIC)
+#define DRUMSTICK_RT_EXPORT
+#else
+#if defined(drumstick_rt_EXPORTS)
+#define DRUMSTICK_RT_EXPORT Q_DECL_EXPORT
+#else
+#define DRUMSTICK_RT_EXPORT Q_DECL_IMPORT
+#endif
+#endif
 
 namespace drumstick { namespace rt {
 
@@ -108,7 +118,7 @@ inline int MIDI_MSB(int x)
     /**
      * @brief MIDI OUT interface
      */
-    class DRUMSTICK_EXPORT MIDIOutput : public QObject
+    class DRUMSTICK_RT_EXPORT MIDIOutput : public QObject
     {
         Q_OBJECT
 

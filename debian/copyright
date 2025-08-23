@@ -6,7 +6,7 @@ Source: https://sourceforge.net/projects/drumstick/files/
 
 Files: *
 Copyright:
- 2006-2022 Pedro Lopez-Cabanillas
+ 2006-2023 Pedro Lopez-Cabanillas
  2003-2021, Gary P. Scavone
 License: GPL-3+
 
@@ -15,7 +15,7 @@ Copyright:
  2006 David Faure
  2007 Pino Toscano
  2007 Will Stephenson
- 2008-2018 Pedro Lopez-Cabanillas
+ 2008-2023 Pedro Lopez-Cabanillas
 License: BSD-3
 
 Files: doc/drumstick-drumgrid.xml.in
@@ -38,7 +38,7 @@ Files: doc/drumstick-devel.doc.txt.in
        library/widgets/blkey.svg
        library/widgets/whkey.png
        library/widgets/whkey.svg
-Copyright: 2009-2021, Pedro López-Cabanillas <plcl@users.sf.net>
+Copyright: 2009-2023, Pedro López-Cabanillas <plcl@users.sf.net>
 License: CC-BY-SA-4
 
 Files: debian/*
@@ -46,7 +46,7 @@ Copyright:
  2012 Alessio Treglia <alessio@debian.org>
  2010 Arnout Engelen <arnouten@bzzt.net>
  2017 Ross Gammon <rosco2@ubuntu.com>
- 2021-2022 Dennis Braun <d_braun@kabelmail.de>
+ 2021-2023 Dennis Braun <snd@debian.org>
 License: GPL-2+
 
 Files: utils/*/drumstick-*.metainfo.xml

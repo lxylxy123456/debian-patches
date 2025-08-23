@@ -1,23 +1,24 @@
-# Drumstick Widgets C++ Library
-# Copyright (C) 2005-2022 Pedro Lopez-Cabanillas <plcl@users.sourceforge.net>
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#[===========================================================================[
+MIDI C++ Library
+Copyright (C) 2005-2024 Pedro Lopez-Cabanillas <plcl@users.sourceforge.net>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+#]===========================================================================]
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Qt${QT_VERSION_MAJOR}Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR}Network REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR}LinguistTools REQUIRED)
 
 set(drumstick-widgets_HEADERS
@@ -30,13 +31,7 @@ set(drumstick-widgets_HEADERS
 set(drumstick-widgets_OBJ_SRCS
     ../include/drumstick/pianokeybd.h
     ../include/drumstick/pianopalette.h
-    ../include/drumstick/rtmidiinput.h
-    ../include/drumstick/rtmidioutput.h
     pianoscene.h
-    fluidsettingsdialog.h
-    networksettingsdialog.h
-    macsynthsettingsdialog.h
-    sonivoxsettingsdialog.h
 )
 
 if(BUILD_FRAMEWORKS)
@@ -47,14 +42,8 @@ endif()
 
 set(drumstick-widgets_SRCS
     configurationdialogs.cpp
-    fluidsettingsdialog.cpp
-    fluidsettingsdialog.h
     keylabel.cpp
     keylabel.h
-    macsynthsettingsdialog.cpp
-    macsynthsettingsdialog.h
-    networksettingsdialog.cpp
-    networksettingsdialog.h
     pianokey.cpp
     pianokey.h
     pianokeybd.cpp
@@ -62,16 +51,43 @@ set(drumstick-widgets_SRCS
     pianoscene.cpp
     pianoscene.h
     settingsfactory.cpp
-    sonivoxsettingsdialog.cpp
-    sonivoxsettingsdialog.h
 )
 
-set(drumstick-widgets_FORMS
-    fluidsettingsdialog.ui
-    macsynthsettingsdialog.ui
-    networksettingsdialog.ui
-    sonivoxsettingsdialog.ui
-)
+if (HAVE_FLUIDSYNTH)
+    list( APPEND drumstick-widgets_OBJ_SRCS fluidsettingsdialog.h )
+    list( APPEND drumstick-widgets_SRCS
+        fluidsettingsdialog.cpp
+        fluidsettingsdialog.h
+    )
+    list( APPEND drumstick-widgets_FORMS fluidsettingsdialog.ui )
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    list( APPEND drumstick-widgets_OBJ_SRCS macsynthsettingsdialog.h )
+    list( APPEND drumstick-widgets_SRCS
+        macsynthsettingsdialog.cpp
+        macsynthsettingsdialog.h
+    )
+    list( APPEND drumstick-widgets_FORMS macsynthsettingsdialog.ui )
+endif()
+
+if (HAVE_NETWORK)
+    list( APPEND drumstick-widgets_OBJ_SRCS networksettingsdialog.h )
+    list( APPEND drumstick-widgets_SRCS
+        networksettingsdialog.cpp
+        networksettingsdialog.h
+    )
+    list( APPEND drumstick-widgets_FORMS networksettingsdialog.ui )
+endif()
+
+if (HAVE_SONIVOX)
+    list( APPEND drumstick-widgets_OBJ_SRCS sonivoxsettingsdialog.h )
+    list( APPEND drumstick-widgets_SRCS
+        sonivoxsettingsdialog.cpp
+        sonivoxsettingsdialog.h
+    )
+    list( APPEND drumstick-widgets_FORMS sonivoxsettingsdialog.ui )
+endif()
 
 if (WIN32)
     set(TARGET_DESCRIPTION ${Drumstick_DESCRIPTION})
@@ -99,6 +115,13 @@ add_library(drumstick-widgets
     ${drumstick-widgets_HEADERS}
 )
 
+target_compile_definitions(drumstick-widgets PRIVATE
+    $<$<BOOL:${HAVE_NETWORK}>:ENABLE_NETWORK>
+    $<$<BOOL:${HAVE_FLUIDSYNTH}>:ENABLE_FLUIDSYNTH>
+    $<$<BOOL:${HAVE_SONIVOX}>:ENABLE_SONIVOX>
+    QT_NO_SIGNALS_SLOTS_KEYWORDS
+)
+
 add_library(Drumstick::Widgets ALIAS drumstick-widgets)
 
 target_include_directories(drumstick-widgets PUBLIC
@@ -108,7 +131,7 @@ target_include_directories(drumstick-widgets PUBLIC
 
 target_link_libraries(drumstick-widgets PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Network
+    $<$<BOOL:${HAVE_NETWORK}>:Qt${QT_VERSION_MAJOR}::Network>
     Drumstick::RT
 )
 
@@ -153,7 +176,9 @@ endif ()
 
 if(STATIC_DRUMSTICK)
     set_target_properties(drumstick-widgets PROPERTIES
-        STATIC_LIB "libdrumstick-widgets")
+        STATIC_LIB "libdrumstick-widgets"
+        EXPORT_NAME Widgets
+    )
 else() # STATIC_DRUMSTICK
     set_target_properties(drumstick-widgets PROPERTIES
         VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}

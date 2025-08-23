@@ -1,6 +1,6 @@
 /*
     Drumstick RT (realtime MIDI In/Out)
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,13 +16,21 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QCoreApplication>
+
 #include "fluidsynthoutput.h"
+#ifdef USE_PIPEWIRE
+#include <pipewire/pipewire.h>
+#endif
 
 namespace drumstick { namespace rt {
 
 FluidSynthOutput::FluidSynthOutput(QObject *parent) : MIDIOutput(parent)
 {
     //qDebug() << Q_FUNC_INFO;
+#ifdef USE_PIPEWIRE
+    pw_init(0, nullptr);
+#endif
     m_synth = new FluidSynthEngine;
 }
 
@@ -31,6 +39,9 @@ FluidSynthOutput::~FluidSynthOutput()
     //qDebug() << Q_FUNC_INFO;
     stop();
     delete m_synth;
+#ifdef USE_PIPEWIRE
+    pw_deinit();
+#endif
 }
 
 void FluidSynthOutput::start()
@@ -166,6 +177,11 @@ void FluidSynthOutput::sendSysex(const QByteArray &data)
 void FluidSynthOutput::sendSystemMsg(const int status)
 {
     Q_UNUSED(status)
+}
+
+void FluidSynthOutput::writeSettings(QSettings *settings)
+{
+    m_synth->writeSettings(settings);
 }
 
 } // namespace rt

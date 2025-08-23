@@ -1,6 +1,6 @@
 /*
     Sonivox EAS Synthesizer for Qt applications
-    Copyright (C) 2016-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2016-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,13 +20,16 @@
 #include <QObject>
 #include <QReadLocker>
 #include <QString>
+#include <QSysInfo>
 #include <QTextStream>
+#include <QVersionNumber>
 #include <QWriteLocker>
 
 #include <eas_chorus.h>
 #include <eas_reverb.h>
 #include <pulse/simple.h>
 #include "synthrenderer.h"
+#include "filewrapper.h"
 
 namespace drumstick {
 namespace rt {
@@ -38,14 +41,21 @@ const QString SynthRenderer::QSTR_REVERBAMT = QStringLiteral("ReverbAmt");
 const QString SynthRenderer::QSTR_CHORUSTYPE = QStringLiteral("ChorusType");
 const QString SynthRenderer::QSTR_CHORUSAMT = QStringLiteral("ChorusAmt");
 const QString SynthRenderer::QSTR_SONIVOXEAS = QStringLiteral("SonivoxEAS");
+const QString SynthRenderer::QSTR_SOUNDFONT = QStringLiteral("InstrumentsDefinition");
+
+const int SynthRenderer::DEF_BUFFERTIME = 60;
+const int SynthRenderer::DEF_REVERBTYPE = EAS_PARAM_REVERB_HALL;
+const int SynthRenderer::DEF_REVERBAMT = 25800;
+const int SynthRenderer::DEF_CHORUSTYPE = -1;
+const int SynthRenderer::DEF_CHORUSAMT = 0;
 
 SynthRenderer::SynthRenderer(QObject *parent) : QObject(parent),
     m_Stopped(true),
     m_rendering(nullptr),
+    m_easData(nullptr),
+    m_streamHandle(nullptr),
     m_bufferTime(60)
-{
-    initEAS();
-}
+{ }
 
 void
 SynthRenderer::initEAS()
@@ -62,11 +72,28 @@ SynthRenderer::initEAS()
         m_diagnostics << "EAS_Config returned null";
         return;
     }
+    m_sampleRate = easConfig->sampleRate;
+    m_bufferSize = easConfig->mixBufferSize;
+    m_channels = easConfig->numChannels;
+    m_libVersion = easConfig->libVersion;
 
     eas_res = EAS_Init(&dataHandle);
     if (eas_res != EAS_SUCCESS) {
       m_diagnostics << QString("EAS_Init error: %1").arg( eas_res );
       return;
+    }
+    m_easData = dataHandle;
+
+    if (!m_soundfont.isEmpty()) {
+        FileWrapper dlsFile(m_soundfont);
+        if (dlsFile.ok()) {
+            eas_res = EAS_LoadDLSCollection(dataHandle, nullptr, dlsFile.getLocator());
+            if (eas_res != EAS_SUCCESS) {
+                m_diagnostics << QString("EAS_LoadDLSCollection(%1) error: %2").arg(m_soundfont).arg(eas_res);
+            }
+        } else {
+            m_diagnostics << QString("Failed to open %1").arg(m_soundfont);
+        }
     }
 
     eas_res = EAS_OpenMIDIStream(dataHandle, &handle, nullptr);
@@ -75,13 +102,9 @@ SynthRenderer::initEAS()
       EAS_Shutdown(dataHandle);
       return;
     }
-
-    m_easData = dataHandle;
     m_streamHandle = handle;
     Q_ASSERT(m_streamHandle != nullptr);
-    m_sampleRate = easConfig->sampleRate;
-    m_bufferSize = easConfig->mixBufferSize;
-    m_channels = easConfig->numChannels;
+
     m_status = true;
     //qDebug() << Q_FUNC_INFO << "EAS bufferSize=" << m_bufferSize << " sampleRate=" << m_sampleRate << " channels=" << m_channels;
 }
@@ -153,19 +176,25 @@ SynthRenderer::uninitPulse()
 
 SynthRenderer::~SynthRenderer()
 {
-    uninitEAS();
+    //qDebug() << Q_FUNC_INFO;
 }
 
 void
 SynthRenderer::initialize(QSettings *settings)
 {
+    //qDebug() << Q_FUNC_INFO;
+
     settings->beginGroup(QSTR_PREFERENCES);
-    m_bufferTime = settings->value(QSTR_BUFFERTIME, 60).toInt();
-    int reverbType = settings->value(QSTR_REVERBTYPE, EAS_PARAM_REVERB_HALL).toInt();
-    int reverbAmt = settings->value(QSTR_REVERBAMT, 25800).toInt();
-    int chorusType = settings->value(QSTR_CHORUSTYPE, -1).toInt();
-    int chorusAmt = settings->value(QSTR_CHORUSAMT, 0).toInt();
+    m_bufferTime = settings->value(QSTR_BUFFERTIME, DEF_BUFFERTIME).toInt();
+    int reverbType = settings->value(QSTR_REVERBTYPE, DEF_REVERBTYPE).toInt();
+    int reverbAmt = settings->value(QSTR_REVERBAMT, DEF_REVERBAMT).toInt();
+    int chorusType = settings->value(QSTR_CHORUSTYPE, DEF_CHORUSTYPE).toInt();
+    int chorusAmt = settings->value(QSTR_CHORUSAMT, DEF_CHORUSAMT).toInt();
+    m_soundfont = settings->value(QSTR_SOUNDFONT, QString()).toString();
     settings->endGroup();
+
+    initEAS();
+    initSoundfont();
     initReverb(reverbType);
     setReverbWet(reverbAmt);
     initChorus(chorusType);
@@ -184,6 +213,7 @@ SynthRenderer::stop()
 {
     QWriteLocker locker(&m_mutex);
     //qDebug() << Q_FUNC_INFO;
+    uninitEAS();
     m_Stopped = true;
 }
 
@@ -226,7 +256,7 @@ SynthRenderer::run()
         m_status = false;
     }
     //qDebug() << Q_FUNC_INFO << "ended";
-    emit finished();
+    Q_EMIT finished();
 }
 
 void
@@ -241,6 +271,23 @@ SynthRenderer::writeMIDIData(const QByteArray& message)
             if (eas_res != EAS_SUCCESS) {
                 m_diagnostics << QString("EAS_WriteMIDIStream error: %1").arg(eas_res);
             }
+        }
+    }
+}
+
+void SynthRenderer::initSoundfont()
+{
+    //qDebug() << Q_FUNC_INFO;
+    if (!m_soundfont.isEmpty()) {
+        for(int ch = 0; ch < MIDI_STD_CHANNELS; ++ch) {
+            if (ch == MIDI_GM_STD_DRUM_CHANNEL) {
+                sendMessage(MIDI_STATUS_CONTROLCHANGE + ch, MIDI_CONTROL_MSB_BANK_SELECT, 0);
+                sendMessage(MIDI_STATUS_CONTROLCHANGE + ch, MIDI_CONTROL_LSB_BANK_SELECT, 127);
+            } else {
+                sendMessage(MIDI_STATUS_CONTROLCHANGE + ch, MIDI_CONTROL_MSB_BANK_SELECT, 0);
+                sendMessage(MIDI_STATUS_CONTROLCHANGE + ch, MIDI_CONTROL_LSB_BANK_SELECT, 0);
+            }
+            sendMessage(MIDI_STATUS_PROGRAMCHANGE + ch, 0);
         }
     }
 }
@@ -260,6 +307,36 @@ void SynthRenderer::setCondition(QWaitCondition *cond)
     m_rendering = cond;
 }
 
+QString SynthRenderer::getLibVersion()
+{
+    quint8 v1, v2, v3, v4;
+    v1 = (m_libVersion >> 24) & 0xff;
+    v2 = (m_libVersion >> 16) & 0xff;
+    v3 = (m_libVersion >> 8) & 0xff;
+    v4 = m_libVersion & 0xff;
+    QVersionNumber vn{v1, v2, v3, v4};
+    return vn.toString();
+}
+
+QString SynthRenderer::getSoundFont()
+{
+    return m_soundfont;
+}
+
+void SynthRenderer::writeSettings(QSettings *settings)
+{
+    if (settings != nullptr) {
+        settings->beginGroup(QSTR_PREFERENCES);
+        settings->setValue(QSTR_BUFFERTIME, m_bufferTime);
+        settings->setValue(QSTR_REVERBTYPE, m_reverbType);
+        settings->setValue(QSTR_REVERBAMT, m_reverbAmt);
+        settings->setValue(QSTR_CHORUSTYPE, m_chorusType);
+        settings->setValue(QSTR_CHORUSAMT, m_chorusAmt);
+        settings->setValue(QSTR_SOUNDFONT, m_soundfont);
+        settings->endGroup();
+    }
+}
+
 void
 SynthRenderer::initReverb(int reverb_type)
 {
@@ -270,6 +347,8 @@ SynthRenderer::initReverb(int reverb_type)
         eas_res = EAS_SetParameter(m_easData, EAS_MODULE_REVERB, EAS_PARAM_REVERB_PRESET, (EAS_I32) reverb_type);
         if (eas_res != EAS_SUCCESS) {
             m_diagnostics << QString("EAS_SetParameter error: %1").arg(eas_res);
+        } else {
+            m_reverbType = reverb_type;
         }
     }
     eas_res = EAS_SetParameter(m_easData, EAS_MODULE_REVERB, EAS_PARAM_REVERB_BYPASS, sw);
@@ -288,6 +367,8 @@ SynthRenderer::initChorus(int chorus_type)
         eas_res = EAS_SetParameter(m_easData, EAS_MODULE_CHORUS, EAS_PARAM_CHORUS_PRESET, (EAS_I32) chorus_type);
         if (eas_res != EAS_SUCCESS) {
             m_diagnostics << QString("EAS_SetParameter error: %1").arg(eas_res);
+        } else {
+            m_chorusType = chorus_type;
         }
     }
     eas_res = EAS_SetParameter(m_easData, EAS_MODULE_CHORUS, EAS_PARAM_CHORUS_BYPASS, sw);
@@ -302,6 +383,8 @@ SynthRenderer::setReverbWet(int amount)
     EAS_RESULT eas_res = EAS_SetParameter(m_easData, EAS_MODULE_REVERB, EAS_PARAM_REVERB_WET, (EAS_I32) amount);
     if (eas_res != EAS_SUCCESS) {
         m_diagnostics << QString("EAS_SetParameter error: %1").arg(eas_res);
+    } else {
+        m_reverbAmt = amount;
     }
 }
 
@@ -311,6 +394,8 @@ SynthRenderer::setChorusLevel(int amount)
     EAS_RESULT eas_res = EAS_SetParameter(m_easData, EAS_MODULE_CHORUS, EAS_PARAM_CHORUS_LEVEL, (EAS_I32) amount);
     if (eas_res != EAS_SUCCESS) {
         m_diagnostics << QString("EAS_SetParameter error: %1").arg(eas_res);
+    } else {
+        m_chorusAmt = amount;
     }
 }
 

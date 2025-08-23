@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2008-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This file is part of the Drumstick project, see https://sf.net/p/drumstick
 
@@ -57,6 +57,7 @@ private:
 
 WidgetsTest::WidgetsTest() = default;
 //{
+//    qDebug() << "platform:" << qApp->platformName();
 //    for( PianoPalette& pal : m_paletteList) {
 //        ...  pal.paletteId();
 //    }

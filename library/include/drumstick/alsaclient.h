@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,6 +32,16 @@
  * Classes managing ALSA Sequencer clients
  */
 
+#if defined(DRUMSTICK_STATIC)
+#define DRUMSTICK_ALSA_EXPORT
+#else
+#if defined(drumstick_alsa_EXPORTS)
+#define DRUMSTICK_ALSA_EXPORT Q_DECL_EXPORT
+#else
+#define DRUMSTICK_ALSA_EXPORT Q_DECL_IMPORT
+#endif
+#endif
+
 /**
  * @brief Drumstick common
  */
@@ -57,7 +67,7 @@ class RemoveEvents;
  * This class is used to retrieve, hold and set some data from
  * sequencer clients, like the name or id.
  */
-class DRUMSTICK_EXPORT ClientInfo
+class DRUMSTICK_ALSA_EXPORT ClientInfo
 {
     friend class MidiClient;
 
@@ -114,7 +124,7 @@ typedef QList<ClientInfo> ClientInfoList;
  * This class is used to retrieve and hold some data about the
  * whole sequencer subsystem.
  */
-class DRUMSTICK_EXPORT SystemInfo
+class DRUMSTICK_ALSA_EXPORT SystemInfo
 {
     friend class MidiClient;
 
@@ -145,7 +155,7 @@ private:
  * This class is used to get and set the size of the input and output pool
  * buffers for a sequencer client.
  */
-class DRUMSTICK_EXPORT PoolInfo
+class DRUMSTICK_ALSA_EXPORT PoolInfo
 {
     friend class MidiClient;
 
@@ -182,7 +192,7 @@ private:
  *
  * @see ALSAClient
  */
-class DRUMSTICK_EXPORT SequencerEventHandler
+class DRUMSTICK_ALSA_EXPORT SequencerEventHandler
 {
 public:
     /** Destructor */
@@ -205,7 +215,7 @@ public:
  *
  * This class represents an ALSA sequencer client
  */
-class DRUMSTICK_EXPORT MidiClient : public QObject
+class DRUMSTICK_ALSA_EXPORT MidiClient : public QObject
 {
     Q_OBJECT
 public:
@@ -295,9 +305,10 @@ public:
     void setRealTimeInput(bool enabled);
     bool realTimeInputEnabled();
 
-signals:
-    /** Signal emitted when an event is received
-     * @param ev pointer to the received event
+Q_SIGNALS:
+    /** Signal emitted when an event is received. It is recommended to use Qt::UniqueConnection
+     *  with this signal.
+     * @param ev pointer to the received event. Receiver gets the ownership of the SequencerEvent pointer.
      */
     void eventReceived(drumstick::ALSA::SequencerEvent* ev);
 
@@ -333,13 +344,13 @@ private:
 };
 
 #if SND_LIB_VERSION > 0x010004
-DRUMSTICK_EXPORT QString getRuntimeALSALibraryVersion();
-DRUMSTICK_EXPORT int getRuntimeALSALibraryNumber();
+DRUMSTICK_ALSA_EXPORT QString getRuntimeALSALibraryVersion();
+DRUMSTICK_ALSA_EXPORT int getRuntimeALSALibraryNumber();
 #endif
-DRUMSTICK_EXPORT QString getRuntimeALSADriverVersion();
-DRUMSTICK_EXPORT int getRuntimeALSADriverNumber();
-DRUMSTICK_EXPORT QString getCompiledALSALibraryVersion();
-DRUMSTICK_EXPORT QString getDrumstickLibraryVersion();
+DRUMSTICK_ALSA_EXPORT QString getRuntimeALSADriverVersion();
+DRUMSTICK_ALSA_EXPORT int getRuntimeALSADriverNumber();
+DRUMSTICK_ALSA_EXPORT QString getCompiledALSALibraryVersion();
+DRUMSTICK_ALSA_EXPORT QString getDrumstickLibraryVersion();
 
 /** @} */
 

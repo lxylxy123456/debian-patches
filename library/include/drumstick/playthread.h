@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,6 +30,16 @@ namespace drumstick { namespace ALSA {
  * Sequencer output thread
  */
 
+#if defined(DRUMSTICK_STATIC)
+#define DRUMSTICK_ALSA_EXPORT
+#else
+#if defined(drumstick_alsa_EXPORTS)
+#define DRUMSTICK_ALSA_EXPORT Q_DECL_EXPORT
+#else
+#define DRUMSTICK_ALSA_EXPORT Q_DECL_IMPORT
+#endif
+#endif
+
 class MidiClient;
 class MidiQueue;
 
@@ -45,7 +55,7 @@ class MidiQueue;
  *
  * Examples: guiplayer.cpp and playsmf.cpp
  */
-class DRUMSTICK_EXPORT  SequencerOutputThread : public QThread
+class DRUMSTICK_ALSA_EXPORT SequencerOutputThread : public QThread
 {
     Q_OBJECT
 
@@ -85,7 +95,7 @@ public:
      */
     virtual void stop();
 
-signals:
+Q_SIGNALS:
     /**
      * Signal emitted when the sequence play-back has finished.
      */
@@ -96,7 +106,7 @@ signals:
      */
     void playbackStopped();
 
-public slots:
+public Q_SLOTS:
     void start( QThread::Priority priority = InheritPriority );
 
 protected:

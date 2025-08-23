@@ -1,6 +1,6 @@
 /*
     Drumstick RT Backend using the ALSA Sequencer
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -132,7 +132,7 @@ namespace rt {
             auto outputs = m_client->getAvailableOutputs();
             m_clientFilter = !advanced;
             m_outputDevices.clear();
-            for (const PortInfo& p : qAsConst(outputs)) {
+            for (const PortInfo &p : std::as_const(outputs)) {
                 QString name = p.getClientName();
                 clientNames << name;
                 if (namesMap.contains(name)) {
@@ -150,7 +150,7 @@ namespace rt {
                     continue;
                 if ( name.startsWith(m_publicName) )
                     continue;
-                for (const QString& n : qAsConst(m_excludedNames)) {
+                for (const QString &n : std::as_const(m_excludedNames)) {
                     if ( name.startsWith(n) ) {
                         excluded = true;
                         break;

@@ -1,3 +1,126 @@
+2024-12-22
+    * Release 2.10.0
+
+2024-12-21
+    * Preparations for release 2.10.0
+
+2024-12-15
+    * Fixed cleanup of Windows MIDI input plugin
+      related to #30 and also #19 / #20
+
+2024-12-14
+    * fixed backendmanager usage in vpiano
+      optization in BackendManager::refresh() to keep plugins loader
+
+2024-12-8
+    Widgets: revised user interface for the fluidsynth settings
+
+2024-12-6
+    ALSA: new QDebug output operator accepting SequencerEvent instances
+
+2024-12-2
+    ALSA: Follow-up of the fix for GH #28: emit signals only when there are connected receivers
+    Updated documentation of MidiClient::eventReceived and MidiPort::subscribed to recommend Qt::UniqueConnection
+
+2024-12-1
+    * fix for GH #26
+    RT, Widgets: issues with the new reverb/chorus fluidsynth settings
+
+2024-10-20
+    * fix for GH #28
+    ALSA: emitted signal with invalid pointer
+
+2024-08-30
+    * fix for GH #27
+    RT: FluidSynth backend, using "audio.jack.autoconnect" when the audio driver is "jack"
+
+2024-08-28
+    * Release 2.9.1
+
+2024-08-25
+    * fix for ticket #25
+        RT: FluidSynth backend, ability to configure chorus and reverb parameters
+        Widgets: FluidSynth settings dialog, configuration of chorus and reverb.
+
+2024-07-07
+    * fix for ticket #24
+        RT: FluidSynth backend, ability to set several soundfonts
+        Widgets: FluidSynth settings dialog, select several soundfonts.
+
+2024-04-14
+    * RT: preliminary support for PipeWire:
+        initialization of the FluidSynth backend
+
+2024-03-06
+    * fix for #21: github workflows:
+        check-branches, rejects PRs targeting master
+        cmake-win: build and test on Windows with msys2 using mingw and clang
+        cmake: build and test on Linux
+
+2024-01-08
+    * Fix for #19: preliminary support for Sysexes under windows. Thanks to Luca Santini
+
+2023-12-23
+    * Documentation updated
+    * Release 2.9.0
+
+2023-12-08
+    * fix for GH #15: new SettingsFactory public static methods: fileName() and format().
+    * fix for GH #16: new slot writeSettings() for some backends: Sonivox, FluidSynth, Network.
+
+2023-12-06
+    * Preparations for release 2.9.0:
+        Building with Qt6 by default.
+        For Qt5 compatibility, a new option USE_QT5 must be set.
+        Upgraded compiler/runtime requirements to C++17.
+        Upgraded CMake requirement to 3.16
+
+2023-08-25
+    * Release 2.8.1
+
+2023-08-24
+    * Chinese translation updated. Thanks to Hycinth
+
+2023-08-17
+    * CMake config check to avoid mixing Qt6 with Qt5
+
+2023-07-31
+    * Fix for GH ticket #13: errors while building drumstick 2.8.0
+
+2023-07-01
+    * Release 2.8.0
+
+2023-06-25
+    * Widgets: fixed compiler definitions, removed object headers duplicity
+    * dumprmi utility: fixed QScopedPointer template for arrays
+    * Updated doxygen settings for Doxygen 1.9.5
+
+2023-06-24
+    * Widgets: clip note children (labels)
+
+2023-06-18
+    * Unit tests: conditionally run the ALSA test and run the Widgets test using the QPA platform "offscreen"
+
+2023-06-17
+    * Fix for ticket #49: Link failure when Qt6 is compiled with visibility protected
+    * ALSA: added assignment operators for sysex and text events
+
+2023-06-11
+    * Fix for ticket #48: SMF Parser does not report enough errors
+
+2023-05-07
+    * Implemented change soundfont function for the SonivoxEAS backend.
+
+2023-05-06
+    * RT Sonivox backend: enabled DLS file loading
+    * Widgets: Sonivox configuration dialog updated
+
+2022-12-18
+    * File: Improved RMID file support
+    *   Extract DLS embedded data
+    *   Decode DLS instrument names
+    *   New mime type
+
 2022-10-1
     * Release 2.7.2
 
@@ -26,8 +149,8 @@
     * fluidsynth: default windows audio driver is now wasapi. Fixed pulseaudio settings.
 
 2022-07-19
-    * fluidsynth backend files and classes renamed with more specific names. 
-    * vpiano error message citing the DRUMSTICKRT environment variable. 
+    * fluidsynth backend files and classes renamed with more specific names.
+    * vpiano error message citing the DRUMSTICKRT environment variable.
     * some work to update the documentation components diagram (unfinished).
 
 2022-07-17
@@ -57,7 +180,7 @@
     * Release 2.6.1
 
 2022-05-19
-    * Another fix related to ticket #39: CMAKE_INSTALL_LIBDIR is passed to the compiler 
+    * Another fix related to ticket #39: CMAKE_INSTALL_LIBDIR is passed to the compiler
       as a symbol named LIBSUFFIX (see library/rt/CMakeLists.txt:69). It needed to be tested
       at runtime with QDir::isAbsolutePath().
     * Bumped version to 2.6.1 for the next release.
@@ -173,7 +296,7 @@
     * implementation of ticket #29: RIFF RMID file support
     * New utility: dumprmi
 
-2021-08-20 
+2021-08-20
     * Enable by default the internal reverb on macOS DLS Synth
     * Avoid hardcoded font family name in vpiano
 
@@ -310,7 +433,7 @@
     * Implemented ticket #26: customizable texture for black and white keys
 
 2021-02-17
-    * Implemented ticket #25: chromatic scale highlight palette 
+    * Implemented ticket #25: chromatic scale highlight palette
 
 2021-02-10
     * fix for ticket #27: error parsing a wrk file
@@ -367,7 +490,7 @@
 2019-12-19
     * Revised ALSA RT plugins. ALSA Client is now created only when needed
 
-2019-12-16 
+2019-12-16
     * Modernization of the cmake buildsystem, producing cmake configuration scripts
 
 2019-09-01
@@ -548,13 +671,13 @@
     * release 0.5.0
 
 2010-09-08
-    * remaining warnings removed 
+    * remaining warnings removed
     * guiplayer simplified, and optimizations
     * compile with -fvisibility=hidden if it is available
     * compile always with -fexceptions
     * fixes in both buildsystems, cmake and qmake
 
-2010-09-02 
+2010-09-02
     * Use RealtimeKit support for the MIDI input thread.
 
 2010-08-31
@@ -567,7 +690,7 @@
 2010-07-12
     * removed PCH build option
     * release 0.4.1
-    
+
 2010-07-11
     * Fixed bug in class SequencerInputThread: realtime priority must be applied
       in run() instead of start() to avoid changing the scheduling policy of the
@@ -579,11 +702,11 @@
     * smfplayer renamed as guiplayer, with a new windows layout and
       supporting Cakewalk WRK files playback
     * release 0.4.0
-    
+
 2010-07-03
     * subdirectory "tests" renamed as "utils".
     * visibility attribute for public classes.
-    
+
 2010-06-10
     * Compile fix for 0.3.2
     * release 0.3.2a
@@ -603,30 +726,30 @@
 2010-04-19
     * Release 0.3.1
     * Allow to build drumstick-file library under Windows
-    * New method MidiClient::parseAddress() replacing the ALSA function 
+    * New method MidiClient::parseAddress() replacing the ALSA function
       snd_seq_parse_address() in MidiPort::subscribeTo() and similar methods.
-    * Fixed MidiClient::getAvailableInputs() and getAvailableOutputs() forcing 
+    * Fixed MidiClient::getAvailableInputs() and getAvailableOutputs() forcing
       to always retrieve the clients list.
 
 2010-03-09
     * Release 0.3.0
     * API changes:
-      SequencerEvent::isChannel() returns true for SND_SEQ_EVENT_NOTE 
+      SequencerEvent::isChannel() returns true for SND_SEQ_EVENT_NOTE
       QueueTimer::setId(const TimerId& id) new method overload
       Timer::bestGlobalTimerId() new static function
       getRuntimeALSALibraryVersion() new global function
       getRuntimeALSALibraryNumber() new global function
       getRuntimeALSADriverVersion() new global function
       getRuntimeALSADriverNumber() new global function
-    
+
 2010-03-02
     * New class QWrk, for reading Cakewalk files
 
 2010-02-17
-    * Split: drumstick-file and drumstick-alsa 
+    * Split: drumstick-file and drumstick-alsa
 
 2010-01-07
-    * Renamed to 'drumstick' and moved to a new project repository 
+    * Renamed to 'drumstick' and moved to a new project repository
 
 2009-12-27
     * Release 0.2.0

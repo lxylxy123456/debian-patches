@@ -1,6 +1,6 @@
 /*
     Sonivox EAS Synthesizer for Qt applications
-    Copyright (C) 2016-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2016-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -158,6 +158,11 @@ void SynthController::sendSystemMsg(const int status)
     Q_UNUSED(status)
 }
 
+void SynthController::writeSettings(QSettings *settings)
+{
+    m_renderer->writeSettings(settings);
+}
+
 QStringList SynthController::getDiagnostics()
 {
     return m_renderer->getDiagnostics();
@@ -166,6 +171,16 @@ QStringList SynthController::getDiagnostics()
 bool SynthController::getStatus()
 {
     return m_renderer->getStatus();
+}
+
+QString SynthController::getLibVersion()
+{
+    return m_renderer->getLibVersion();
+}
+
+QString SynthController::getSoundFont()
+{
+    return m_renderer->getSoundFont();
 }
 
 } // namespace rt

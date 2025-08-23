@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,6 +23,10 @@
  * signals or posting QEvents to the QApplication loop */
 #undef USE_QEVENTS
 //#define USE_QEVENTS
+
+/* Subscribe to Announce port to receive client and port events */
+#undef SUBSCRIBE_ANNOUNCE
+//#define SUBSCRIBE_ANNOUNCE
 
 /* To get timestamped events from ALSA, you need a running queue */
 //#undef WANT_TIMESTAMPS
@@ -52,7 +56,7 @@ public:
 
     virtual void handleSequencerEvent(drumstick::ALSA::SequencerEvent* ev);
 
-public slots:
+public Q_SLOTS:
     void subscription( drumstick::ALSA::MidiPort* port, drumstick::ALSA::Subscription* subs );
 
 #ifdef USE_QEVENTS

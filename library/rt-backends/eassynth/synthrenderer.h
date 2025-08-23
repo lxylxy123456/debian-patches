@@ -1,6 +1,6 @@
 /*
     Sonivox EAS Synthesizer for Qt applications
-    Copyright (C) 2016-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2016-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -52,6 +52,9 @@ namespace drumstick { namespace rt {
         bool getStatus() const;
         QStringList getDiagnostics() const;
         void setCondition(QWaitCondition *cond);
+        QString getLibVersion();
+        QString getSoundFont();
+        void writeSettings(QSettings *settings);
 
         static const QString QSTR_PREFERENCES;
         static const QString QSTR_BUFFERTIME;
@@ -60,6 +63,13 @@ namespace drumstick { namespace rt {
         static const QString QSTR_CHORUSTYPE;
         static const QString QSTR_CHORUSAMT;
         static const QString QSTR_SONIVOXEAS;
+        static const QString QSTR_SOUNDFONT;
+
+        static const int DEF_BUFFERTIME;
+        static const int DEF_REVERBTYPE;
+        static const int DEF_REVERBAMT;
+        static const int DEF_CHORUSTYPE;
+        static const int DEF_CHORUSAMT;
 
     private:
         void initEAS();
@@ -67,11 +77,12 @@ namespace drumstick { namespace rt {
         void uninitEAS();
         void uninitPulse();
         void writeMIDIData(const QByteArray& message);
+        void initSoundfont();
 
-    public slots:
+    public Q_SLOTS:
         void run();
 
-    signals:
+    Q_SIGNALS:
         void finished();
 
     private:
@@ -82,13 +93,18 @@ namespace drumstick { namespace rt {
         int m_sampleRate, m_bufferSize, m_channels;
         EAS_DATA_HANDLE m_easData;
         EAS_HANDLE m_streamHandle;
-        EAS_HANDLE m_fileHandle;
+        QString m_soundfont;
         /* pulseaudio */
-        int m_bufferTime;
+        int m_bufferTime{DEF_BUFFERTIME};
         pa_simple *m_pulseHandle;
         /* object properties */
         bool m_status;
         QStringList m_diagnostics;
+        EAS_U32 m_libVersion;
+        int m_reverbType{DEF_REVERBTYPE};
+        int m_reverbAmt{DEF_REVERBAMT};
+        int m_chorusType{DEF_CHORUSTYPE};
+        int m_chorusAmt{DEF_CHORUSAMT};
     };
 
 }} /* drumstick::rt */

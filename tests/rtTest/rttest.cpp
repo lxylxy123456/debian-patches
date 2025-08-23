@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2008-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This file is part of the Drumstick project, see https://sf.net/p/drumstick
 
@@ -52,7 +52,7 @@ Q_IMPORT_PLUGIN(DummyOutput)
 #endif
 
 #if defined(FLUIDSYNTH_BACKEND)
-Q_IMPORT_PLUGIN(SynthOutput)
+Q_IMPORT_PLUGIN(FluidSynthOutput)
 #endif
 
 #if defined(OSS_BACKEND)

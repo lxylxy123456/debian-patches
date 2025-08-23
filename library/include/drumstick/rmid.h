@@ -1,6 +1,6 @@
 /*
     Standard RIFF MIDI Component
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,6 +30,16 @@
  * RIFF MIDI Files Input
  */
 
+#if defined(DRUMSTICK_STATIC)
+#define DRUMSTICK_FILE_EXPORT
+#else
+#if defined(drumstick_file_EXPORTS)
+#define DRUMSTICK_FILE_EXPORT Q_DECL_EXPORT
+#else
+#define DRUMSTICK_FILE_EXPORT Q_DECL_IMPORT
+#endif
+#endif
+
 namespace drumstick { namespace File {
 
 /**
@@ -43,7 +53,7 @@ namespace drumstick { namespace File {
  * This class is used to parse RIFF MIDI Files
  * @since 2.4.0
  */
-class DRUMSTICK_EXPORT Rmidi : public QObject
+class DRUMSTICK_FILE_EXPORT Rmidi : public QObject
 {
     Q_OBJECT
 
@@ -54,7 +64,7 @@ public:
     void readFromFile(QString fileName);
     void readFromStream(QDataStream* ds);
 
-signals:
+Q_SIGNALS:
     /**
      * @brief signalRMidInfo is emitted for each RIFF INFO element
      * @param infoType Type of data (chunk ID) as defined in the spec (Source: www.midi.org rp29spec.pdf).
@@ -87,8 +97,8 @@ signals:
      * The handler of this event should use the method QSmf::readFromStream() to
      * parse the contents of the SMF data element.
      *
-     * @param dataType may only be "RMID" for RIFF RMID files
-     * @param data binary payload, in RMID files is a Standard MIDI File structure
+     * @param dataType may be "RMID" (SMF) or "DLS"
+     * @param data binary payload, in RMID files is either a Standard MIDI File or a DLS structure
      */
     void signalRiffData(const QString& dataType, const QByteArray& data);
 
@@ -97,6 +107,7 @@ private:
     void processINFO(int size);
     void processList(int size);
     void processRMID(int size);
+    void processRIFF(int size);
     void processData(const QString& dataType, int size);
     void skip(quint32 cktype, int size);
     quint32 readExpectedChunk(quint32 cktype);

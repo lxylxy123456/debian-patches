@@ -1,18 +1,20 @@
-# MIDI Sequencer C++ Library
-# Copyright (C) 2005-2022 Pedro Lopez-Cabanillas <plcl@users.sourceforge.net>
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#[===========================================================================[
+MIDI C++ Library
+Copyright (C) 2005-2024 Pedro Lopez-Cabanillas <plcl@users.sourceforge.net>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+#]===========================================================================]
 
 set ( SOURCES rttest.cpp )
 
@@ -26,7 +28,13 @@ target_link_libraries (rtTest PRIVATE
     Qt${QT_VERSION_MAJOR}::Test
     Drumstick::RT )
 
-add_test (rtTest ${PROJECT_BINARY_DIR}/bin/rtTest)
+if (${CMAKE_SYSTEM} MATCHES "Linux")
+    if (BUILD_ALSA AND ALSA_FOUND AND (EXISTS "/dev/snd/") AND (EXISTS "/dev/snd/seq"))
+        add_test (rtTest ${PROJECT_BINARY_DIR}/bin/rtTest)
+    endif()
+else()
+    add_test (rtTest ${PROJECT_BINARY_DIR}/bin/rtTest)
+endif()
 
 if(STATIC_DRUMSTICK)
     if (FALSE)

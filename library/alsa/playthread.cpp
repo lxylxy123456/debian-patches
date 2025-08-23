@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -193,14 +193,14 @@ void SequencerOutputThread::run()
             }
             if (stopRequested()) {
                 m_Queue->clear();
-                emit playbackStopped();
+                Q_EMIT playbackStopped();
             } else {
                 drainOutput();
                 syncOutput();
                 if (stopRequested())
-                    emit playbackStopped();
+                    Q_EMIT playbackStopped();
                 else
-                    emit playbackFinished();
+                    Q_EMIT playbackFinished();
             }
             m_Queue->stop();
         } catch (...) {

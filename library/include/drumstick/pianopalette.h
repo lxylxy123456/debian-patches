@@ -1,6 +1,6 @@
 /*
     MIDI Virtual Piano Keyboard
-    Copyright (C) 2008-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2008-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,6 +30,16 @@
  * Piano Palette declarations
  */
 
+#if defined(DRUMSTICK_STATIC)
+#define DRUMSTICK_WIDGETS_EXPORT
+#else
+#if defined(drumstick_widgets_EXPORTS)
+#define DRUMSTICK_WIDGETS_EXPORT Q_DECL_EXPORT
+#else
+#define DRUMSTICK_WIDGETS_EXPORT Q_DECL_IMPORT
+#endif
+#endif
+
 namespace drumstick { namespace widgets {
 
 /**
@@ -57,7 +67,7 @@ enum PalettePolicy {
  *
  * PianoPalette represents a set of colors used to paint the PianoKeybd widgets
  */
-class DRUMSTICK_EXPORT PianoPalette
+class DRUMSTICK_WIDGETS_EXPORT PianoPalette
 {
     Q_GADGET
     Q_DECLARE_TR_FUNCTIONS(PianoPalette)

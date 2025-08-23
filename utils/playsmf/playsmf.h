@@ -1,6 +1,6 @@
 /*
     Standard MIDI File player program 
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
  
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ public:
     void dumpStr(const QString& event, const QString& data);
     void shutupSound();
 
-public slots:
+public Q_SLOTS:
     void headerEvent(int format, int ntrks, int division);
     void noteOnEvent(int chan, int pitch, int vol);
     void noteOffEvent(int chan, int pitch, int vol);

@@ -1,6 +1,6 @@
 /*
     Virtual Piano test using the MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include <QFontDialog>
@@ -26,22 +25,24 @@
 #if defined(Q_OS_MACOS)
 #include <CoreFoundation/CoreFoundation.h>
 #endif
+
+#include <drumstick/pianokeybd.h>
+#include <drumstick/settingsfactory.h>
+
 #include "connections.h"
 #include "preferences.h"
 #include "vpiano.h"
 #include "vpianoabout.h"
 #include "vpianosettings.h"
-#include <drumstick/backendmanager.h>
-#include <drumstick/pianokeybd.h>
-#include <drumstick/settingsfactory.h>
 
 using namespace drumstick::rt;
 using namespace drumstick::widgets;
 
-VPiano::VPiano( QWidget * parent, Qt::WindowFlags flags)
-    : QMainWindow(parent, flags),
-    m_midiIn(nullptr),
-    m_midiOut(nullptr)
+VPiano::VPiano(QWidget *parent, Qt::WindowFlags flags)
+    : QMainWindow(parent, flags)
+    , m_manager{new BackendManager}
+    , m_midiIn{nullptr}
+    , m_midiOut{nullptr}
 {
     ui.setupUi(this);
 
@@ -107,23 +108,23 @@ VPiano::~VPiano()
 {
     m_midiIn->close();
     m_midiOut->close();
+    delete m_manager;
 }
 
 void VPiano::initialize()
 {
     readSettings();
 
-    BackendManager man;
-    man.refresh(VPianoSettings::instance()->settingsMap());
-    m_inputs = man.availableInputs();
-    m_outputs = man.availableOutputs();
+    m_manager->refresh(VPianoSettings::instance()->settingsMap());
+    m_inputs = m_manager->availableInputs();
+    m_outputs = m_manager->availableOutputs();
 
-    m_midiIn = man.findInput(VPianoSettings::instance()->lastInputBackend());
+    m_midiIn = m_manager->findInput(VPianoSettings::instance()->lastInputBackend());
     if (m_midiIn == nullptr) {
         qFatal("Unable to find a suitable input backend.");
     }
 
-    m_midiOut = man.findOutput(VPianoSettings::instance()->lastOutputBackend());
+    m_midiOut = m_manager->findOutput(VPianoSettings::instance()->lastOutputBackend());
     if (m_midiOut == nullptr) {
         qFatal("Unable to find a suitable output backend. You may need to set the DRUMSTICKRT environment variable.");
     }

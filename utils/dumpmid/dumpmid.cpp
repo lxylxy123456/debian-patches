@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,14 +45,20 @@ using namespace drumstick::ALSA;
 QDumpMIDI::QDumpMIDI()
     : QObject(), m_Stopped(false)
 {
+    bool ok{false};
     m_Client = new MidiClient(this);
     m_Client->open();
     m_Client->setClientName("DumpMIDI");
 #ifndef USE_QEVENTS // using signals instead
-    connect( m_Client, &MidiClient::eventReceived,
-                 this, &QDumpMIDI::sequencerEvent,
-                       Qt::DirectConnection );
+    ok = connect(m_Client,
+                 &MidiClient::eventReceived,
+                 this,
+                 &QDumpMIDI::sequencerEvent,
+                 static_cast<Qt::ConnectionType>(Qt::DirectConnection | Qt::UniqueConnection));
     /* note: there is no event loop to handle Qt::QueuedConnection */
+    if (!ok) {
+        qWarning() << "Connecting signal MidiClient::eventReceived() failed";
+    }
 #endif
     // enable here the callback event delivery
     // m_Client->setHandler(this);
@@ -70,9 +76,13 @@ QDumpMIDI::QDumpMIDI()
     //m_Port->setTimestampReal(true);
     m_Port->setTimestampQueue(m_Queue->getId());
 #endif
-    connect( m_Port, &MidiPort::subscribed, this, &QDumpMIDI::subscription);
-    qDebug() << "Trying to subscribe from Announce";
+    ok = connect(m_Port, &MidiPort::subscribed, this, &QDumpMIDI::subscription, Qt::UniqueConnection);
+    if (!ok) {
+        qWarning() << "Connecting signal MidiPort::subscribed() failed";
+    }
+#ifdef SUBSCRIBE_ANNOUNCE
     m_Port->subscribeFromAnnounce();
+#endif
 }
 
 QDumpMIDI::~QDumpMIDI()
@@ -103,12 +113,13 @@ QDumpMIDI::subscription(MidiPort*, Subscription* subs)
     qDebug() << "Subscription made from"
              << subs->getSender()->client << ":"
              << subs->getSender()->port;
+    delete subs;
 }
 
 void QDumpMIDI::subscribe(const QString& portName)
 {
     try {
-        qDebug() << "Trying to subscribe" << portName.toLocal8Bit().data();
+        //qDebug() << "Trying to subscribe" << portName.toLocal8Bit().data();
         m_Port->subscribeFrom(portName);
     } catch (const SequencerError& err) {
         cerr << "SequencerError exception. Error code: " << err.code()
@@ -156,7 +167,7 @@ void QDumpMIDI::run()
 
 void QDumpMIDI::handleSequencerEvent(SequencerEvent *ev)
 {
-    //qDebug() << Q_FUNC_INFO;
+    //qDebug() << Q_FUNC_INFO << ev;
     dumpEvent(ev);
     delete ev;
 }
@@ -177,7 +188,7 @@ QDumpMIDI::customEvent(QEvent *ev)
 void
 QDumpMIDI::sequencerEvent(SequencerEvent *ev)
 {
-    //qDebug() << Q_FUNC_INFO;
+    //qDebug() << Q_FUNC_INFO << ev;
     dumpEvent(ev);
     delete ev;
 }
@@ -461,9 +472,9 @@ QDumpMIDI* test;
 void signalHandler(int sig)
 {
     if (sig == SIGINT)
-        qDebug() << "Caught a SIGINT. Exiting";
+        qDebug() << "Received a SIGINT. Exiting";
     else if (sig == SIGTERM)
-        qDebug() << "Caught a SIGTERM. Exiting";
+        qDebug() << "Received a SIGTERM. Exiting";
     test->stop();
 }
 

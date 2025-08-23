@@ -1,6 +1,6 @@
 /*
     Drumstick RT Mac OSX Backend
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,10 +35,10 @@ namespace rt {
         AUGraph m_graph;
         AudioUnit m_synthUnit;
         MIDIConnection m_connection;
+    public:
         QString m_soundfont_dls;
         bool m_default_dls;
         bool m_reverb_dls;
-    public:
         bool m_status;
         QStringList m_diagnostics;
 
@@ -394,6 +394,16 @@ namespace rt {
     void MacSynthOutput::sendSystemMsg(const int status)
     {
         d->sendStatusEvent(static_cast<unsigned>(status), 0, 0);
+    }
+
+    void MacSynthOutput::writeSettings(QSettings *settings)
+    {
+        settings->beginGroup("DLS Synth");
+        settings->setValue("soundfont_dls", d->m_soundfont_dls);
+        settings->setValue("reverb_dls", d->m_reverb_dls);
+        settings->setValue("default_dls", d->m_default_dls);
+        settings->endGroup();
+        settings->sync();
     }
 
     QStringList MacSynthOutput::getDiagnostics()

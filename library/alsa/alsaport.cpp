@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <QMetaMethod>
 
 #include "errorcheck.h"
 #include <drumstick/alsaclient.h>
@@ -626,7 +628,7 @@ MidiPort::setMidiClient( MidiClient* seq )
     if (m_MidiClient != seq)
     {
         m_MidiClient = seq;
-        emit midiClientChanged( this, m_MidiClient );
+        Q_EMIT midiClientChanged( this, m_MidiClient );
         applyPortInfo();
     }
 }
@@ -638,9 +640,12 @@ MidiPort::setMidiClient( MidiClient* seq )
 void
 MidiPort::subscribe(Subscription* subs)
 {
+    static const QMetaMethod subscribedSignal = QMetaMethod::fromSignal(&MidiPort::subscribed);
     subs->subscribe(m_MidiClient);
     m_Subscriptions.append(*subs);
-    emit subscribed(this, subs);
+    if (isSignalConnected(subscribedSignal)) {
+        Q_EMIT subscribed(this, subs->clone());
+    }
 }
 
 /**
@@ -1124,7 +1129,7 @@ MidiPort::attach( MidiClient* seq )
         m_MidiClient = seq;
         m_MidiClient->portAttach(this);
         m_Attached = true;
-        emit attached(this);
+        Q_EMIT attached(this);
     }
 }
 
@@ -1137,7 +1142,7 @@ MidiPort::detach()
     if (m_Attached && (m_MidiClient != nullptr)) {
         m_MidiClient->portDetach(this);
         m_Attached = false;
-        emit detached(this);
+        Q_EMIT detached(this);
     }
 }
 

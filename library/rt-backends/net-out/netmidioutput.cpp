@@ -1,6 +1,6 @@
 /*
     Drumstick RT (realtime MIDI In/Out)
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -83,6 +83,17 @@ public:
             if (!m_status) {
                 m_diagnostics << QString("Invalid multicast address: %1").arg(address);
             }
+        }
+    }
+
+    void writeSettings(QSettings *settings)
+    {
+        if (settings != nullptr) {
+            settings->beginGroup("Network");
+            settings->setValue("interface", m_iface.name());
+            settings->setValue("ipv6", m_ipv6);
+            settings->setValue("address", m_groupAddress.toString());
+            settings->endGroup();
         }
     }
 
@@ -266,6 +277,11 @@ void NetMIDIOutput::sendSysex(const QByteArray &data)
 void NetMIDIOutput::sendSystemMsg(const int status)
 {
     d->sendMessage(status);
+}
+
+void NetMIDIOutput::writeSettings(QSettings *settings)
+{
+    d->writeSettings(settings);
 }
 
 QStringList NetMIDIOutput::getDiagnostics()

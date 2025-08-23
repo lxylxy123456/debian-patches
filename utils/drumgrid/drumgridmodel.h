@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ public:
 
     static const QString DEFVAL;
 
-public slots:
+public Q_SLOTS:
     void changeCell(const QModelIndex &index);
     void changeCell(const QModelIndex &index, const QString& newValue);
 

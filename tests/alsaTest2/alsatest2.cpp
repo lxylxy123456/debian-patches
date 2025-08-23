@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2008-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This file is part of the Drumstick project, see https://sf.net/p/drumstick
 
@@ -64,7 +64,7 @@ void AlsaTest2::initTestCase()
         m_test_timer = Timer::bestGlobalTimer( SND_TIMER_OPEN_NONBLOCK |
                                                SND_TIMER_OPEN_TREAD );
     } catch (...) {
-        QWARN("Timer test initialization failed");
+        qWarning("Timer test initialization failed");
     }
 }
 

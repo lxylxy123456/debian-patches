@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2008-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This file is part of the Drumstick project, see https://sf.net/p/drumstick
 
@@ -39,7 +39,7 @@ public:
     static const char test_wrk[];
     static const int test_wrk_len;
 
-public slots:
+public Q_SLOTS:
     void fileHeader(int verh, int verl);
     void trackHeader(const QString& name1, const QString& name2,
                      int trackno, int channel, int pitch,
@@ -56,7 +56,7 @@ public slots:
                         int velocity, int port,
                         bool selected, bool muted, bool loop);
 
-private slots:
+private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
     void testCaseReadWrkFile();

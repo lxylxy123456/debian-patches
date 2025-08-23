@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -117,7 +117,11 @@ DrumGrid::DrumGrid(QWidget *parent)
     m_Client = new MidiClient(this);
     m_Client->open();
     m_Client->setClientName("DrumGrid");
-    connect( m_Client, &MidiClient::eventReceived, this, &DrumGrid::sequencerEvent, Qt::QueuedConnection );
+    connect(m_Client,
+            &MidiClient::eventReceived,
+            this,
+            &DrumGrid::sequencerEvent,
+            static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection));
     m_Port = new MidiPort(this);
     m_Port->attach( m_Client );
     m_Port->setPortName("DrumGrid Output Port");
@@ -195,7 +199,7 @@ void DrumGrid::sequencerEvent(SequencerEvent *ev)
         break;
     case SND_SEQ_EVENT_USR1:
         m_beat++;
-        emit signalUpdate(m_bar, m_beat-1);
+        Q_EMIT signalUpdate(m_bar, m_beat-1);
         break;
     }
     delete ev;

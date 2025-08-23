@@ -1,6 +1,6 @@
 /*
     Drumstick RT (realtime MIDI In/Out)
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -39,6 +39,9 @@ namespace rt {
 
     public:
         explicit NetMIDIInput(QObject *parent = nullptr);
+
+    public Q_SLOTS:
+        void writeSettings(QSettings *settings);
 
         // MIDIInput interface
     public:

@@ -1,6 +1,6 @@
 /*
     Drumstick RT (realtime MIDI In/Out)
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ namespace drumstick { namespace rt {
         virtual void close() override;
         virtual MIDIConnection currentConnection() override;
 
-    public slots:
+    public Q_SLOTS:
         virtual void sendNoteOff(int chan, int note, int vel) override;
         virtual void sendNoteOn(int chan, int note, int vel) override;
         virtual void sendKeyPressure(int chan, int note, int value) override;
@@ -65,6 +65,8 @@ namespace drumstick { namespace rt {
         virtual void sendPitchBend(int chan, int value) override;
         virtual void sendSysex(const QByteArray &data) override;
         virtual void sendSystemMsg(const int status) override;
+
+        void writeSettings(QSettings *settings);
 
     private:
         class NetMIDIOutputPrivate;

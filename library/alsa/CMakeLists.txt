@@ -1,18 +1,20 @@
-# MIDI Sequencer C++ Library
-# Copyright (C) 2005-2022 Pedro Lopez-Cabanillas <plcl@users.sourceforge.net>
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#[===========================================================================[
+MIDI C++ Library
+Copyright (C) 2005-2024 Pedro Lopez-Cabanillas <plcl@users.sourceforge.net>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+#]===========================================================================]
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -67,6 +69,13 @@ target_include_directories(drumstick-alsa PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
+#message(STATUS "ALSA -- HAVE_DBUS: ${HAVE_DBUS}")
+
+target_compile_definitions(drumstick-alsa PRIVATE
+    QT_NO_SIGNALS_SLOTS_KEYWORDS
+    $<$<BOOL:${HAVE_DBUS}>:RTKIT_SUPPORT>
+)
+
 target_link_libraries(drumstick-alsa PRIVATE
     Qt${QT_VERSION_MAJOR}::Core
     PkgConfig::ALSA
@@ -80,7 +89,9 @@ endif()
 
 if(STATIC_DRUMSTICK)
     set_target_properties(drumstick-alsa PROPERTIES
-        STATIC_LIB "libdrumstick-alsa")
+        STATIC_LIB "libdrumstick-alsa"
+        EXPORT_NAME ALSA
+    )
 else()
     set_target_properties(drumstick-alsa PROPERTIES
         VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}

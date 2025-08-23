@@ -1,6 +1,6 @@
 /*
     Standard MIDI File dump program
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     Based on midifile.c by Tim Thompson, M.Czeiszperger and Greg Lee
 
@@ -31,7 +31,7 @@
     void dumpStr(const QString& event, const QString& data);
     int  numErrors();
 
-  public slots:
+  public Q_SLOTS:
     void headerEvent(int format, int ntrks, int division);
     void trackStartEvent();
     void trackEndEvent();

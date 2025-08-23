@@ -1,6 +1,6 @@
 /*
     Cakewalk WRK file dump program
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     Based on midifile.c by Tim Thompson, M.Czeiszperger and Greg Lee
 
@@ -39,7 +39,7 @@
 
     static const QString NO_CHANNEL;
 
-  public slots:
+  public Q_SLOTS:
     void unknownChunk(int type, const QByteArray& data);
     void fileHeader(int verh, int verl);
     void trackHeader(const QString& name1, const QString& name2,

@@ -1,6 +1,6 @@
 /*
     MIDI Sequencer C++ library
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,8 +16,11 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <cxxabi.h>
+
 #include "errorcheck.h"
 #include <drumstick/alsaevent.h>
+
 /**
  * @file alsaevent.cpp
  * Implementation of classes managing ALSA Sequencer events.
@@ -91,7 +94,6 @@ namespace drumstick { namespace ALSA {
  * @see https://www.alsa-project.org/alsa-doc/alsa-lib/group___m_i_d_i___event.html
  * @}
  */
-
 
 /**
  * Default constructor.
@@ -705,6 +707,19 @@ SysExEvent* SysExEvent::clone() const
 }
 
 /**
+ * Assignment operator.
+ * @param other Another SysExEvent object reference
+ * @return pointer to this object
+ */
+SysExEvent &SysExEvent::operator=(const SysExEvent &other)
+{
+    m_event = other.m_event;
+    m_data = other.m_data;
+    snd_seq_ev_set_sysex(&m_event, m_data.size(), m_data.data());
+    return *this;
+}
+
+/**
  * Default constructor
  */
 TextEvent::TextEvent()
@@ -781,6 +796,21 @@ int TextEvent::getTextType() const
 TextEvent* TextEvent::clone() const
 {
     return new TextEvent(&m_event);
+}
+
+/**
+ * Assignment operator.
+ * @param other Another TextEvent object reference
+ * @return pointer to this object
+ */
+TextEvent &TextEvent::operator=(const TextEvent &other)
+{
+    m_event = other.m_event;
+    m_data = other.m_data;
+    m_textType = other.getTextType();
+    snd_seq_ev_set_variable(&m_event, m_data.size(), m_data.data());
+    setSequencerType(SND_SEQ_EVENT_USR_VAR0);
+    return *this;
 }
 
 /**
@@ -1233,6 +1263,29 @@ void
 MidiCodec::resizeBuffer(int bufsize)
 {
     DRUMSTICK_ALSA_CHECK_WARNING(snd_midi_event_resize_buffer(m_Info, bufsize));
+}
+
+QString typeOfEvent(const SequencerEvent &v)
+{
+    int status;
+    char *realname = abi::__cxa_demangle(typeid(v).name(), 0, 0, &status);
+    QString name(realname && realname[0] ? realname : "drumstick::ALSA::SequencerEvent");
+    free(realname);
+    return name;
+}
+
+QDebug operator<<(QDebug d, const SequencerEvent &event)
+{
+    QDebugStateSaver saver(d);
+    d.noquote() << typeOfEvent(event);
+    return d;
+}
+
+QDebug operator<<(QDebug d, const SequencerEvent *event)
+{
+    QDebugStateSaver saver(d);
+    d.noquote().nospace() << typeOfEvent(*event) << "*";
+    return d;
 }
 
 } // namespace ALSA

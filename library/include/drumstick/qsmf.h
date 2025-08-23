@@ -1,6 +1,6 @@
 /*
     Standard MIDI File component
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     Based on midifile.c by Tim Thompson, M.Czeiszperger and Greg Lee
 
@@ -32,6 +32,16 @@ class QDataStream;
  * @file qsmf.h
  * Standard MIDI Files Input/Output
  */
+
+#if defined(DRUMSTICK_STATIC)
+#define DRUMSTICK_FILE_EXPORT
+#else
+#if defined(drumstick_file_EXPORTS)
+#define DRUMSTICK_FILE_EXPORT Q_DECL_EXPORT
+#else
+#define DRUMSTICK_FILE_EXPORT Q_DECL_IMPORT
+#endif
+#endif
 
 namespace drumstick {
 /**
@@ -89,7 +99,7 @@ const quint8 minor_mode =         1; /**< Minor mode scale */
  *
  * This class is used to parse and encode Standard MIDI Files (SMF)
  */
-class DRUMSTICK_EXPORT QSmf : public QObject
+class DRUMSTICK_FILE_EXPORT QSmf : public QObject
 {
     Q_OBJECT
 
@@ -131,7 +141,7 @@ public:
     Q_DECL_DEPRECATED QTextCodec* getTextCodec();
     Q_DECL_DEPRECATED void setTextCodec(QTextCodec *codec);
 
-signals:
+Q_SIGNALS:
     /**
      * Emitted for a SMF read or write error
      * @param errorStr Error string
@@ -344,7 +354,7 @@ private:
     void writeTrackChunk(int track);
 };
 
-QString DRUMSTICK_EXPORT drumstickLibraryVersion();
+QString DRUMSTICK_FILE_EXPORT drumstickLibraryVersion();
 
 /** @} */
 

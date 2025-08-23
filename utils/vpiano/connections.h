@@ -1,6 +1,6 @@
 /*
     Virtual Piano test using the MIDI Sequencer C++ library 
-    Copyright (C) 2006-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2006-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public:
     drumstick::rt::MIDIInput *getInput();
     drumstick::rt::MIDIOutput *getOutput();
 
-public slots:
+public Q_SLOTS:
     void configureInputDriver();
     void configureOutputDriver();
     void clickedAdvanced(bool value);

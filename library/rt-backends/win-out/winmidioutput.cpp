@@ -1,6 +1,6 @@
 /*
     Drumstick RT Windows Backend
-    Copyright (C) 2009-2022 Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2009-2024 Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #include <QByteArray>
 #include <QVarLengthArray>
 #include <qmath.h>
-#include <Windows.h>
+#include <windows.h>
 #include <mmsystem.h>
 #include "winmidioutput.h"
 
@@ -64,6 +64,11 @@ namespace rt {
             m_publicName(DEFAULT_PUBLIC_NAME)
         {
             reloadDeviceList(true);
+        }
+
+        ~WinMIDIOutputPrivate()
+        {
+            close();
         }
 
         void reloadDeviceList(bool advanced)

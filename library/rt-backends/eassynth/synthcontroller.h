@@ -1,6 +1,6 @@
 /*
     Sonivox EAS Synthesizer for Qt applications
-    Copyright (C) 2016-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2016-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This library is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,6 +35,8 @@ namespace rt {
         Q_INTERFACES(drumstick::rt::MIDIOutput)
         Q_PROPERTY(QStringList diagnostics READ getDiagnostics)
         Q_PROPERTY(bool status READ getStatus)
+        Q_PROPERTY(QString libversion READ getLibVersion)
+        Q_PROPERTY(QString soundfont READ getSoundFont)
 
     public:
         explicit SynthController(QObject *parent = nullptr);
@@ -55,7 +57,7 @@ namespace rt {
         virtual void close() override;
         virtual MIDIConnection currentConnection() override;
 
-    public slots:
+    public Q_SLOTS:
         virtual void sendNoteOff(int chan, int note, int vel) override;
         virtual void sendNoteOn(int chan, int note, int vel) override;
         virtual void sendKeyPressure(int chan, int note, int value) override;
@@ -66,6 +68,8 @@ namespace rt {
         virtual void sendSysex(const QByteArray &data) override;
         virtual void sendSystemMsg(const int status) override;
 
+        void writeSettings(QSettings *settings);
+
     private:
         QThread m_renderingThread;
         SynthRenderer *m_renderer;
@@ -74,6 +78,8 @@ namespace rt {
     private:
         QStringList getDiagnostics();
         bool getStatus();
+        QString getLibVersion();
+        QString getSoundFont();
     };
 
 }}

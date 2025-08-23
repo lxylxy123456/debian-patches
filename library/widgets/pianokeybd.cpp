@@ -1,6 +1,6 @@
 /*
     Virtual Piano Widget for Qt
-    Copyright (C) 2008-2022, Pedro Lopez-Cabanillas <plcl@users.sf.net>
+    Copyright (C) 2008-2024, Pedro Lopez-Cabanillas <plcl@users.sf.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,6 +30,11 @@
  * The QGraphicsView class provides a widget for displaying the contents of a QGraphicsScene.
  * @see https://doc.qt.io/qt-5/qgraphicsview.html
  */
+
+inline void initResources()
+{
+    Q_INIT_RESOURCE(pianokeybd);
+}
 
 namespace drumstick { namespace widgets {
 
@@ -434,6 +439,7 @@ void PianoKeybd::initialize()
 #endif
     setOptimizationFlag(DontSavePainterState, true);
     setOptimizationFlag(DontAdjustForAntialiasing, true);
+    initResources();
 }
 
 /**
