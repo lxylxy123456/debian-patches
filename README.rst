@@ -77,12 +77,16 @@ Thanks to https://gitlab.gnome.org/GNOME/vte/-/issues/347#note_1197315
 libdrumstick-widgets2: change keys' shape
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+--------+-------------------------+-----------------------+
-| Debian | Branch                  | Diff                  |
-+========+=========================+=======================+
-|   12   | `libdrumstick_2.7.2-1`_ | `be7e8775..bbd0faaf`_ |
-+--------+-------------------------+-----------------------+
++--------+--------------------------+-----------------------+
+| Debian | Branch                   | Diff                  |
++========+==========================+=======================+
+|   13   | `libdrumstick_2.10.0-1`_ | `bf552448..1d038c11`_ |
++--------+--------------------------+-----------------------+
+|   12   | `libdrumstick_2.7.2-1`_  | `0ae70fc5..e0497cde`_ |
++--------+--------------------------+-----------------------+
 
+.. _libdrumstick_2.10.0-1: https://github.com/lxylxy123456/debian-patches/tree/libdrumstick_2.10.0-1
+.. _bf552448..1d038c11: https://github.com/lxylxy123456/debian-patches/compare/bf552448a69f98034f5a26a8afdc95594baeb451..1d038c11c7769e81db31ba59956a9b615f29ff67
 .. _libdrumstick_2.7.2-1: https://github.com/lxylxy123456/debian-patches/tree/libdrumstick_2.7.2-1
 .. _0ae70fc5..e0497cde: https://github.com/lxylxy123456/debian-patches/compare/0ae70fc518ab945509f74216379ad819d2f9870f..e0497cde2b5694f669c5fe837d811fbc31b8c605
 
