@@ -22,6 +22,7 @@ Install command (using libvte-2.91-0 as an example):
 
 .. code:: bash
 
+	# Naming: <package>_<version>_<architecture>.deb
 	sudo apt install ../libvte-2.91-0_0.70.3-1_amd64.deb
 	sudo apt-mark hold libvte-2.91-0
 
@@ -47,22 +48,22 @@ https://aur.archlinux.org/cgit/aur.git/tree/transparency.patch?h=gnome-terminal-
 .. _gnome-terminal-3.46.8: https://github.com/lxylxy123456/debian-patches/tree/gnome-terminal-3.46.8
 .. _28fb800d..fe3cbdd8: https://github.com/lxylxy123456/debian-patches/compare/28fb800de968a8c382506f845557aeed1660a4cf..fe3cbdd84933e7341b8d00ac1cba664d37850ab2
 
-libvte-2.91: fix line height problem
+libvte-2.91-0: fix line height problem
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Thanks to https://gitlab.gnome.org/GNOME/vte/-/issues/347#note_1197315
 
-+--------+-------------+--------------------+-----------------------------------+-----------------------+
-| Debian | Package     | Version            | Branch                            | Diff                  |
-+========+=============+====================+===================================+=======================+
-|   13   | libvte-2.91 | 0_0.80.1-1         | `libvte-2.91-0_0.80.1-1`_         | `ad7b8b26..8482f4cc`_ |
-+--------+             +--------------------+-----------------------------------+-----------------------+
-|   12   |             | 0_0.70.6-2_deb12u1 | `libvte-2.91-0_0.70.6-2_deb12u1`_ | `be7e8775..bbd0faaf`_ |
-|        |             +--------------------+-----------------------------------+-----------------------+
-|        |             | 0.70.6             | `vte2.91-0.70.6`_                 | `4993fe32..4b71d300`_ |
-|        |             +--------------------+-----------------------------------+-----------------------+
-|        |             | 0.70.3             | `vte2.91-0.70.3`_                 | `1b499c9f..53248a69`_ |
-+--------+-------------+--------------------+-----------------------------------+-----------------------+
++--------+---------------+------------------+-----------------------------------+-----------------------+
+| Debian | Package       | Version          | Branch                            | Diff                  |
++========+===============+==================+===================================+=======================+
+|   13   | libvte-2.91-0 | 0.80.1-1         | `libvte-2.91-0_0.80.1-1`_         | `ad7b8b26..8482f4cc`_ |
++--------+               +------------------+-----------------------------------+-----------------------+
+|   12   |               | 0.70.6-2~deb12u1 | `libvte-2.91-0_0.70.6-2_deb12u1`_ | `be7e8775..bbd0faaf`_ |
+|        |               +------------------+-----------------------------------+-----------------------+
+|        |               | 0.70.6           | `vte2.91-0.70.6`_                 | `4993fe32..4b71d300`_ |
+|        |               +------------------+-----------------------------------+-----------------------+
+|        |               | 0.70.3           | `vte2.91-0.70.3`_                 | `1b499c9f..53248a69`_ |
++--------+---------------+------------------+-----------------------------------+-----------------------+
 
 .. _libvte-2.91-0_0.80.1-1: https://github.com/lxylxy123456/debian-patches/tree/libvte-2.91-0_0.80.1-1
 .. _ad7b8b26..8482f4cc: https://github.com/lxylxy123456/debian-patches/compare/ad7b8b26cff490c8322fc9a37fa5f252d6233982..8482f4cc69f79656c8e6f213ab068123d615d372
@@ -72,7 +73,6 @@ Thanks to https://gitlab.gnome.org/GNOME/vte/-/issues/347#note_1197315
 .. _4993fe32..4b71d300: https://github.com/lxylxy123456/debian-patches/compare/4993fe32fe4e4d3c2d4e313a1c9e3c02b241eaae..4b71d300f504d8bc3d41803e8626f98217df5764
 .. _vte2.91-0.70.3: https://github.com/lxylxy123456/debian-patches/tree/vte2.91-0.70.3
 .. _1b499c9f..53248a69: https://github.com/lxylxy123456/debian-patches/compare/1b499c9fe60bb30f1dfd5ab5a12b5b297ce22866..53248a69677d05d7600d61ccaabaeebe610eea50
-
 
 libdrumstick: change keys' shape
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
