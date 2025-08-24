@@ -100,5 +100,5 @@ gedit-plugin-git: maintain gedit's Git plugin
 +--------+------------------+---------+----------------------------+-------------+
 
 .. _gedit-plugin-git_48.1-2: https://github.com/lxylxy123456/debian-patches/tree/gedit-plugin-git_48.1-2
-.. _75aeb537: https://github.com/lxylxy123456/gedit-wraptextperfile/commit/75aeb537775561bf355572e27ec1d639ba70366a
+.. _75aeb537: https://github.com/lxylxy123456/debian-patches/commit/75aeb537775561bf355572e27ec1d639ba70366a
 
