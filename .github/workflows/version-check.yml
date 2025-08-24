@@ -28,7 +28,7 @@ jobs:
         ../../version-check.sh
     - uses: actions/checkout@v5
       with:
-        ref: 'dummy'
+        ref: 'dummy-${{ matrix.debian_version }}'
         path: 'dummy'
     - name: dummy
       run: |
@@ -39,7 +39,6 @@ jobs:
         git config pull.rebase false
         git add -A
         git commit -m 'Dummy commit by version-check.yml'
-        git pull origin dummy --no-edit
-        git push origin dummy
+        git push origin dummy-${{ matrix.debian_version }}
         cd ..
 
