@@ -1,0 +1,1188 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sveinn í Felli <sv1@fellsnet.is>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: gedit\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gedit-plugins/issues\n"
+"POT-Creation-Date: 2022-07-29 05:07+0000\n"
+"PO-Revision-Date: 2022-09-07 15:44+0000\n"
+"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
+"Language-Team: Icelandic\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 21.12.3\n"
+
+#: plugins/bookmarks/bookmarks.plugin.desktop.in.in:5
+#: plugins/bookmarks/gedit-bookmarks.metainfo.xml.in:6
+msgid "Bookmarks"
+msgstr "Bókamerki"
+
+#: plugins/bookmarks/bookmarks.plugin.desktop.in.in:6
+#: plugins/bookmarks/gedit-bookmarks.metainfo.xml.in:7
+msgid "Easy document navigation with bookmarks"
+msgstr "Bókamerki einfalda mjög að rata um skjöl"
+
+#: plugins/bookmarks/gedit-bookmarks-app-activatable.c:141
+msgid "Toggle Bookmark"
+msgstr "Víxla bókamerkjum af/á"
+
+#: plugins/bookmarks/gedit-bookmarks-app-activatable.c:145
+msgid "Go to Next Bookmark"
+msgstr "Fara á næsta bókamerki"
+
+#: plugins/bookmarks/gedit-bookmarks-app-activatable.c:149
+msgid "Go to Previous Bookmark"
+msgstr "Fara á fyrra bókamerki"
+
+#: plugins/bracketcompletion/bracketcompletion.plugin.desktop.in.in:6
+#: plugins/bracketcompletion/gedit-bracketcompletion.metainfo.xml.in:6
+msgid "Bracket Completion"
+msgstr "Svigaklárun"
+
+#: plugins/bracketcompletion/bracketcompletion.plugin.desktop.in.in:7
+msgid "Automatically adds closing brackets."
+msgstr "Bætir sjálfkrafa við endasvigunum."
+
+#: plugins/bracketcompletion/gedit-bracketcompletion.metainfo.xml.in:7
+msgid "Automatically add a closing bracket when you insert one"
+msgstr "Bæta sjálfkrafa við endasvigunum þegar upphafssvigar eru fyrir hendi"
+
+#: plugins/charmap/charmap/__init__.py:56
+#: plugins/charmap/charmap.plugin.desktop.in.in:6
+msgid "Character Map"
+msgstr "Stafatafla"
+
+#: plugins/charmap/charmap.plugin.desktop.in.in:7
+msgid "Insert special characters just by clicking on them."
+msgstr "Setur inn sértákn með því að smella á þau."
+
+#: plugins/charmap/gedit-charmap.metainfo.xml.in:6
+msgid "Charmap"
+msgstr "Stafatafla"
+
+#: plugins/charmap/gedit-charmap.metainfo.xml.in:7
+msgid "Select characters from a character map"
+msgstr "Veldu stafi úr staftáknatöflu"
+
+#: plugins/codecomment/codecomment.plugin.desktop.in.in:6
+#: plugins/codecomment/gedit-codecomment.metainfo.xml.in:6
+msgid "Code Comment"
+msgstr "Athugasemd kóða"
+
+#: plugins/codecomment/codecomment.plugin.desktop.in.in:7
+msgid "Comment out or uncomment a selected block of code."
+msgstr "Setja eða fjarlægja athugasemd á valinni blokk af kóða"
+
+#: plugins/codecomment/codecomment.py:118
+msgid "Co_mment Code"
+msgstr "Athugasemdir í kóða"
+
+#: plugins/codecomment/codecomment.py:124
+msgid "U_ncomment Code"
+msgstr "_Eyða athugasemd á kóða"
+
+#: plugins/codecomment/gedit-codecomment.metainfo.xml.in:7
+msgid "Comment or uncomment blocks of code"
+msgstr "Setja eða fjarlægja athugasemdir á blokkir af kóða"
+
+#: plugins/colorpicker/colorpicker.plugin.desktop.in.in:6
+msgid "Color Picker"
+msgstr "Litaplokkari"
+
+#: plugins/colorpicker/colorpicker.plugin.desktop.in.in:7
+msgid "Pick a color from a dialog and insert its hexadecimal representation."
+msgstr "Veldu lit úr valmynd og settu inn hex-gildi litarins."
+
+#: plugins/colorpicker/colorpicker.py:132
+msgid "Pick _Color…"
+msgstr "Vel_du lit"
+
+#: plugins/colorpicker/colorpicker.py:172
+msgid "Pick Color"
+msgstr "Veldu lit"
+
+#: plugins/colorpicker/gedit-colorpicker.metainfo.xml.in:6
+msgid "Color picker"
+msgstr "Litaplokkari"
+
+#: plugins/colorpicker/gedit-colorpicker.metainfo.xml.in:7
+msgid "Select and insert a color from a dialog (for HTML, CSS, PHP)"
+msgstr "Veldu og settu inn lit úr valmynd (fyrir HTML, CSS, PHP)"
+
+#: plugins/colorschemer/colorschemer.plugin.desktop.in.in:6
+#: plugins/colorschemer/gedit-colorschemer.metainfo.xml.in:6
+#: plugins/colorschemer/schemer/__init__.py:50
+#: plugins/colorschemer/schemer.ui:20
+msgid "Color Scheme Editor"
+msgstr "Ritill fyrir litastef"
+
+#: plugins/colorschemer/colorschemer.plugin.desktop.in.in:7
+msgid "Source code color scheme editor"
+msgstr "Ritill fyrir litastef grunnkóða"
+
+#: plugins/colorschemer/gedit-colorschemer.metainfo.xml.in:7
+msgid "Create and edit the color scheme used for syntax highlighting"
+msgstr ""
+"Útbúðu og breyttu litastefi sem notað er við áherslulitun á málskipan (syntax"
+" highlighting)"
+
+#: plugins/colorschemer/schemer/schemer.py:271
+#: plugins/colorschemer/schemer/schemer.py:318
+msgid "There was a problem saving the scheme"
+msgstr "Það kom upp vandamál við að vista litastefið"
+
+#: plugins/colorschemer/schemer/schemer.py:272
+msgid ""
+"You have chosen to create a new scheme\n"
+"but the Name or ID you are using is being used already.\n"
+"\n"
+"Please make sure to choose a Name and ID that are not already in use.\n"
+msgstr ""
+"Þú hefur valið að útbúa nýtt litastef\n"
+"en nafnið eða auðkennið eru þegar til staðar.\n"
+"\n"
+"Gakktu úr skugga um að velja ekki nafn eða auðkenni sem þegar eru í notkun.\n"
+
+#: plugins/colorschemer/schemer/schemer.py:319
+msgid ""
+"You do not have permission to overwrite the scheme you have chosen.\n"
+"Instead a copy will be created.\n"
+"\n"
+"Please make sure to choose a Name and ID that are not already in use.\n"
+msgstr ""
+"Þú hefur ekki heimild til að skrifa yfir litastefið sem þú valdir.\n"
+"Í staðinn verður búið til afrit.\n"
+"\n"
+"Gakktu úr skugga um að velja ekki nafn eða auðkenni sem þegar eru í notkun.\n"
+
+#. there must have been some conflict, since it opened the wrong file
+#: plugins/colorschemer/schemer/schemer.py:378
+msgid "There was a problem opening the file"
+msgstr "Villa kom upp við að opna skrána"
+
+#: plugins/colorschemer/schemer/schemer.py:379
+msgid "You appear to have schemes with the same IDs in different directories\n"
+msgstr "Það lítur út fyrir að þú sért með sömu auðkennin í mismunandi möppum\n"
+
+#: plugins/colorschemer/schemer.ui:137 plugins/colorschemer/schemer.ui:138
+msgid "Bold"
+msgstr "Feitletrað"
+
+#: plugins/colorschemer/schemer.ui:160 plugins/colorschemer/schemer.ui:161
+msgid "Italic"
+msgstr "Skáletrað"
+
+#: plugins/colorschemer/schemer.ui:183 plugins/colorschemer/schemer.ui:184
+msgid "Underline"
+msgstr "Undirstrikað"
+
+#: plugins/colorschemer/schemer.ui:206 plugins/colorschemer/schemer.ui:207
+msgid "Strikethrough"
+msgstr "Gegnumstrikað"
+
+#: plugins/colorschemer/schemer.ui:243
+msgid "Pick the background color"
+msgstr "Veldu bakgrunnslitinn"
+
+#: plugins/colorschemer/schemer.ui:259
+msgid "Pick the foreground color"
+msgstr "Veldu forgrunnslitinn"
+
+#: plugins/colorschemer/schemer.ui:270
+msgid "_Background"
+msgstr "_Bakgrunnur"
+
+#: plugins/colorschemer/schemer.ui:288
+msgid "_Foreground"
+msgstr "_Forgrunnur"
+
+#: plugins/colorschemer/schemer.ui:341
+msgid "_Clear"
+msgstr "_Hreinsa"
+
+#: plugins/colorschemer/schemer.ui:383
+msgid "Name"
+msgstr "Heiti"
+
+#: plugins/colorschemer/schemer.ui:408
+msgid "ID"
+msgstr "Auðkenni (ID)"
+
+#: plugins/colorschemer/schemer.ui:433
+msgid "Description"
+msgstr "Lýsing"
+
+#: plugins/colorschemer/schemer.ui:459
+msgid "Author"
+msgstr "Höfundur"
+
+#: plugins/colorschemer/schemer.ui:503
+msgid "Sample"
+msgstr "Sýni"
+
+#: plugins/commander/commander/appactivatable.py:56
+msgid "Commander Mode"
+msgstr "Skipanalínu-hamur"
+
+#: plugins/commander/commander.plugin.desktop.in.in:6
+#: plugins/commander/gedit-commander.metainfo.xml.in:6
+msgid "Commander"
+msgstr "Skipanalína"
+
+#: plugins/commander/commander.plugin.desktop.in.in:7
+#: plugins/commander/gedit-commander.metainfo.xml.in:7
+msgid "Command line interface for advanced editing"
+msgstr "Skipanalínuviðmót fyrir ítarlegri breytingar"
+
+#: plugins/drawspaces/drawspaces.plugin.desktop.in.in:5
+#: plugins/drawspaces/org.gnome.gedit.plugins.drawspaces.gschema.xml:20
+msgid "Draw Spaces"
+msgstr "Teikna bil"
+
+#: plugins/drawspaces/drawspaces.plugin.desktop.in.in:6
+msgid "Draw spaces and tabs"
+msgstr "Teikna bil og inndráttarmerki"
+
+#: plugins/drawspaces/gedit-drawspaces-configurable.ui:57
+#: plugins/drawspaces/gedit-drawspaces.metainfo.xml.in:6
+msgid "Draw spaces"
+msgstr "Teikna bil"
+
+#: plugins/drawspaces/gedit-drawspaces-configurable.ui:73
+msgid "Draw tabs"
+msgstr "Teikna inndráttarmerki"
+
+#: plugins/drawspaces/gedit-drawspaces-configurable.ui:89
+msgid "Draw new lines"
+msgstr "Teikna nýjar línur"
+
+#: plugins/drawspaces/gedit-drawspaces-configurable.ui:104
+msgid "Draw non-breaking spaces"
+msgstr "Teikna óskiptanleg bil"
+
+#: plugins/drawspaces/gedit-drawspaces-configurable.ui:119
+msgid "Draw leading spaces"
+msgstr "Teikna bil á undan"
+
+#: plugins/drawspaces/gedit-drawspaces-configurable.ui:134
+msgid "Draw spaces in text"
+msgstr "Teikna bil í texta"
+
+#: plugins/drawspaces/gedit-drawspaces-configurable.ui:149
+msgid "Draw trailing spaces"
+msgstr "Teikna bil aftan við"
+
+#: plugins/drawspaces/gedit-drawspaces.metainfo.xml.in:7
+msgid "Draw Spaces and Tabs"
+msgstr "Teikna bil og inndráttarmerki"
+
+#: plugins/drawspaces/org.gnome.gedit.plugins.drawspaces.gschema.xml:15
+msgid "Show White Space"
+msgstr "Sýna stafbil"
+
+#: plugins/drawspaces/org.gnome.gedit.plugins.drawspaces.gschema.xml:16
+msgid "If TRUE drawing will be enabled."
+msgstr "Ef SATT er teikning virkjuð."
+
+#: plugins/drawspaces/org.gnome.gedit.plugins.drawspaces.gschema.xml:21
+msgid "The type of spaces to be drawn."
+msgstr "Tegund bila sem á að teikna."
+
+#: plugins/findinfiles/dialog.ui:7 plugins/findinfiles/dialog.vala:53
+#: plugins/findinfiles/findinfiles.plugin.desktop.in.in:5
+#: plugins/findinfiles/gedit-findinfiles.metainfo.xml.in:6
+msgid "Find in Files"
+msgstr "Finna í skrám"
+
+#: plugins/findinfiles/dialog.ui:23 plugins/findinfiles/dialog.vala:58
+#: plugins/findinfiles/result-panel.vala:63
+msgid "_Close"
+msgstr "_Loka"
+
+#: plugins/findinfiles/dialog.ui:39
+msgctxt "label of the find button"
+msgid "_Find"
+msgstr "_Finna"
+
+#: plugins/findinfiles/dialog.ui:72
+msgctxt "label on the left of the GtkEntry containing text to search"
+msgid "F_ind:"
+msgstr "F_inna:"
+
+#: plugins/findinfiles/dialog.ui:99
+msgid "_In:"
+msgstr "_Í:"
+
+#: plugins/findinfiles/dialog.ui:115
+msgid "Select a _folder"
+msgstr "Veldu mö_ppu"
+
+#: plugins/findinfiles/dialog.ui:130
+msgid "_Match case"
+msgstr "Passa við sta_fstöðu"
+
+#: plugins/findinfiles/dialog.ui:146
+msgid "Match _entire word only"
+msgstr "Passar einungis við _heil orð"
+
+#: plugins/findinfiles/dialog.ui:162
+msgid "Re_gular expression"
+msgstr "Re_gluleg segð"
+
+#: plugins/findinfiles/findinfiles.plugin.desktop.in.in:6
+msgid "Find text in all files of a folder."
+msgstr "Finna texta í öllum skrám í möppu."
+
+#: plugins/findinfiles/gedit-findinfiles.metainfo.xml.in:7
+msgid "Find text in all files of a folder"
+msgstr "Finna texta í öllum skrám í möppu"
+
+#: plugins/findinfiles/plugin.vala:159
+msgid "Find in Files…"
+msgstr "Finna í skrám…"
+
+#: plugins/findinfiles/result-panel.vala:127
+msgid "hit"
+msgid_plural "hits"
+msgstr[0] "samsvörun"
+msgstr[1] "samsvaranir"
+
+#: plugins/findinfiles/result-panel.vala:196
+msgid "No results found"
+msgstr "Engar niðurstöður fundust"
+
+#: plugins/findinfiles/result-panel.vala:207
+msgid "File"
+msgstr "Skrá"
+
+#. The stop button is showed in the bottom-left corner of the TreeView
+#: plugins/findinfiles/result-panel.vala:218
+msgid "Stop the search"
+msgstr "Stöðva leitina"
+
+#: plugins/git/gedit-git.metainfo.xml.in:6
+#: plugins/git/git.plugin.desktop.in.in:6
+msgid "Git"
+msgstr "Git"
+
+#: plugins/git/gedit-git.metainfo.xml.in:7
+msgid ""
+"Use git information to display which lines and files changed since last "
+"commit"
+msgstr ""
+"Nota upplýsingar frá Git til að birta hvaða línur hafa breyst síðan síðasta"
+" innsending átti sér stað"
+
+#: plugins/git/git.plugin.desktop.in.in:7
+msgid "Highlight lines that have been changed since the last commit"
+msgstr ""
+"Áherslulita línur sem hefur verið breytt síðan síðasta innsending átti sér"
+" stað"
+
+#: plugins/joinlines/gedit-joinlines.metainfo.xml.in:6
+#: plugins/joinlines/joinlines.plugin.desktop.in.in:6
+msgid "Join/Split Lines"
+msgstr "Sameina/Skipta upp línum"
+
+#: plugins/joinlines/gedit-joinlines.metainfo.xml.in:7
+msgid "Join or split multiple lines through Ctrl+J and Ctrl+Shift+J"
+msgstr "Sameina eða skipta upp línum með Ctrl+J og Ctrl+Shift+J"
+
+#: plugins/joinlines/joinlines.plugin.desktop.in.in:7
+msgid "Join several lines or split long ones"
+msgstr "Sameinaðu margar línur eða skiptu upp löngum línum"
+
+#: plugins/joinlines/joinlines.py:111
+msgid "_Join Lines"
+msgstr "Same_ina línur"
+
+#: plugins/joinlines/joinlines.py:117
+msgid "_Split Lines"
+msgstr "_Skipta línum"
+
+#: plugins/multiedit/gedit-multiedit.metainfo.xml.in:6
+msgid "Multi edit"
+msgstr ""
+
+#: plugins/multiedit/gedit-multiedit.metainfo.xml.in:7
+#: plugins/multiedit/multiedit.plugin.desktop.in.in:7
+msgid "Edit document in multiple places at once"
+msgstr ""
+
+#: plugins/multiedit/multiedit/appactivatable.py:44
+#: plugins/multiedit/multiedit/viewactivatable.py:1351
+msgid "Multi Edit Mode"
+msgstr ""
+
+#: plugins/multiedit/multiedit.plugin.desktop.in.in:6
+msgid "Multi Edit"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:317
+msgid "Added edit point…"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:659
+msgid "Column Mode…"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:777
+msgid "Removed edit point…"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:943
+msgid "Cancelled column mode…"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1306
+msgid "Enter column edit mode using selection"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1307
+msgid "Enter <b>smart</b> column edit mode using selection"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1308
+msgid "<b>Smart</b> column align mode using selection"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1309
+msgid "<b>Smart</b> column align mode with additional space using selection"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1311
+msgid "Toggle edit point"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1312
+msgid "Add edit point at beginning of line/selection"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1313
+msgid "Add edit point at end of line/selection"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1314
+msgid "Align edit points"
+msgstr ""
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1315
+msgid "Align edit points with additional space"
+msgstr ""
+
+#: plugins/sessionsaver/sessionsaver/appactivatable.py:55
+msgid "_Manage Saved Sessions…"
+msgstr "Sýsla _með vistaðar setur…"
+
+#: plugins/sessionsaver/sessionsaver/appactivatable.py:58
+msgid "_Save Session…"
+msgstr "Vi_sta setu…"
+
+#: plugins/sessionsaver/sessionsaver/appactivatable.py:64
+#, python-brace-format
+msgid "Recover “{0}” Session"
+msgstr "Endurheimta “{0}” setuna"
+
+#: plugins/sessionsaver/sessionsaver/dialogs.py:153
+msgid "Session Name"
+msgstr "Nafn á setu"
+
+#: plugins/sessionsaver/sessionsaver.plugin.desktop.in.in:6
+msgid "Session Saver"
+msgstr "Vistun á setu"
+
+#: plugins/sessionsaver/sessionsaver.plugin.desktop.in.in:7
+msgid "Save and restore your working sessions"
+msgstr "Vista og endurheimta vinnuseturnar þínar"
+
+#: plugins/sessionsaver/sessionsaver/ui/sessionsaver.ui:8
+msgid "Save session"
+msgstr "Vista setu"
+
+#: plugins/sessionsaver/sessionsaver/ui/sessionsaver.ui:76
+msgid "Session name:"
+msgstr "Nafn á setu:"
+
+#: plugins/sessionsaver/sessionsaver/ui/sessionsaver.ui:120
+msgid "Saved Sessions"
+msgstr "Vistaðar setur"
+
+#: plugins/smartspaces/gedit-smartspaces.metainfo.xml.in:6
+#: plugins/smartspaces/smartspaces.plugin.desktop.in.in:5
+msgid "Smart Spaces"
+msgstr "Snjöll bil"
+
+#: plugins/smartspaces/gedit-smartspaces.metainfo.xml.in:7
+msgid "Allow to unindent like if you were using tabs while you’re using spaces"
+msgstr ""
+
+#: plugins/smartspaces/smartspaces.plugin.desktop.in.in:6
+msgid "Forget you’re not using tabulations."
+msgstr ""
+
+#: plugins/synctex/gedit-synctex.metainfo.xml.in:6
+#: plugins/synctex/synctex.plugin.desktop.in.in:6
+msgid "SyncTeX"
+msgstr "SyncTeX"
+
+#: plugins/synctex/gedit-synctex.metainfo.xml.in:7
+msgid "Synchronize between LaTeX and PDF with gedit and evince"
+msgstr "Samstilla milli LaTeX og PDF með gedit og evince"
+
+#: plugins/synctex/synctex.plugin.desktop.in.in:7
+msgid "Synchronize between LaTeX and PDF with gedit and evince."
+msgstr "Samstilla milli LaTeX og PDF með gedit og evince."
+
+#: plugins/synctex/synctex/synctex.py:342
+msgid "Forward Search"
+msgstr "Leit áfram"
+
+#: plugins/terminal/gedit-terminal.metainfo.xml.in:6
+#: plugins/terminal/terminal.py:313
+msgid "Terminal"
+msgstr "Skjáhermir"
+
+#: plugins/terminal/gedit-terminal.metainfo.xml.in:7
+msgid "A simple terminal widget accessible from the bottom panel"
+msgstr "Einfaldur skjáhermi-viðmótshluti til taks á stiku neðst í glugganum"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:16
+msgid "Whether to silence terminal bell"
+msgstr "Hvort eigi að þagga niður í skjáhermibjöllu"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:17
+msgid ""
+"If true, don’t make a noise when applications send the escape sequence for "
+"the terminal bell."
+msgstr ""
+"Satt merkir að skjáhermir gefur ekki frá sér hljóð þegar forrit innan hans"
+" senda lausnarrunu hringingar fyrir skjáhermi."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:24
+msgid "Number of lines to keep in scrollback"
+msgstr "Fjöldi lína til að halda í afturrakningu"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:25
+msgid ""
+"Number of scrollback lines to keep around. You can scroll back in the "
+"terminal by this number of lines; lines that don’t fit in the scrollback are "
+"discarded. If scrollback-unlimited is true, this value is ignored."
+msgstr ""
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:34
+msgid "Whether an unlimited number of lines should be kept in scrollback"
+msgstr "Hvort eigi að hafa ótakmarkaðan fjölda lína í afturrakningu"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:37
+msgid ""
+"If true, scrollback lines will never be discarded. The scrollback history is "
+"stored on disk temporarily, so this may cause the system to run out of disk "
+"space if there is a lot of output to the terminal."
+msgstr ""
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:46
+msgid "Whether to scroll to the bottom when a key is pressed"
+msgstr "Hvort eigi að skruna neðst ef ýtt er á lykil"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:47
+msgid "If true, pressing a key jumps the scrollbar to the bottom."
+msgstr "Satt merkir að við innslátt er skrunað að botni gluggans."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:53
+msgid "Whether to scroll to the bottom when there’s new output"
+msgstr "Hvort eigi að skruna neðst ef nýtt úttak berst"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:54
+msgid ""
+"If true, whenever there’s new output the terminal will scroll to the bottom."
+msgstr "Ef hakað er við þetta, er skrunað að botni gluggans við nýtt úttak."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:61
+msgid "Default color of text in the terminal"
+msgstr "Sjálfgefinn litur á texta í skjáhermi"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:62
+msgid ""
+"Default color of text in the terminal, as a color specification (can be HTML-"
+"style hex digits, or a color name such as “red”)."
+msgstr ""
+"Sjálfgefinn litur á texta í skjáhermiglugga, sem litaskilgreining (getur"
+" verið nafn á lit, t.d. \"red\", eða RGB hexakóði, t.d. \"FF00FF\")."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:70
+msgid "Default color of terminal background"
+msgstr "Sjálfgefinn bakgrunnslitur skjáhermis"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:71
+msgid ""
+"Default color of terminal background, as a color specification (can be HTML-"
+"style hex digits, or a color name such as “red”)."
+msgstr ""
+"Sjálfgefinn litur á bakgrunni í skjáhermiglugga, sem litaskilgreining (getur"
+" verið nafn á lit, t.d. \"red\", eða RGB hexakóði, t.d. \"FF00FF\")."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:94
+msgid "Palette for terminal applications"
+msgstr "Litaspjald fyrir skipanalínuforrit"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:95
+msgid ""
+"Terminals have a 16-color palette that applications inside the terminal can "
+"use. This is that palette, in the form of a colon-separated list of color "
+"names. Color names should be in hex format e.g. “#FF00FF”"
+msgstr ""
+"Skjáhermar eru með 16-lita litastef sem forrit innan hans geta notað. Þetta"
+" er það litastef, á forminu sem listi litaheita aðgreindur í dálkum. Nöfn"
+" litanna ættu að vera á hex-sniði, t.d. “#FF00FF”"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:104
+msgid "Whether to use the colors from the theme for the terminal widget"
+msgstr "Hvort nota eigi liti úr þemanu fyrir skjáhermi-viðmótshlutann"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:107
+msgid ""
+"If true, the theme color scheme used for text entry boxes will be used for "
+"the terminal, instead of colors provided by the user."
+msgstr ""
+"Satt merkir að skjáhermirinn skuli nota litastef kerfisins fyrir"
+" textainntaksreiti, í stað þeirra lita sem notandinn velur."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:114
+msgid "Whether to blink the cursor"
+msgstr "Hvort bendillinn eigi að blikka"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:115
+msgid ""
+"The possible values are “system” to use the global cursor blinking settings, "
+"or “on” or “off” to set the mode explicitly."
+msgstr ""
+"Möguleg gildi eru “kerfi” til að nota víðværar blikkstillingar bendils, eða"
+" “á” eða “af” til að setja haminn sérstaklega."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:122
+msgid "The cursor appearance"
+msgstr "Útlit músarbendilsins"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:123
+msgid ""
+"The possible values are “block” to use a block cursor, “ibeam” to use a "
+"vertical line cursor, or “underline” to use an underline cursor."
+msgstr ""
+"Möguleg gildi eru “block” til að nota blokkarbendil, “ibeam” til að nota"
+" lóðréttan línubendil, eða “underline” til að nota undirstrikunarbendil."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:130
+msgid "Whether to use the system font"
+msgstr "Hvort nota eigi kerfisletur"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:131
+msgid ""
+"If true, the terminal will use the desktop-global standard font if it’s "
+"monospace (and the most similar font it can come up with otherwise)."
+msgstr ""
+"Satt merkir að skjáhermirinn skuli nota leturgerð úr víðværum"
+" skjáborðsstillingum ef sú gerð hefur jafnbreitt letur (en annars er reynt að"
+" finna eitthvað svipað)."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:139
+msgid "Font"
+msgstr "Letur"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:140
+msgid "A Pango font name. Examples are “Sans 12” or “Monospace Bold 14”."
+msgstr "Heiti á Pango letri. Dæmi: \"Sans 12\" eða \"Monospace Bold 14\"."
+
+#: plugins/terminal/terminal.plugin.desktop.in.in:6
+msgid "Embedded Terminal"
+msgstr "Ívafinn skjáhermir"
+
+#: plugins/terminal/terminal.plugin.desktop.in.in:7
+msgid "Embed a terminal in the bottom pane."
+msgstr "Ívafinn skjáhermir á neðstu stikunni"
+
+#: plugins/terminal/terminal.py:334
+msgid "C_hange Directory"
+msgstr "S_kipta um möppu"
+
+#: plugins/textsize/gedit-textsize.metainfo.xml.in:6
+msgid "Text size"
+msgstr "Stærð texta"
+
+#: plugins/textsize/gedit-textsize.metainfo.xml.in:7
+#: plugins/textsize/textsize.plugin.desktop.in.in:7
+msgid "Easily increase and decrease the text size"
+msgstr "Auktu og minnkaðu stærð texta á einfaldan máta"
+
+#: plugins/textsize/textsize/__init__.py:53
+msgid "_Normal size"
+msgstr "_Venjuleg stærð"
+
+#: plugins/textsize/textsize/__init__.py:55
+msgid "S_maller Text"
+msgstr "_Minni texti"
+
+#: plugins/textsize/textsize/__init__.py:57
+msgid "_Larger Text"
+msgstr "S_tærri texti"
+
+#: plugins/textsize/textsize.plugin.desktop.in.in:6
+msgid "Text Size"
+msgstr "Stærð texta"
+
+#: plugins/translate/gedit-translate.metainfo.xml.in:5
+#: plugins/translate/translate.plugin.desktop.in.in:6
+msgid "Translate"
+msgstr "Þýða"
+
+#: plugins/translate/gedit-translate.metainfo.xml.in:6
+#: plugins/translate/translate.plugin.desktop.in.in:7
+msgid "Translates text into different languages"
+msgstr "Þýðir texta yfir á mismunandi tungumál"
+
+#: plugins/translate/org.gnome.gedit.plugins.translate.gschema.xml:5
+msgid "Where translation output is shown"
+msgstr "Þar sem þýddur texti birtist"
+
+#: plugins/translate/org.gnome.gedit.plugins.translate.gschema.xml:6
+msgid ""
+"If true, output of the translation is inserted in the document window if not "
+"in the Translate console."
+msgstr ""
+"Ef þetta er virkt, er úttak þýðingar sett inn í glugga skjalsins, annars"
+" birtist það á þýðingaskjánum."
+
+#. Translators: You can adjust the default pair for users in your locale.
+#. https://wiki.apertium.org/wiki/List_of_language_pairs lists valid pairs, in
+#. the format apertium-xxx-yyy. For this translation, use ASCII apostrophes and
+#. | as the delimiter. Language pair values must be in the format 'xxx|yyy' -
+#. You must keep this format 'xxx|yyy', or things will break!
+#: plugins/translate/org.gnome.gedit.plugins.translate.gschema.xml:16
+msgid "'eng|spa'"
+msgstr "'eng|isl'"
+
+#: plugins/translate/org.gnome.gedit.plugins.translate.gschema.xml:17
+msgid "Language pair used"
+msgstr "Tungumálapör í notkun"
+
+#: plugins/translate/org.gnome.gedit.plugins.translate.gschema.xml:18
+msgid "Language pair used to translate from one language to another"
+msgstr "Tungumálapör sem notuð eru til að þýða frá einu tungumáli yfir á annað"
+
+#: plugins/translate/org.gnome.gedit.plugins.translate.gschema.xml:24
+#: plugins/translate/org.gnome.gedit.plugins.translate.gschema.xml:25
+msgid "Apertium server end point"
+msgstr "Endapunktur Apertium-þjóns"
+
+#: plugins/translate/org.gnome.gedit.plugins.translate.gschema.xml:31
+#: plugins/translate/org.gnome.gedit.plugins.translate.gschema.xml:32
+msgid "API key for remote web service"
+msgstr "API-lykill inn á vefþjónustu"
+
+#: plugins/translate/org.gnome.gedit.plugins.translate.gschema.xml:38
+#: plugins/translate/org.gnome.gedit.plugins.translate.gschema.xml:39
+msgid "Remote web service to use"
+msgstr "Vefþjónusta sem á að nota"
+
+#: plugins/translate/translate/__init__.py:88
+#, python-brace-format
+msgid "Translations powered by {0}"
+msgstr "Þýðingar eru keyrðar með {0}"
+
+#: plugins/translate/translate/__init__.py:91
+msgid "Translate Console"
+msgstr "Þýðingaskjár"
+
+#: plugins/translate/translate/__init__.py:166
+#, python-brace-format
+msgid "Translate selected text [{0}]"
+msgstr "Þýða valinn texta [{0}]"
+
+#: plugins/translate/translate/preferences.py:84
+msgid "API Key"
+msgstr "API-lykill"
+
+#: plugins/translate/translate/services/yandex.py:65
+msgid ""
+"You need to obtain an API key at <a href='https://tech.yandex.com/"
+"translate/'>https://tech.yandex.com/translate/</a>"
+msgstr ""
+
+#: plugins/translate/translate/ui/preferences.ui:23
+msgid "Translation languages:"
+msgstr "Tungumál þýðingar:"
+
+#: plugins/translate/translate/ui/preferences.ui:60
+msgid "Where to output translation:"
+msgstr "Hvert á að senda þýðingu:"
+
+#: plugins/translate/translate/ui/preferences.ui:75
+msgid "Same document window"
+msgstr "Sama glugga skjals"
+
+#: plugins/translate/translate/ui/preferences.ui:90
+msgid "Translate console (bottom panel)"
+msgstr "Þýðingaskjár (spjaldið niðri)"
+
+#: plugins/translate/translate/ui/preferences.ui:157
+msgid "Translation service:"
+msgstr "Þýðingaþjónusta:"
+
+#: plugins/wordcompletion/gedit-word-completion-configure.ui:18
+msgid "Interactive completion"
+msgstr "Gagnvirk klárun"
+
+#: plugins/wordcompletion/gedit-word-completion-configure.ui:43
+msgid "Minimum word size:"
+msgstr "Lágmarksstærð orðs:"
+
+#: plugins/wordcompletion/gedit-wordcompletion.metainfo.xml.in:6
+msgid "Word completion"
+msgstr "Orðaklárun"
+
+#: plugins/wordcompletion/gedit-wordcompletion.metainfo.xml.in:7
+msgid ""
+"Propose automatic completion using words already present in the document"
+msgstr ""
+"Stungið er upp á sjálfvirkri klárun orða, með orðum sem fyrir eru í skjalinu"
+
+#: plugins/wordcompletion/gedit-word-completion-plugin.c:181
+msgid "Document Words"
+msgstr "Orð skjals"
+
+#: plugins/wordcompletion/org.gnome.gedit.plugins.wordcompletion.gschema.xml:5
+msgid "Interactive Completion"
+msgstr "Gagnvirk klárun"
+
+#: plugins/wordcompletion/org.gnome.gedit.plugins.wordcompletion.gschema.xml:6
+msgid "Whether to enable interactive completion."
+msgstr "Hvort eigi að virkja gagnvirka orðaklárun."
+
+#: plugins/wordcompletion/org.gnome.gedit.plugins.wordcompletion.gschema.xml:11
+msgid "Minimum Word Size"
+msgstr "Lágmarksstærð orðs"
+
+#: plugins/wordcompletion/org.gnome.gedit.plugins.wordcompletion.gschema.xml:12
+msgid "The minimum word size to complete."
+msgstr "Lágmarksstærð orða sem á að klára."
+
+#: plugins/wordcompletion/wordcompletion.plugin.desktop.in.in:5
+msgid "Word Completion"
+msgstr "Orðaklárun"
+
+#: plugins/wordcompletion/wordcompletion.plugin.desktop.in.in:6
+msgid "Word completion using the completion framework"
+msgstr ""
+
+#, fuzzy
+#~ msgid "Comment the selected code"
+#~ msgstr "Klippa val"
+
+#, fuzzy
+#~ msgid "Pick _Color..."
+#~ msgstr "Veldu lit"
+
+#, fuzzy
+#~ msgid "Pick a color from a dialog"
+#~ msgstr "Veldu lit"
+
+#~ msgid "_Insert"
+#~ msgstr "_Innsetja"
+
+#~ msgid "Enabled"
+#~ msgstr "Virkur"
+
+#, fuzzy
+#~ msgid "Join the selected lines"
+#~ msgstr "Afrita val"
+
+#, fuzzy
+#~ msgid "Split the selected lines"
+#~ msgstr "Klippa val"
+
+#, fuzzy
+#~ msgid "_Save current session"
+#~ msgstr "Vista núverandi skjal"
+
+#, fuzzy
+#~ msgid "Save the current document list as a new session"
+#~ msgstr "Vista núverandi skjal"
+
+#, fuzzy
+#~ msgid "_Preview"
+#~ msgstr "Prentunarforsýn"
+
+#, fuzzy
+#~ msgid "Abbreviation"
+#~ msgstr "Armenskt"
+
+#, fuzzy
+#~ msgid "Background color (deprecated)"
+#~ msgstr "Bakgrunnslitur"
+
+#, fuzzy
+#~ msgid "Background texture tile"
+#~ msgstr "Bakgrunnslitur"
+
+#, fuzzy
+#~ msgid "Background texture tile (deprecated)"
+#~ msgstr "Bakgrunnslitur"
+
+#, fuzzy
+#~ msgid "Base font"
+#~ msgstr "Nota letur á miða"
+
+#, fuzzy
+#~ msgid "Border"
+#~ msgstr "Feitletrað"
+
+#, fuzzy
+#~ msgid "Center"
+#~ msgstr "Almennt"
+
+#, fuzzy
+#~ msgid "Comment"
+#~ msgstr "_Innihald"
+
+#, fuzzy
+#~ msgid "Content scheme"
+#~ msgstr "_Innihald"
+
+#, fuzzy
+#~ msgid "Content type"
+#~ msgstr "_Innihald"
+
+#, fuzzy
+#~ msgid "Content type (deprecated)"
+#~ msgstr "_Innihald"
+
+#, fuzzy
+#~ msgid "Coordinates"
+#~ msgstr "_Innihald"
+
+#, fuzzy
+#~ msgid "Definition description"
+#~ msgstr "_Lýsing"
+
+#, fuzzy
+#~ msgid "Deleted text"
+#~ msgstr "Eyða"
+
+#, fuzzy
+#~ msgid "Direction"
+#~ msgstr "_Lýsing"
+
+#, fuzzy
+#~ msgid "Disabled"
+#~ msgstr "Virkur"
+
+#, fuzzy
+#~ msgid "Document base"
+#~ msgstr "_Skjöl"
+
+#, fuzzy
+#~ msgid "Document body"
+#~ msgstr "_Skjöl"
+
+#, fuzzy
+#~ msgid "Document head"
+#~ msgstr "_Skjöl"
+
+#, fuzzy
+#~ msgid "Document title"
+#~ msgstr "_Skjöl"
+
+#, fuzzy
+#~ msgid "Document type"
+#~ msgstr "_Skjöl"
+
+#, fuzzy
+#~ msgid "Element ID"
+#~ msgstr "_Skjöl"
+
+#, fuzzy
+#~ msgid "For label"
+#~ msgstr "merki"
+
+#, fuzzy
+#~ msgid "Form"
+#~ msgstr "Venjulegt"
+
+#, fuzzy
+#~ msgid "Frame"
+#~ msgstr "Nafn:"
+
+#, fuzzy
+#~ msgid "Frame border"
+#~ msgstr "_Öfugri röð"
+
+#, fuzzy
+#~ msgid "Frame spacing"
+#~ msgstr "Víetnamska"
+
+#, fuzzy
+#~ msgid "Frameset"
+#~ msgstr "Færeyska"
+
+#, fuzzy
+#~ msgid "Generic span"
+#~ msgstr "Almennt"
+
+#, fuzzy
+#~ msgid "Inserted text"
+#~ msgstr "Stillingar dags/tíma"
+
+#, fuzzy
+#~ msgid "Label"
+#~ msgstr "merki"
+
+#, fuzzy
+#~ msgid "Link color"
+#~ msgstr "Veldu lit"
+
+#, fuzzy
+#~ msgid "Link color (deprecated)"
+#~ msgstr "Veldu lit"
+
+#, fuzzy
+#~ msgid "Long description link"
+#~ msgstr "_Lýsing"
+
+#, fuzzy
+#~ msgid "Object applet file"
+#~ msgstr "Opna skrá"
+
+#, fuzzy
+#~ msgid "Object applet file (deprecated)"
+#~ msgstr "Opna skrá"
+
+#, fuzzy
+#~ msgid "OnChange event"
+#~ msgstr "Bre_yta"
+
+#, fuzzy
+#~ msgid "Option selector"
+#~ msgstr "Leturval"
+
+#, fuzzy
+#~ msgid "Preformatted text"
+#~ msgstr "Forsýna texta"
+
+#, fuzzy
+#~ msgid "Quote"
+#~ msgstr "Hætta"
+
+#, fuzzy
+#~ msgid "Range"
+#~ msgstr "Bre_yta"
+
+#, fuzzy
+#~ msgid "Reverse link"
+#~ msgstr "_Öfugri röð"
+
+#, fuzzy
+#~ msgid "Selected"
+#~ msgstr "_Vista Valið"
+
+#, fuzzy
+#~ msgid "Shape"
+#~ msgstr "Vista"
+
+#, fuzzy
+#~ msgid "Size"
+#~ msgstr "Sýna stærð"
+
+#, fuzzy
+#~ msgid "Spacer"
+#~ msgstr "Útskipta"
+
+#, fuzzy
+#~ msgid "Span"
+#~ msgstr "Spænska"
+
+#, fuzzy
+#~ msgid "Starting sequence number"
+#~ msgstr "Sýna &línu númer"
+
+#, fuzzy
+#~ msgid "Starting sequence number (deprecated)"
+#~ msgstr "Sýna &línu númer"
+
+#, fuzzy
+#~ msgid "Strike-through text (deprecated)"
+#~ msgstr "Yfirstrikun"
+
+#, fuzzy
+#~ msgid "Strike-through text style"
+#~ msgstr "Yfirstrikun"
+
+#, fuzzy
+#~ msgid "Strike-through text style (deprecated)"
+#~ msgstr "Yfirstrikun"
+
+#, fuzzy
+#~ msgid "Superscript"
+#~ msgstr "_Lýsing"
+
+#, fuzzy
+#~ msgid "Table"
+#~ msgstr "Virkur"
+
+#, fuzzy
+#~ msgid "Text color"
+#~ msgstr "Texta Litur"
+
+#, fuzzy
+#~ msgid "Text color (deprecated)"
+#~ msgstr "Texta Litur"
+
+#~ msgid "Title"
+#~ msgstr "Titill"
+
+#, fuzzy
+#~ msgid "Unordered list"
+#~ msgstr "Undirstrikun"
+
+#, fuzzy
+#~ msgid "Footnote"
+#~ msgstr "Letur"
+
+#, fuzzy
+#~ msgid "Greek alpha"
+#~ msgstr "Gríska"
+
+#, fuzzy
+#~ msgid "Greek beta"
+#~ msgstr "Gríska"
+
+#, fuzzy
+#~ msgid "Greek gamma"
+#~ msgstr "Gríska"
+
+#, fuzzy
+#~ msgid "Greek rho"
+#~ msgstr "Gríska"
+
+#, fuzzy
+#~ msgid "Greek tau"
+#~ msgstr "Gríska"
+
+#, fuzzy
+#~ msgid "Reference label"
+#~ msgstr "Eiginleikar"
+
+#, fuzzy
+#~ msgid "Reference ref"
+#~ msgstr "Eiginleikar"
+
+#, fuzzy
+#~ msgid "namespace"
+#~ msgstr "Víetnamska"
+
+#, fuzzy
+#~ msgid "parent"
+#~ msgstr "Opna"

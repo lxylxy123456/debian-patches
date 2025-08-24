@@ -1,0 +1,1277 @@
+# Hungarian translation for gedit-plugins help.
+# Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2019, 2022 The Free Software Foundation, inc.
+# This file is distributed under the same license as the gedit-plugins package.
+#
+# Mate Ory <orymate at gmail dot com>, 2007, 2008.
+# Gabor Kelemen <kelemeng at gnome dot hu>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015.
+# Balázs Úr <ur.balazs at fsf dot hu>, 2014, 2019, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: gedit-pugins-help master\n"
+"POT-Creation-Date: 2022-07-18 05:16+0000\n"
+"PO-Revision-Date: 2022-09-05 23:35+0200\n"
+"Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
+"Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 19.12.3\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+
+#. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
+msgctxt "_"
+msgid "translator-credits"
+msgstr ""
+"Kelemen Gábor <kelemeng at gnome dot hu>, 2007, 2008, 2009, 2010, 2011, "
+"2012, 2013, 2014.\n"
+"Őry Máté <orymate at gmail dot com>, 2007, 2008.\n"
+"Úr Balázs <ur.balazs at fsf dot hu>, 2014, 2019, 2022."
+
+#. (itstool) path: credit/name
+#: C/bookmarks.page:13 C/bracket-comp.page:12 C/character-map.page:13
+#: C/code-comment.page:12 C/color-picker.page:12 C/draw-spaces.page:12
+#: C/join-split-lines.page:12 C/multi-edit.page:12 C/terminal.page:13
+#: C/text-size.page:13 C/word-completion.page:12
+msgid "Jim Campbell"
+msgstr "Jim Campbell"
+
+#. (itstool) path: credit/name
+#: C/bookmarks.page:17
+msgid "Ekaterina Gerasimova"
+msgstr "Ekaterina Gerasimova"
+
+#. (itstool) path: credit/years
+#: C/bookmarks.page:19
+msgid "2014"
+msgstr "2014"
+
+#. (itstool) path: info/desc
+#: C/bookmarks.page:22
+msgid "Record commonly-referenced locations with bookmarks."
+msgstr "Gyakran hivatkozott helyek rögzítése könyvjelzőkkel."
+
+#. (itstool) path: page/title
+#: C/bookmarks.page:25
+msgid "Bookmarks"
+msgstr "Könyvjelzők"
+
+#. (itstool) path: page/p
+#: C/bookmarks.page:27
+msgid ""
+"<app>gedit</app> bookmarks allow you to highlight important lines of text "
+"within your document or program, making them easier to find. You can also "
+"move up or down between bookmarks, making document navigation a bit faster."
+msgstr ""
+"A <app>gedit</app> könyvjelzői lehetővé teszik a dokumentumon belüli fontos "
+"sorok kiemelését, ezzel megkönnyítve a megtalálásukat. Ezen kívül fel és le "
+"lépkedhet a könyvjelzők között, ezzel is gyorsabbá téve a dokumentumon "
+"belüli navigációt."
+
+#. (itstool) path: steps/title
+#: C/bookmarks.page:33 C/bracket-comp.page:25 C/character-map.page:37
+#: C/code-comment.page:30 C/color-picker.page:26 C/draw-spaces.page:27
+#: C/git.page:26 C/join-split-lines.page:25 C/multi-edit.page:26
+#: C/session-saver.page:30 C/terminal.page:37 C/text-size.page:36
+#: C/word-completion.page:35
+#| msgid "To enable Text Size plugin:"
+msgid "To enable the plugin:"
+msgstr "A bővítmény engedélyezéséhez:"
+
+#. (itstool) path: item/p
+#: C/bookmarks.page:35 C/bracket-comp.page:27 C/character-map.page:39
+#: C/code-comment.page:32 C/color-picker.page:28 C/draw-spaces.page:29
+#: C/git.page:28 C/join-split-lines.page:27 C/multi-edit.page:28
+#: C/session-saver.page:32 C/terminal.page:39 C/text-size.page:38
+#: C/word-completion.page:37
+#| msgid ""
+#| "Select <guiseq><gui style=\"menu\">Edit</gui> <gui style=\"menuitem"
+#| "\">Preferences</gui> <gui style=\"tab\">Plugins</gui></guiseq>."
+msgid ""
+"Press the menu button in the top-right corner of the window and select "
+"<guiseq><gui style=\"menuitem\">Preferences</gui> <gui style=\"tab"
+"\">Plugins</gui></guiseq>."
+msgstr ""
+"Nyomja meg az ablak jobb felső sarkában lévő menügombot, és válassza a "
+"<guiseq><gui style=\"menuitem\">Beállítások</gui> <gui style=\"tab"
+"\">Bővítmények</gui></guiseq> menüpontot."
+
+#. (itstool) path: item/p
+#: C/bookmarks.page:40
+#| msgid "Select <gui style=\"menuitem\">Translate</gui> to enable the plugin."
+msgid "Select <gui style=\"menuitem\">Bookmarks</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Könyvjelzők</gui> bejegyzést a bővítmény"
+" engedélyezéséhez."
+
+#. (itstool) path: steps/title
+#: C/bookmarks.page:45
+msgid ""
+"Bookmarks are inserted and removed by completing the same action. To insert "
+"or remove bookmarks:"
+msgstr ""
+"A könyvjelzők ugyanazon művelet végrehajtásával szúrhatók be és távolíthatók "
+"el. Könyvjelzők beszúrásához vagy eltávolításához:"
+
+#. (itstool) path: item/p
+#: C/bookmarks.page:48
+msgid "Navigate to the line where you want to insert or remove the bookmark."
+msgstr ""
+"Lépjen abba a sorba, amelybe a könyvjelzőt be szeretné szúrni vagy amelyből "
+"el szeretné távolítani azt."
+
+#. (itstool) path: item/p
+#: C/bookmarks.page:52
+msgid ""
+"Press <keyseq><key>Ctrl</key><key>Alt</key><key>B</key></keyseq>, or open "
+"the menu in the top-right corner and select <gui style=\"menuitem\">Toggle "
+"Bookmark</gui>."
+msgstr ""
+"Nyomja meg a <keyseq><key>Ctrl</key><key>Alt</key><key>B</key></keyseq> "
+"billentyűkombinációt, vagy nyissa meg a jobb felső sarokban lévő menüt, és "
+"válassza a <gui style=\"menuitem\">Könyvjelző átváltása</gui> menüpontot."
+
+#. (itstool) path: list/title
+#: C/bookmarks.page:59
+msgid "To move between bookmarks:"
+msgstr "A könyvjelzők közti mozgáshoz:"
+
+#. (itstool) path: item/p
+#: C/bookmarks.page:61
+msgid ""
+"Press <keyseq><key>Ctrl</key><key>B</key></keyseq> to move to the next "
+"bookmark."
+msgstr ""
+"Nyomja meg a <keyseq><key>Ctrl</key><key>B</key></keyseq> "
+"billentyűkombinációt a következő könyvjelzőre lépéshez."
+
+#. (itstool) path: item/p
+#: C/bookmarks.page:65
+msgid ""
+"Press <keyseq><key>Ctrl</key><key>Shift</key><key>B</key></keyseq> to move "
+"to the previous bookmark."
+msgstr ""
+"Nyomja meg a <keyseq><key>Ctrl</key><key>Shift</key><key>B</key></keyseq> "
+"billentyűkombinációt az előző könyvjelzőre lépéshez."
+
+#. (itstool) path: note/p
+#: C/bookmarks.page:71
+msgid ""
+"If you prefer to use the mouse, you can open the menu in the top-right "
+"corner and select <gui style=\"menuitem\">Go to Next Bookmark</gui> or <gui "
+"style=\"menuitem\">Go to Previous Bookmark</gui>."
+msgstr ""
+"Ha inkább az egeret szeretné használni, akkor nyissa meg a jobb felső "
+"sarokban lévő menüt, és válassza az <gui style=\"menuitem\">Ugrás a "
+"következő könyvjelzőre</gui> vagy az <gui style=\"menuitem\">Ugrás az előző "
+"könyvjelzőre</gui> menüpontot."
+
+#. (itstool) path: info/desc
+#: C/bracket-comp.page:16
+msgid "Auto-complete closing brackets."
+msgstr "Záró zárójelek automatikus kiegészítése."
+
+#. (itstool) path: page/title
+#: C/bracket-comp.page:19
+msgid "Bracket Completion"
+msgstr "Zárójel-kiegészítés"
+
+#. (itstool) path: page/p
+#: C/bracket-comp.page:21
+msgid ""
+"The <app>Bracket Completion</app> plugin will auto-complete closing brackets "
+"for curly braces, parentheses and square brackets."
+msgstr ""
+"A <app>Zárójel-kiegészítés</app> bővítmény automatikusan kiegészíti a záró "
+"zárójeleket kapcsos, szögletes és kerek zárójelekhez."
+
+#. (itstool) path: item/p
+#: C/bracket-comp.page:32
+#| msgid ""
+#| "Select <gui style=\"menuitem\">Word Completion</gui> to enable the plugin."
+msgid ""
+"Select <gui style=\"menuitem\">Bracket Completion</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Zárójel-kiegészítés</gui> bejegyzést a"
+" bővítmény engedélyezéséhez."
+
+#. (itstool) path: note/p
+#: C/bracket-comp.page:38
+msgid "This plugin does not automatically insert closing HTML or XML tags."
+msgstr "Ez a bővítmény nem szúr be automatikusan HTML vagy XML címkéket."
+
+#. (itstool) path: credit/name
+#: C/character-map.page:17 C/word-completion.page:16
+msgid "Paul Weaver"
+msgstr "Paul Weaver"
+
+#. (itstool) path: info/desc
+#: C/character-map.page:21
+msgid "Insert special characters just by clicking on them."
+msgstr "Különleges karakterek beillesztése egy kattintással."
+
+#. (itstool) path: page/title
+#: C/character-map.page:24
+msgid "Character Map"
+msgstr "Karaktertábla"
+
+#. (itstool) path: page/p
+#: C/character-map.page:33
+#| msgid ""
+#| "The <app>Character Map</app> plugin enables you to insert characters into "
+#| "your document that you may not be able to type easily using your "
+#| "keyboard. To enable this plugin, select <guiseq><gui style=\"menu"
+#| "\">gedit</gui> <gui style=\"menuitem\">Preferences</gui><gui>Plugins</"
+#| "gui> <gui>Character Map</gui></guiseq>."
+msgid ""
+"The <app>Character Map</app> plugin enables you to insert characters into "
+"your document that you may not be able to type easily using your keyboard."
+msgstr ""
+"A <app>Karaktertábla</app> bővítmény olyan karakterek beszúrását teszi "
+"lehetővé, amelyek beírása nem egyszerű a billentyűzet használatával."
+
+#. (itstool) path: item/p
+#: C/character-map.page:44
+#| msgid "Select <gui style=\"menuitem\">Translate</gui> to enable the plugin."
+msgid ""
+"Select <gui style=\"menuitem\">Character Map</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Karaktertábla</gui> bejegyzést a bővítmény"
+" engedélyezéséhez."
+
+#. (itstool) path: section/title
+#: C/character-map.page:49
+msgid "Using Character Map"
+msgstr "Karaktertábla használata"
+
+#. (itstool) path: section/p
+#: C/character-map.page:51
+#| msgid ""
+#| "Once the plugin is enabled, you can add characters from the <gui style="
+#| "\"tab\">Character Map</gui> tab of the side panel (<guiseq><gui>View</"
+#| "gui><gui>Side Panel</gui></guiseq>)."
+msgid ""
+"Once the plugin is enabled, you can add characters from the <gui style=\"tab"
+"\">Character Map</gui> view of the side panel."
+msgstr ""
+"A bővítmény engedélyezése után az oldalpanel <gui style=\"tab\""
+">Karaktertábla</gui> nézetéből adhat hozzá karaktereket."
+
+#. (itstool) path: item/p
+#: C/character-map.page:56
+msgid ""
+"Place the cursor at the point in your document at which you would like your "
+"special character."
+msgstr ""
+"Vigye a kurzort a dokumentumban oda, ahova a speciális karaktert be szeretné "
+"szúrni."
+
+#. (itstool) path: item/p
+#: C/character-map.page:60
+#| msgid ""
+#| "Open the side panel by selecting <guiseq><gui>View</gui> <gui>Side Panel</"
+#| "gui></guiseq>, or by pressing <key>F9</key>."
+msgid ""
+"Open the side panel by pressing the menu button in the top-right corner of "
+"the window and selecting <guiseq><gui>View</gui> <gui>Side Panel</gui></"
+"guiseq>, or by pressing <key>F9</key>."
+msgstr ""
+"Nyissa meg az oldalpanelt az ablak jobb felső sarkában lévő menügomb"
+" megnyomásával, majd a <guiseq><gui>Nézet</gui> <gui>Oldalpanel</gui></guiseq"
+"> menüpont kiválasztásával, vagy az <key>F9</key> "
+"billentyű megnyomásával."
+
+#. (itstool) path: item/p
+#: C/character-map.page:65
+#| msgid "Select the <gui>Character Map</gui> tab in the side panel."
+msgid ""
+"Select <gui>Character Map</gui> from the drop-down list at the top of the "
+"side panel."
+msgstr ""
+"Válassza a <gui>Karaktertábla</gui> elemet az oldalpanel tetején lévő"
+" legördülő listából."
+
+#. (itstool) path: item/p
+#: C/character-map.page:69
+#| msgid ""
+#| "If necessary, choose the character set to which your character belongs "
+#| "from the list at the top of the <gui style=\"tab\">Character Map</gui> "
+#| "tab (for example, Arabic)."
+msgid ""
+"If necessary, choose the character set to which your character belongs from "
+"the list at the top of the <gui>Character Map</gui> side panel (for example, "
+"Arabic)."
+msgstr ""
+"Szükség esetén a <gui>Karaktertábla</gui> oldalpanel tetején lévő listából"
+" válassza ki a karakterkészletet, amelyhez a karakter tartozik (például arab)."
+
+#. (itstool) path: item/p
+#: C/character-map.page:74
+msgid "Double click your desired character to insert it."
+msgstr "Kattintson duplán a kívánt karakterre a beszúrásához."
+
+#. (itstool) path: note/p
+#: C/character-map.page:79
+msgid ""
+"You must click on the editing view of your document to continue editing "
+"normally."
+msgstr ""
+"A normál szerkesztés folytatásához a dokumentum szerkesztőmezőjére kell "
+"kattintania."
+
+#. (itstool) path: info/desc
+#: C/code-comment.page:16
+msgid "Comment-out or uncomment a block of code."
+msgstr "Kódblokk megjegyzésbe tétele vagy kivétel onnan."
+
+#. (itstool) path: page/title
+#: C/code-comment.page:19
+msgid "Code comment"
+msgstr "Kód megjegyzésbe"
+
+#. (itstool) path: page/p
+#: C/code-comment.page:21
+msgid ""
+"Code comments are portions of text that make it easier for people to "
+"understand a program's code, but they don't affect how a program works. "
+"Comments are separated from other parts of a program by special characters."
+msgstr ""
+"A kódmegjegyzések olyan szövegrészek, amelyek egyszerűbbé teszik másoknak "
+"egy programkód megértését, de a program működését nem befolyásolják. A "
+"megjegyzéseket speciális karakterek választják el a program többi részétől."
+
+#. (itstool) path: page/p
+#: C/code-comment.page:26
+msgid ""
+"The <app>code comment</app> plugin makes it easier to quickly create or "
+"remove code comments."
+msgstr ""
+"A <app>Kód megjegyzésbe</app> bővítmény egyszerűbbé teszi a kódban lévő"
+" megjegyzések gyors létrehozását vagy eltávolítását."
+
+#. (itstool) path: item/p
+#: C/code-comment.page:37
+#| msgid ""
+#| "Select <gui style=\"menuitem\">Word Completion</gui> to enable the plugin."
+msgid "Select <gui style=\"menuitem\">Code comment</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Kód megjegyzésbe</gui> bejegyzést a"
+" bővítmény engedélyezéséhez."
+
+#. (itstool) path: steps/title
+#: C/code-comment.page:42
+msgid "To create or remove a comment:"
+msgstr "Megjegyzés létrehozása vagy eltávolítása:"
+
+#. (itstool) path: item/p
+#: C/code-comment.page:44
+msgid ""
+"Highlight the portion of text where you want to add or remove a comment."
+msgstr ""
+"Jelölje ki azt a szövegrészt, amelyet megjegyzésbe kíván tenni, vagy abból "
+"ki kíván venni."
+
+#. (itstool) path: item/p
+#: C/code-comment.page:48
+#| msgid ""
+#| "To add a comment, click <guiseq><gui style=\"menu\">gedit</gui> "
+#| "<gui>Comment Code</gui></guiseq>, or press <keyseq><key>Ctrl</key> "
+#| "<key>M</key></keyseq>."
+msgid ""
+"To add a comment, right click and select <gui style=\"menuitem\">Comment "
+"Code</gui>, or press <keyseq><key>Ctrl</key><key>M</key></keyseq>."
+msgstr ""
+"Megjegyzés hozzáadásához kattintson a jobb egérgombbal, és válassza a <gui"
+" style=\"menuitem\">Kód megjegyzésbe</gui> menüpontot, vagy nyomja meg a <"
+"keyseq><key>Ctrl</key><key>M</key></keyseq> billentyűkombinációt."
+
+#. (itstool) path: item/p
+#: C/code-comment.page:52
+#| msgid ""
+#| "To remove a comment, click <guiseq><gui style=\"menu\">gedit</gui> "
+#| "<gui>Uncomment Code</gui></guiseq>, or press <keyseq><key>Shift</key> "
+#| "<key>Ctrl</key><key>M</key></keyseq>."
+msgid ""
+"To remove a comment, right click and select <gui style=\"menuitem"
+"\">Uncomment Code</gui>, or press <keyseq><key>Shift</key> <key>Ctrl</"
+"key><key>M</key></keyseq>."
+msgstr ""
+"Megjegyzés eltávolításához kattintson a jobb egérgombbal, és válassza az <gui"
+" style=\"menuitem\">A kód nem megjegyzés</gui> menüpontot, vagy nyomja meg a"
+" <keyseq><key>Shift</key> <key>Ctrl</key><key>M</key></keyseq>"
+" billentyűkombinációt."
+
+#. (itstool) path: note/p
+#: C/code-comment.page:59
+msgid ""
+"<app>gedit</app> will automatically use the correct style of comment based "
+"on the language or syntax of the file. If <app>gedit</app> doesn't identify "
+"your language or syntax, you can select it from the language list in the "
+"bottom <gui>Status bar</gui>."
+msgstr ""
+"A <app>gedit</app> automatikusan a megfelelő kódstílust fogja használni a "
+"fájl nyelve vagy szintaxisa alapján. Ha a <app>gedit</app> nem azonosítja a "
+"nyelvet vagy szintaxist, akkor kiválaszthatja azt az alsó <gui>állapotsor</"
+"gui> nyelvlistájából."
+
+#. (itstool) path: info/desc
+#: C/color-picker.page:16
+msgid "Pick a color from a dialog and insert its hexadecimal representation."
+msgstr ""
+"Szín választása párbeszédablakból, és hexadecimális ábrázolásának beszúrása."
+
+#. (itstool) path: page/title
+#: C/color-picker.page:19
+msgid "Color Picker"
+msgstr "Színpipetta"
+
+#. (itstool) path: page/p
+#: C/color-picker.page:21
+msgid ""
+"The <app>Color Picker</app> plugin helps you to insert the character codes "
+"that represent a certain color. This can make it easier to choose and use "
+"the correct color in your programs."
+msgstr ""
+"A <app>Színpipetta</app> bővítmény segít beszúrni a színeket képviselő "
+"karakterkódokat. Ez egyszerűbbé teszi a megfelelő szín kiválasztását és "
+"használatát programjaiban."
+
+#. (itstool) path: item/p
+#: C/color-picker.page:33
+#| msgid "Select <gui style=\"menuitem\">Text Size</gui> to enable the plugin."
+msgid "Select <gui style=\"menuitem\">Color Picker</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Színpipetta</gui> bejegyzést a bővítmény"
+" engedélyezéséhez."
+
+#. (itstool) path: steps/title
+#: C/color-picker.page:38
+msgid "To open and use the color picker:"
+msgstr "A színpipetta megnyitásához és használatához:"
+
+#. (itstool) path: item/p
+#: C/color-picker.page:40
+msgid ""
+"Place your cursor at the point in your document where you want to insert the "
+"color code."
+msgstr ""
+"Vigye a kurzort arra a pontra a dokumentumban, ahová be szeretné szúrni a "
+"színkódot."
+
+#. (itstool) path: item/p
+#: C/color-picker.page:44
+#| msgid ""
+#| "If you prefer to use the mouse, you can open the menu in the top-right "
+#| "corner and select <gui style=\"menuitem\">Go to Next Bookmark</gui> or "
+#| "<gui style=\"menuitem\">Go to Previous Bookmark</gui>."
+msgid ""
+"Press the menu button in the top-right corner of the window and select "
+"<guiseq><gui style=\"menuitem\">Tools</gui> <gui style=\"menuitem\">Pick "
+"Color…</gui></guiseq>."
+msgstr ""
+"Nyomja meg az ablak jobb felső sarkában lévő menügombot, és válassza az <"
+"guiseq><gui style=\"menuitem\">Eszközök</gui> <gui style=\"menuitem\">Szín"
+" kiválasztása…</gui></guiseq> menüpontot."
+
+#. (itstool) path: item/p
+#: C/color-picker.page:49
+msgid "Click on the desired color in the color picker window."
+msgstr "Kattintson a kívánt színre a színválasztó ablakban."
+
+#. (itstool) path: item/p
+#: C/color-picker.page:52
+msgid ""
+"The appropriate color code will be inserted where you had placed your cursor."
+msgstr "A megfelelő színkód a kurzor helyére lesz beszúrva."
+
+#. (itstool) path: item/p
+#: C/color-picker.page:56
+#| msgid "To close the <app>color picker</app>, click <gui>Close</gui>."
+msgid "To close the <app>color picker</app>, click <gui>Cancel</gui>."
+msgstr ""
+"A <app>színpipetta</app> bezárásához kattintson a <gui>Mégse</gui> gombra."
+
+#. (itstool) path: note/p
+#: C/color-picker.page:62
+#| msgid ""
+#| "You can make fine-grained adjustments to the color by adjusting the "
+#| "values for Hue, Saturation, Value, Red, Green, or Blue."
+msgid ""
+"You can make fine-grained adjustments to the color and adjust the values for "
+"Hue, Saturation, Value, Red, Green, or Blue by right clicking on a color and "
+"selecting <gui style=\"menuitem\">Customize</gui>."
+msgstr ""
+"A szín finomhangolását és az árnyalat, a telítettség, az érték, a vörös, a"
+" zöld vagy a kék értékek beállítását a színre történő jobb kattintással és a"
+" <gui style=\"menüpont\">Személyre szabás</gui> menüpont kiválasztásával"
+" végezheti el."
+
+#. (itstool) path: info/desc
+#: C/draw-spaces.page:16
+msgid "Show white space between words or portions of code."
+msgstr "Üres helyek megjelenítése szavak vagy a kód részei között."
+
+#. (itstool) path: page/title
+#: C/draw-spaces.page:19
+msgid "Draw Spaces"
+msgstr "Szóközök rajzolása"
+
+#. (itstool) path: page/p
+#: C/draw-spaces.page:21
+msgid ""
+"The <app>Draw Spaces</app> plugin is a simple plugin that can mark spaces, "
+"tabs, and other types of whitespace with a small, visible marker. By making "
+"whitespace visible, you can more easily see how whitespace is used in a "
+"document, and can apply spacing strategies more consistently."
+msgstr ""
+"A <app>Szóközök rajzolása</app> bővítmény képes megjelölni a szóközöket, "
+"tabokat és más üres hely karaktereket egy kis, látható jelölővel. Az üres "
+"helyek láthatóvá tételével egyszerűbben láthatja, hogy hol vannak ilyen "
+"karakterek a dokumentumban, és konzisztensebben használhatja azokat."
+
+#. (itstool) path: item/p
+#: C/draw-spaces.page:34
+#| msgid "Select <gui style=\"menuitem\">Translate</gui> to enable the plugin."
+msgid "Select <gui style=\"menuitem\">Draw Spaces</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Szóközök rajzolása</gui> bejegyzést a"
+" bővítmény engedélyezéséhez."
+
+#. (itstool) path: item/p
+#: C/draw-spaces.page:37
+#| msgid ""
+#| "Select <gui style=\"button\">Preferences</gui> to configure the "
+#| "translation engine to use and a language pair."
+msgid "Press <gui style=\"button\">Preferences</gui> to set its options."
+msgstr ""
+"Nyomja meg a <gui style=\"button\">Beállítások</gui> gombot a lehetőségei"
+" beállításához."
+
+#. (itstool) path: note/p
+#: C/draw-spaces.page:42
+#| msgid ""
+#| "Though you will be able to see the dots when you work on a file, the dots "
+#| "will not be visible when you print a file to paper."
+msgid ""
+"Though you will be able to see the markers when you work on a file, the "
+"markers will not be visible when you print a file to paper."
+msgstr ""
+"Noha a fájlon való munka közben jelöléseket fog látni, a jelölések nem"
+" lesznek láthatók, amikor papírra nyomtat egy fájlt."
+
+#. (itstool) path: credit/name
+#: C/git.page:12
+msgid "Aleksandra Hankus"
+msgstr "Aleksandra Hankus"
+
+#. (itstool) path: info/desc
+#: C/git.page:16
+msgid "Highlight lines that have been changed since the last commit."
+msgstr "Az utolsó kommit óta megváltozott sorok kiemelése."
+
+#. (itstool) path: page/title
+#: C/git.page:19
+msgid "Git"
+msgstr "Git"
+
+#. (itstool) path: page/p
+#: C/git.page:21
+#| msgid ""
+#| "The <app>git</app> plugin will highlight lines that have been changed "
+#| "since the last commit. Lines will be highlighted only on files that are "
+#| "already tracked by git."
+msgid ""
+"The <app>Git</app> plugin will highlight lines that have been changed since "
+"the last commit. Lines will be highlighted only on files that are already "
+"tracked by git."
+msgstr ""
+"A <app>Git</app> bővítmény kiemeli az utolsó véglegesítés óta megváltozott "
+"sorokat. A sorok csak a git által már követett fájlokban kerülnek kiemelésre."
+
+#. (itstool) path: item/p
+#: C/git.page:33
+#| msgid "Select <gui style=\"menuitem\">Text Size</gui> to enable the plugin."
+msgid "Select <gui style=\"menuitem\">Git</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Git</gui> bejegyzést a bővítmény"
+" engedélyezéséhez."
+
+#. (itstool) path: page/p
+#: C/git.page:37
+msgid ""
+"The changes are shown in the margin of the document in three different "
+"colors:"
+msgstr ""
+"A változások a dokumentum margójában három eltérő színnel jelennek meg:"
+
+#. (itstool) path: item/title
+#: C/git.page:41
+msgid "Green"
+msgstr "Zöld"
+
+#. (itstool) path: item/p
+#: C/git.page:42
+msgid "Shows the new lines added to the document."
+msgstr "A dokumentumhoz adott sorokat jelzi."
+
+#. (itstool) path: item/title
+#: C/git.page:45
+msgid "Orange"
+msgstr "Narancs"
+
+#. (itstool) path: item/p
+#: C/git.page:46
+msgid "Shows the lines that have been modified in the document."
+msgstr "A dokumentumban módosított sorokat jelzi."
+
+#. (itstool) path: item/title
+#: C/git.page:49
+msgid "Red"
+msgstr "Vörös"
+
+#. (itstool) path: item/p
+#: C/git.page:50
+msgid "Shows the parts of the document that have been deleted."
+msgstr "A dokumentumból törölt sorokat jelzi."
+
+#. (itstool) path: note/p
+#: C/git.page:55
+msgid ""
+"Hover the mouse pointer on the red or orange margin to view the original "
+"text in a tool tip."
+msgstr ""
+"Mutasson az egérmutatóval a vörös vagy narancs margóra az eredeti szöveg "
+"megjelenítéséhez buboréksúgóban."
+
+#. (itstool) path: info/desc
+#: C/join-split-lines.page:16
+msgid "Join several lines of text or split long lines."
+msgstr "Több szövegsor egyesítése, vagy hosszú sorok szétvágása."
+
+#. (itstool) path: page/title
+#: C/join-split-lines.page:19
+msgid "Join/Split Lines"
+msgstr "Sorok egyesítése / szétvágása"
+
+#. (itstool) path: page/p
+#: C/join-split-lines.page:21
+msgid ""
+"The <app>Join/Split Lines</app> plugin can join shorter lines into one "
+"longer line, or can split a long line into multiple shorter lines."
+msgstr ""
+"A <app>Sorok egyesítése/szétvágása</app> bővítmény lehetővé teszi rövidebb "
+"sorok egyesítését egy hosszabbá, vagy egy hosszabb sor szétvágását több "
+"rövidebb sorrá."
+
+#. (itstool) path: item/p
+#: C/join-split-lines.page:32
+#| msgid "Select <gui style=\"menuitem\">Text Size</gui> to enable the plugin."
+msgid ""
+"Select <gui style=\"menuitem\">Join/Split Lines</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Sorok egyesítése / szétvágása</gui>"
+" bejegyzést a bővítmény engedélyezéséhez."
+
+#. (itstool) path: steps/title
+#: C/join-split-lines.page:37
+msgid "To join multiple lines into one longer line:"
+msgstr "Több sor egy hosszabb sorrá egyesítéséhez:"
+
+#. (itstool) path: item/p
+#: C/join-split-lines.page:39
+msgid ""
+"Select the lines that you want to join. To do this, you can use the mouse, "
+"or you can press <keyseq><key>Shift</key><key>Up Arrow</key> </keyseq> or "
+"<keyseq><key>Shift</key><key>Down Arrow</key></keyseq>."
+msgstr ""
+"Jelölje ki az egyesíteni kívánt sorokat. Ezt megteheti az egérrel, vagy a "
+"<keyseq><key>Shift</key><key>Fel nyíl</key></keyseq> vagy "
+"<keyseq><key>Shift</key><key>Le nyíl</key></keyseq> kombinációkkal."
+
+#. (itstool) path: item/p
+#: C/join-split-lines.page:44
+msgid "Press <keyseq><key>Ctrl</key><key>J</key></keyseq>."
+msgstr "Nyomja meg a <keyseq><key>Ctrl</key><key>J</key></keyseq> kombinációt."
+
+#. (itstool) path: item/p
+#: C/join-split-lines.page:45
+msgid "The lines that you selected will be joined into one longer line."
+msgstr "A kijelölt sorok egy hosszabb sorrá lesznek egyesítve."
+
+#. (itstool) path: steps/title
+#: C/join-split-lines.page:50
+msgid "To split one line into multiple lines:"
+msgstr "Egy sor több szétvágásához több sorrá:"
+
+#. (itstool) path: item/p
+#: C/join-split-lines.page:52
+msgid ""
+"Select the line that you want to split by placing your cursor anywhere on "
+"that line."
+msgstr ""
+"Válassza ki a szétvágni kívánt sort az egérmutató elhelyezésével az adott "
+"sorban."
+
+#. (itstool) path: item/p
+#: C/join-split-lines.page:56
+msgid "Press <keyseq><key>Ctrl</key><key>Shift</key> <key>J</key></keyseq>."
+msgstr ""
+"Nyomja meg a <keyseq><key>Ctrl</key><key>Shift</key><key>J</key></keyseq> "
+"billentyűkombinációt."
+
+#. (itstool) path: item/p
+#: C/join-split-lines.page:58
+msgid ""
+"The line will be split into multiple lines. Spaces are used to determine "
+"where it is safe to split a line, and the length of each line will not "
+"exceed 80 characters."
+msgstr ""
+"A sor több sorrá lesz szétvágva. A sor szétvágása a szóközöknél történik, és "
+"egyik sor hossza sem fogja meghaladni a 80 karaktert."
+
+#. (itstool) path: p/link
+#: C/legal-plugins.xml:7
+msgid "http://creativecommons.org/licenses/by-sa/3.0/"
+msgstr "http://creativecommons.org/licenses/by-sa/3.0/"
+
+#. (itstool) path: license/p
+#: C/legal-plugins.xml:5
+msgid ""
+"This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 "
+"Unported License. To view a copy of this license, visit <_:link-1/> or send "
+"a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View, "
+"California, 94041, USA."
+msgstr ""
+"Ez a munka a Creative Commons Attribution-ShareAlike 3.0 Unported licenc "
+"alatt érhető el. A licenc másolatának megjelenítéséhez keresse fel a <_:"
+"link-1/> oldalt, vagy küldjön levelet a következő címre: Creative Commons, "
+"444 Castro Street, Suite 900, Mountain View, California, 94041, USA."
+
+#. (itstool) path: credit/years
+#: C/multi-edit.page:14
+msgid "2011"
+msgstr "2011"
+
+#. (itstool) path: info/desc
+#: C/multi-edit.page:17
+msgid "Edit a document in multiple places at once."
+msgstr "Egy dokumentum szerkesztése egyszerre több helyen."
+
+#. (itstool) path: page/title
+#: C/multi-edit.page:20
+msgid "Multi Edit"
+msgstr "Párhuzamos szerkesztés"
+
+#. (itstool) path: page/p
+#: C/multi-edit.page:22
+#| msgid ""
+#| "The <app>Multi Edit</app> plugin allows you to edit a document in "
+#| "multiple places at once. This can be helpful when performing tedious "
+#| "editing tasks. To enable the Multi Edit plugin, select <guiseq><gui style="
+#| "\"menu\">gedit</gui> <gui>Preferences</gui><gui>Plugins</gui><gui>Multi "
+#| "Edit</gui></guiseq>."
+msgid ""
+"The <app>Multi Edit</app> plugin allows you to edit a document in multiple "
+"places at once. This can be helpful when performing tedious editing tasks."
+msgstr ""
+"A <app>Párhuzamos szerkesztés</app> bővítmény lehetővé teszi a dokumentum"
+" szerkesztését egyszerre több helyen. Ez hasznos lehet a fárasztó"
+" szerkesztési feladatok elvégzésekor."
+
+#. (itstool) path: item/p
+#: C/multi-edit.page:33
+#| msgid "Select <gui style=\"menuitem\">Text Size</gui> to enable the plugin."
+msgid "Select <gui style=\"menuitem\">Multi Edit</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Párhuzamos szerkesztés</gui> bejegyzést a"
+" bővítmény engedélyezéséhez."
+
+#. (itstool) path: page/p
+#: C/multi-edit.page:38
+#| msgid ""
+#| "After you have enabled the plugin, turn-on Multi Edit mode by pressing "
+#| "<keyseq><key>Ctrl</key><key>Shift</key><key>C</key></keyseq>, or clicking "
+#| "<guiseq><gui style=\"menu\">gedit</gui><gui>Multi Edit Mode</gui></"
+#| "guiseq>. You can then select the points in your file that you would like "
+#| "start editing."
+msgid ""
+"After you have enabled the plugin, turn-on Multi Edit mode by pressing "
+"<keyseq><key>Ctrl</key><key>Shift</key><key>C</key></keyseq>, or press the "
+"menu button in the top-right corner of the window and select <guiseq><gui "
+"style=\"menuitem\">Tools</gui><gui style=\"menuitem\">Multi Edit Mode</gui></"
+"guiseq>. You can then select the points in your file that you would like "
+"start editing."
+msgstr ""
+"A bővítmény engedélyezése után kapcsolja be a párhuzamos szerkesztés módot a"
+" <keyseq><key>Ctrl</key><key>Shift</key><key>C</key></keyseq>"
+" billentyűkombináció megnyomásával, vagy nyomja meg az ablak jobb felső"
+" sarkában lévő menügombot, és válassza az <guiseq><gui style=\"menuitem\""
+">Eszközök</gui><gui style=\"menuitem\">Párhuzamos szerkesztési mód</gui><"
+"/guiseq> menüpont. Ezután kiválaszthatja azokat a pontokat a fájlban, ahol el"
+" szeretné kezdeni a szerkesztést."
+
+#. (itstool) path: page/p
+#: C/multi-edit.page:45
+msgid "To insert editing points in your file:"
+msgstr "Szerkesztési pontok beszúrásához a fájlba:"
+
+#. (itstool) path: item/p
+#: C/multi-edit.page:48
+msgid "Place your cursor at your first desired editing point."
+msgstr "Vigye a kurzort az első kívánt szerkesztési pontra."
+
+#. (itstool) path: item/p
+#: C/multi-edit.page:51
+msgid "Press <keyseq><key>Ctrl</key><key>E</key></keyseq>."
+msgstr ""
+"Nyomja meg a <keyseq><key>Ctrl</key><key>E</key></keyseq> "
+"billentyűkombinációt."
+
+#. (itstool) path: item/p
+#: C/multi-edit.page:54
+msgid ""
+"Move to your next editing point, and press <keyseq><key>Ctrl</key> <key>E</"
+"key></keyseq> again."
+msgstr ""
+"Vigye a kurzort a következő szerkesztési pontra, és nyomja meg újra a "
+"<keyseq><key>Ctrl</key><key>E</key></keyseq> billentyűkombinációt."
+
+#. (itstool) path: item/p
+#: C/multi-edit.page:58
+msgid "Continue inserting editing points, adding as many as you need."
+msgstr ""
+"Folytassa a szerkesztési pontok beszúrását; tetszőleges számút vehet fel."
+
+#. (itstool) path: page/p
+#: C/multi-edit.page:62
+msgid ""
+"Once you have inserted all of your editing points, you can make your desired "
+"edits."
+msgstr ""
+"Miután beszúrta az összes szerkesztési pontot, végrehajthatja a kívánt "
+"szerkesztéseket."
+
+#. (itstool) path: page/p
+#: C/multi-edit.page:65
+msgid ""
+"To remove editing points, press the <key>Esc</key> key. This will remove all "
+"of the editing points. Pressing the <key>Esc</key> key again will turn off "
+"Multi Edit mode, returning the editor back to its normal state."
+msgstr ""
+"A szerkesztési pontok eltávolításához nyomja meg az <key>Esc</key> "
+"billentyűt. Ez eltávolítja az összes szerkesztési pontot. Az <key>Esc</key> "
+"billentyű ismételt megnyomása kikapcsolja a párhuzamos szerkesztési módot, "
+"és a szerkesztő visszatér a normális állapotába."
+
+#. (itstool) path: credit/name
+#: C/session-saver.page:12
+msgid "Jordi Mas i Hernàndez"
+msgstr "Jordi Mas i Hernàndez"
+
+#. (itstool) path: info/desc
+#: C/session-saver.page:18
+msgid "Save and restore your working sessions"
+msgstr "Munkamenetek mentése és visszaállítása"
+
+#. (itstool) path: page/title
+#: C/session-saver.page:21
+msgid "Session Saver"
+msgstr "Munkamenet mentője"
+
+#. (itstool) path: page/p
+#: C/session-saver.page:23
+msgid ""
+"The <app>Session Saver</app> plugin allows you to remember which documents "
+"are currently open and open the same documents again at a later time."
+msgstr ""
+"A <app>Munkamenet mentője</app> bővítmény lehetővé teszi annak megjegyzését,"
+" hogy mely dokumentumok vannak éppen megnyitva, és ugyanazokat a"
+" dokumentumokat egy későbbi időpontban újra megnyithassa."
+
+#. (itstool) path: section/title
+#: C/session-saver.page:27
+#| msgid "Enable Text Size Plugin"
+msgid "Enable Session Saver Plugin"
+msgstr "A Munkamenet mentője bővítmény engedélyezése"
+
+#. (itstool) path: item/p
+#: C/session-saver.page:37
+#| msgid "Select <gui style=\"menuitem\">Text Size</gui> to enable the plugin."
+msgid ""
+"Select <gui style=\"menuitem\">Session Saver</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Munkamenet mentője</gui> bejegyzést a"
+" bővítmény engedélyezéséhez."
+
+#. (itstool) path: section/title
+#: C/session-saver.page:45
+msgid "Save a session"
+msgstr "Munkamenet mentése"
+
+#. (itstool) path: section/p
+#: C/session-saver.page:46
+msgid "Save all your open files to be able to open them later."
+msgstr ""
+"Az összes megnyitott fájl mentése, hogy később is meg tudja nyitni azokat."
+
+#. (itstool) path: steps/title
+#: C/session-saver.page:48
+msgid "To save a session:"
+msgstr "Egy munkamenet mentéséhez:"
+
+#. (itstool) path: item/p
+#: C/session-saver.page:50
+#| msgid ""
+#| "If you prefer to use the mouse, you can open the menu in the top-right "
+#| "corner and select <gui style=\"menuitem\">Go to Next Bookmark</gui> or "
+#| "<gui style=\"menuitem\">Go to Previous Bookmark</gui>."
+msgid ""
+"Press the menu button in the top-right corner of the window and select "
+"<guiseq><gui style=\"menuitem\">Tools</gui> <gui style=\"menuitem\">Save "
+"Session…</gui></guiseq>."
+msgstr ""
+"Nyomja meg az ablak jobb felső sarkában lévő menügombot, és válassza az <"
+"guiseq><gui style=\"menuitem\">Eszközök</gui> <gui style=\"menuitem\""
+">Munkamenet mentése…</gui></guiseq> menüpontot."
+
+#. (itstool) path: section/title
+#: C/session-saver.page:58
+msgid "Open a session"
+msgstr "Munkamenet megnyitása"
+
+#. (itstool) path: section/p
+#: C/session-saver.page:59
+msgid "Open all the files from an already saved session."
+msgstr "Az összes fájl megnyitása egy már elmentett munkamenetből."
+
+#. (itstool) path: steps/title
+#: C/session-saver.page:61
+msgid "To open a session:"
+msgstr "Egy munkamenet megnyitásához:"
+
+#. (itstool) path: item/p
+#: C/session-saver.page:63
+#| msgid ""
+#| "Press <keyseq><key>Ctrl</key><key>Alt</key><key>B</key></keyseq>, or open "
+#| "the menu in the top-right corner and select <gui style=\"menuitem"
+#| "\">Toggle Bookmark</gui>."
+msgid ""
+"Press the menu button in the top-right corner of the window and select <gui "
+"style=\"menuitem\">Tools</gui>."
+msgstr ""
+"Nyomja meg az ablak jobb felső sarkában lévő menügombot, és válassza az <gui"
+" style=\"menuitem\">Eszközök</gui> menüpontot."
+
+#. (itstool) path: item/p
+#: C/session-saver.page:67
+msgid "Select one of the saved sessions from the menu."
+msgstr "Válassza ki a mentett munkamenetek egyikét a menüből."
+
+#. (itstool) path: section/title
+#: C/session-saver.page:73
+msgid "Manage Sessions"
+msgstr "Munkamenetek kezelése"
+
+#. (itstool) path: section/p
+#: C/session-saver.page:74
+msgid "Open and delete your already saved sessions."
+msgstr "A már elmentett munkamenetek megnyitása és törlése."
+
+#. (itstool) path: steps/title
+#: C/session-saver.page:76
+msgid "Manage sessions"
+msgstr "Munkamenetek kezelése"
+
+#. (itstool) path: item/p
+#: C/session-saver.page:78
+#| msgid ""
+#| "If you prefer to use the mouse, you can open the menu in the top-right "
+#| "corner and select <gui style=\"menuitem\">Go to Next Bookmark</gui> or "
+#| "<gui style=\"menuitem\">Go to Previous Bookmark</gui>."
+msgid ""
+"Press the menu button in the top-right corner of the window and select "
+"<guiseq><gui style=\"menuitem\">Tools</gui> <gui style=\"menuitem\">Manage "
+"Saved Sessions…</gui></guiseq>"
+msgstr ""
+"Nyomja meg az ablak jobb felső sarkában lévő menügombot, és válassza az <"
+"guiseq><gui style=\"menuitem\">Eszközök</gui> <gui style=\"menuitem\">Mentett"
+" munkamenetek kezelése…</gui></guiseq> menüpontot."
+
+#. (itstool) path: info/desc
+#: C/synctex.page:20
+msgid ""
+"Quickly switch between TeX source files and rendered PDF documents in evince."
+msgstr ""
+"Gyors váltás a TeX forrásfájlok és a megjelenített PDF dokumentumok között az"
+" evince programban."
+
+#. (itstool) path: page/title
+#: C/synctex.page:24
+msgid "SyncTeX"
+msgstr "SyncTeX"
+
+#. (itstool) path: page/p
+#: C/synctex.page:26
+msgid ""
+"SyncTeX is a method that enables synchronization between a TeX source file "
+"and the PDF output generated by a TeX/LaTeX compiler. This plugin allows to "
+"use SyncTeX in <app>gedit</app> to quickly switch from an opened TeX source "
+"file to a PDF document opened in <app>evince</app> and vice versa."
+msgstr ""
+"A SyncTeX egy olyan módszer, amely lehetővé teszi a TeX forrásfájl és a"
+" TeX/LaTeX fordító által előállított PDF kimenet közötti szinkronizálását. Ez"
+" a bővítmény lehetővé teszi a SyncTeX használatát a <app>gedit</app>"
+" programban, hogy gyorsan válthasson egy megnyitott TeX forrásfájlról az <app"
+">evince</app> programban megnyitott PDF dokumentumra és fordítva."
+
+#. (itstool) path: note/p
+#: C/synctex.page:32
+msgid ""
+"To be useful, this plugin requires a TeX/LaTeX compiler and SyncTeX to be "
+"installed. Both are provided by TeX distributions such as TeX Live. Also "
+"<app>evince</app> must be installed."
+msgstr ""
+"Ahhoz, hogy hasznos legyen, a bővítményhez szükséges egy TeX/LaTeX fordító és"
+" a SyncTeX telepítése. Mindkettőt a TeX disztribúciók, például a TeX Live"
+" biztosítja. Az <app>evince</app> programot is telepíteni kell."
+
+#. (itstool) path: item/p
+#: C/synctex.page:39
+msgid ""
+"Some basic information on setting up SyncTeX and compiling LaTeX documents "
+"can be found in the <link xref=\"help:evince#synctex\"><app>evince</app>-"
+"SyncTeX documentation</link>."
+msgstr ""
+"A SyncTeX beállításával és a LaTeX dokumentumok lefordításával kapcsolatos"
+" alapvető információk megtalálhatók az <link xref=\"help:evince#synctex\"><"
+"app>evince</app>-SyncTeX dokumentációban</link>."
+
+#. (itstool) path: item/p
+#: C/synctex.page:45
+msgid ""
+"Key shortcuts and mouse controls are also documented in the <link xref="
+"\"help:evince/synctex-search\"> <app>evince</app>-SyncTeX documentation</"
+"link>."
+msgstr ""
+"A gyorsbillentyűk és az egérvezérlők szintén dokumentálva vannak az <link"
+" xref=\"help:evince/synctex-search\"> <app>evince</app>-SyncTeX"
+" dokumentációban</link>."
+
+#. (itstool) path: item/p
+#: C/synctex.page:50
+msgid ""
+"<link xref=\"help:gnome-latex\"> <app>Gnome-LaTeX</app></link> is an "
+"alternative text editor specifically designed for writing TeX code."
+msgstr ""
+"A <link xref=\"help:gnome-latex\"> <app>Gnome-LaTeX</app></link> egy"
+" alternatív szövegszerkesztő, amelyet kifejezetten TeX kód írására terveztek."
+
+#. (itstool) path: credit/name
+#: C/terminal.page:17 C/text-size.page:17 C/word-completion.page:20
+msgid "Sindhu S"
+msgstr "Sindhu S"
+
+#. (itstool) path: info/desc
+#: C/terminal.page:23
+#| msgid "Add a terminal console to the bottom pane."
+msgid "Add a terminal console to the bottom panel."
+msgstr "Terminálkonzol hozzáadása az alsó panelhez."
+
+#. (itstool) path: page/title
+#: C/terminal.page:26
+msgid "Embedded Terminal"
+msgstr "Beágyazott terminál"
+
+#. (itstool) path: page/p
+#: C/terminal.page:28
+#| msgid ""
+#| "<app>gedit</app> makes it possible to include an embedded version of "
+#| "<app>GNOME Terminal</app>, the GNOME command-line application, in the "
+#| "bottom pane of the <app>gedit</app> window. This will let you run "
+#| "scripts, install needed software, or test your program without leaving "
+#| "<app>gedit</app>."
+msgid ""
+"<app>gedit</app> makes it possible to include an embedded version of "
+"<app>GNOME Terminal</app>, the GNOME command-line application, in the bottom "
+"panel of the <app>gedit</app> window. This will let you run scripts, install "
+"needed software, or test your program without leaving <app>gedit</app>."
+msgstr ""
+"A <app>gedit</app> lehetővé teszi a <app>GNOME Terminál</app>, a GNOME"
+" parancssor alkalmazásának beágyazását a <app>gedit</app> ablakának alsó"
+" paneljére. Ez lehetővé teszi parancsfájlok futtatását, szükséges szoftverek"
+" telepítését, vagy programjának tesztelését a <app>gedit</app> elhagyása"
+" nélkül."
+
+#. (itstool) path: section/title
+#: C/terminal.page:34
+msgid "Enable Embedded Terminal"
+msgstr "Beágyazott terminál engedélyezése"
+
+#. (itstool) path: item/p
+#: C/terminal.page:44
+msgid ""
+"Select <gui style=\"menuitem\">Embedded Terminal</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Beágyazott terminál</gui> bejegyzést a "
+"bővítmény engedélyezéséhez."
+
+#. (itstool) path: section/title
+#: C/terminal.page:52
+msgid "Using Embedded Terminal"
+msgstr "Beágyazott terminál használata"
+
+#. (itstool) path: section/p
+#: C/terminal.page:54
+#| msgid ""
+#| "Once you have enabled the plugin, to add a terminal to the bottom pane:"
+msgid ""
+"Once you have enabled the plugin, to add a terminal to the bottom panel:"
+msgstr ""
+"A bővítmény engedélyezése után az alsó panelhez a következőképpen adhat egy "
+"terminált:"
+
+#. (itstool) path: item/p
+#: C/terminal.page:59
+#| msgid ""
+#| "If you prefer to use the mouse, you can open the menu in the top-right "
+#| "corner and select <gui style=\"menuitem\">Go to Next Bookmark</gui> or "
+#| "<gui style=\"menuitem\">Go to Previous Bookmark</gui>."
+msgid ""
+"Press the menu button in the top-right corner of the window and select "
+"<guiseq><gui style=\"menu\">View</gui> <gui style=\"menuitem\">Bottom Panel</"
+"gui></guiseq>."
+msgstr ""
+"Nyomja meg az ablak jobb felső sarkában lévő menügombot, és válassza a <"
+"guiseq><gui style=\"menu\">Nézet</gui> <gui style=\"menuitem\">Alsó panel<"
+"/gui></guiseq> menüpontot."
+
+#. (itstool) path: info/desc
+#: C/text-size.page:23
+msgid "Increase or decrease text size."
+msgstr "A szöveg méretének növelése vagy csökkentése."
+
+#. (itstool) path: page/title
+#: C/text-size.page:26
+msgid "Text Size"
+msgstr "Szövegméret"
+
+#. (itstool) path: page/p
+#: C/text-size.page:28
+msgid ""
+"The text size plugin allows you to temporarily change the text size for "
+"better readability in <app>gedit</app> without changing the program's "
+"default text size."
+msgstr ""
+"A szövegméret bővítmény a jobb olvashatósága érdekében lehetővé teszi a "
+"szövegméret ideiglenes módosítását a <app>geditben</app> a program "
+"alapértelmezett szövegméretének módosítása nélkül."
+
+#. (itstool) path: section/title
+#: C/text-size.page:33
+msgid "Enable Text Size Plugin"
+msgstr "A Szövegméret bővítmény engedélyezése"
+
+#. (itstool) path: item/p
+#: C/text-size.page:43
+msgid "Select <gui style=\"menuitem\">Text Size</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Szövegméret</gui> bejegyzést a bővítmény "
+"engedélyezéséhez."
+
+#. (itstool) path: section/title
+#: C/text-size.page:50
+msgid "Use the <app>Text Size</app> plugin"
+msgstr "A <app>Szövegméret</app> bővítmény használata"
+
+#. (itstool) path: section/p
+#: C/text-size.page:52
+msgid ""
+"Once you have enabled the plugin, do any of the following to change the text "
+"size in <app>gedit</app>:"
+msgstr ""
+"A bővítmény engedélyezése után a következők használatával módosíthatja a "
+"szövegméretet a <app>geditben</app>:"
+
+#. (itstool) path: item/p
+#: C/text-size.page:57
+msgid ""
+"To <em>increase</em> the text size, press <keyseq><key>Ctrl</key><key>+</"
+"key></keyseq>."
+msgstr ""
+"A szövegméret <em>növeléséhez</em> nyomja meg a <keyseq><key>Ctrl</key><key>"
+"+</key></keyseq> billentyűkombinációt."
+
+#. (itstool) path: item/p
+#: C/text-size.page:61
+msgid ""
+"To <em>decrease</em> the text size, press <keyseq><key>Ctrl</key><key>-</"
+"key></keyseq>."
+msgstr ""
+"A szövegméret <em>csökkentéséhez</em> nyomja meg a <keyseq><key>Ctrl</"
+"key><key>-</key></keyseq> billentyűkombinációt."
+
+#. (itstool) path: item/p
+#: C/text-size.page:65
+msgid ""
+"To <em>reset</em> the text size to the default size, press "
+"<keyseq><key>Ctrl</key><key>0</key></keyseq>."
+msgstr ""
+"A szövegméret az alapértelmezett méretre történő <em>visszaállításához</em> "
+"nyomja meg a <keyseq><key>Ctrl</key> <key>0</key></keyseq> "
+"billentyűkombinációt."
+
+#. (itstool) path: info/desc
+#: C/word-completion.page:26
+msgid "Autocomplete words or portions of code as you type."
+msgstr "Szavak vagy kódrészletek automatikus kiegészítése gépelés közben."
+
+#. (itstool) path: page/title
+#: C/word-completion.page:29
+msgid "Word Completion"
+msgstr "Szókiegészítés"
+
+#. (itstool) path: page/p
+#: C/word-completion.page:31
+#| msgid ""
+#| "The <app>Word Completion</app> plugin can speed up your editing by "
+#| "suggesting completions of words as you type. To enable the plugin:"
+msgid ""
+"The <app>Word Completion</app> plugin can speed up your editing by "
+"suggesting completions of words as you type."
+msgstr ""
+"A <app>Szókiegészítés</app> bővítmény képes felgyorsítani a szerkesztést "
+"szókiegészítések felajánlásával gépelés közben."
+
+#. (itstool) path: item/p
+#: C/word-completion.page:42
+msgid ""
+"Select <gui style=\"menuitem\">Word Completion</gui> to enable the plugin."
+msgstr ""
+"Válassza a <gui style=\"menuitem\">Szókiegészítés</gui> bejegyzést a "
+"bővítmény engedélyezéséhez."
+
+#. (itstool) path: page/p
+#: C/word-completion.page:47
+msgid ""
+"While editing, the <app>Word Completion</app> plugin will automatically "
+"display a pop-up list of words that begin with the letters you have already "
+"typed. Word suggestions are based upon words that appear elsewhere in your "
+"document and upon pre-defined keywords if your document is of a recognised "
+"format."
+msgstr ""
+"Szerkesztés közben a <app>Szókiegészítés</app> bővítmény automatikusan "
+"megjeleníti a már beírt betűkkel kezdődő szavak felugró listáját. A "
+"szójavaslatok a dokumentumban máshol megjelenő szavakon és egyes felismert "
+"dokumentumtípusok esetén előre megadott kulcsszavakon alapul."
+
+#. (itstool) path: page/p
+#: C/word-completion.page:53
+msgid ""
+"To insert a suggested word, double-click on it in the pop-up list or press "
+"<keyseq><key>Alt</key><key>Num</key></keyseq>, where <key>Num</key> is the "
+"number displayed next to your desired word."
+msgstr ""
+"Egy javasolt szó beszúrásához kattintson rá duplán a felugró listában, vagy "
+"nyomja meg az <keyseq><key>Alt</key><key>Szám</key></keyseq> "
+"billentyűkombinációt, ahol a <key>Szám</key> a kívánt szó mellett megjelenő "
+"szám."

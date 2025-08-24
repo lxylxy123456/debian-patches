@@ -1,0 +1,874 @@
+# translation of ru.po to Russian
+# translation of gedit to Russian
+# Copyright (C) 1999-2003, 2004, 2005, 2006, 2007, 2008, 2010 Free Software Foundation, Inc.
+#
+#
+# Valek Filippov <frob@df.ru>, 2000-2002, 2003.
+# Sergey Panov <sipan@mit.edu>, 1999-2000.
+# Dmitry G. Mastrukov <dmitry@taurussoft.org>, 2002.
+# Andrew W. Nosenko <awn@bcs.zp.ua>, 2003.
+# Leonid Kanter <leon@asplinux.ru>, 2003, 2004, 2005, 2006, 2010.
+# Maxim Popov <ravemax@hotbox.ru>, 2006.
+# Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2007.
+# Nickolay V. Shmyrev <nshmyrev@yandex.ru>, 2007.
+# Yuri Kozlov <kozlov.y@gmail.com>, 2008.
+# Alexander Saprykin <xelfium@gmail.com>, 2010.
+# Stas Solovey <whats_up@tut.by>, 2013.
+# Yuri Myasoedov <omerta13@yandex.ru>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ru\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gedit-plugins/issues\n"
+"POT-Creation-Date: 2022-08-01 15:09+0000\n"
+"PO-Revision-Date: 2022-08-09 15:50+1000\n"
+"Last-Translator: Ser82-png <asvmail.as@gmail.com>\n"
+"Language-Team: русский <gnome-cyr@gnome.org>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 2.3\n"
+
+#: plugins/bookmarks/bookmarks.plugin.desktop.in.in:5
+#: plugins/bookmarks/gedit-bookmarks.metainfo.xml.in:6
+msgid "Bookmarks"
+msgstr "Закладки"
+
+#: plugins/bookmarks/bookmarks.plugin.desktop.in.in:6
+#: plugins/bookmarks/gedit-bookmarks.metainfo.xml.in:7
+msgid "Easy document navigation with bookmarks"
+msgstr "Простое перемещение по документу с помощью закладок"
+
+#: plugins/bookmarks/gedit-bookmarks-app-activatable.c:141
+msgid "Toggle Bookmark"
+msgstr "Добавить/удалить закладку"
+
+#: plugins/bookmarks/gedit-bookmarks-app-activatable.c:145
+msgid "Go to Next Bookmark"
+msgstr "Перейти к следующей закладке"
+
+#: plugins/bookmarks/gedit-bookmarks-app-activatable.c:149
+msgid "Go to Previous Bookmark"
+msgstr "Перейти к предыдущей закладке"
+
+#: plugins/bracketcompletion/bracketcompletion.plugin.desktop.in.in:6
+#: plugins/bracketcompletion/gedit-bracketcompletion.metainfo.xml.in:6
+msgid "Bracket Completion"
+msgstr "Дополнение скобок"
+
+#: plugins/bracketcompletion/bracketcompletion.plugin.desktop.in.in:7
+msgid "Automatically adds closing brackets."
+msgstr "Автоматическое добавление закрывающей скобки."
+
+#: plugins/bracketcompletion/gedit-bracketcompletion.metainfo.xml.in:7
+msgid "Automatically add a closing bracket when you insert one"
+msgstr "Автоматическое добавление закрывающей скобки если вы ввели открывающую"
+
+#: plugins/charmap/charmap/__init__.py:56
+#: plugins/charmap/charmap.plugin.desktop.in.in:6
+msgid "Character Map"
+msgstr "Таблица символов"
+
+#: plugins/charmap/charmap.plugin.desktop.in.in:7
+msgid "Insert special characters just by clicking on them."
+msgstr "Вставка специальных символов простым нажатием."
+
+#: plugins/charmap/gedit-charmap.metainfo.xml.in:6
+msgid "Charmap"
+msgstr "Таблица символов"
+
+#: plugins/charmap/gedit-charmap.metainfo.xml.in:7
+msgid "Select characters from a character map"
+msgstr "Выбор символа из таблицы символов"
+
+#: plugins/codecomment/codecomment.plugin.desktop.in.in:6
+#: plugins/codecomment/gedit-codecomment.metainfo.xml.in:6
+msgid "Code Comment"
+msgstr "Комментирование кода"
+
+#: plugins/codecomment/codecomment.plugin.desktop.in.in:7
+msgid "Comment out or uncomment a selected block of code."
+msgstr "Комментирование выбранного блока кода."
+
+#: plugins/codecomment/codecomment.py:118
+msgid "Co_mment Code"
+msgstr "_Комментировать код"
+
+#: plugins/codecomment/codecomment.py:124
+msgid "U_ncomment Code"
+msgstr "Рас_комментировать код"
+
+#: plugins/codecomment/gedit-codecomment.metainfo.xml.in:7
+msgid "Comment or uncomment blocks of code"
+msgstr "Комментирование или раскомментирование блоков кода"
+
+#: plugins/colorpicker/colorpicker.plugin.desktop.in.in:6
+msgid "Color Picker"
+msgstr "Палитра цветов"
+
+#: plugins/colorpicker/colorpicker.plugin.desktop.in.in:7
+msgid "Pick a color from a dialog and insert its hexadecimal representation."
+msgstr "Выбор цвета и вставка его шестнадцатиричного представления."
+
+#: plugins/colorpicker/colorpicker.py:132
+msgid "Pick _Color…"
+msgstr "Выбрать _цвет…"
+
+#: plugins/colorpicker/colorpicker.py:172
+msgid "Pick Color"
+msgstr "Выбрать цвет"
+
+#: plugins/colorpicker/gedit-colorpicker.metainfo.xml.in:6
+msgid "Color picker"
+msgstr "Выбор цвета"
+
+#: plugins/colorpicker/gedit-colorpicker.metainfo.xml.in:7
+msgid "Select and insert a color from a dialog (for HTML, CSS, PHP)"
+msgstr "Выбор и вставка цвета из диалогового окна (для HTML, CSS, PHP)"
+
+#: plugins/colorschemer/colorschemer.plugin.desktop.in.in:6
+#: plugins/colorschemer/gedit-colorschemer.metainfo.xml.in:6
+#: plugins/colorschemer/schemer/__init__.py:50
+#: plugins/colorschemer/schemer.ui:20
+msgid "Color Scheme Editor"
+msgstr "Редактор цветовой схемы"
+
+#: plugins/colorschemer/colorschemer.plugin.desktop.in.in:7
+msgid "Source code color scheme editor"
+msgstr "Редактор цветовой схемы исходного кода"
+
+#: plugins/colorschemer/gedit-colorschemer.metainfo.xml.in:7
+msgid "Create and edit the color scheme used for syntax highlighting"
+msgstr "Создание и редактирование цветовой схемы для подсветки синтаксиса"
+
+#: plugins/colorschemer/schemer/schemer.py:271
+#: plugins/colorschemer/schemer/schemer.py:318
+msgid "There was a problem saving the scheme"
+msgstr "Возникла проблема с сохранением схемы"
+
+#: plugins/colorschemer/schemer/schemer.py:272
+msgid ""
+"You have chosen to create a new scheme\n"
+"but the Name or ID you are using is being used already.\n"
+"\n"
+"Please make sure to choose a Name and ID that are not already in use.\n"
+msgstr ""
+"Вы выбрали создание новой схемы\n"
+"но имя или ID, выбранный вами, уже используется.\n"
+"\n"
+"Пожалуйста, убедитесь, что вы выбрали имя и ID, которые ещё не "
+"используются.\n"
+
+#: plugins/colorschemer/schemer/schemer.py:319
+msgid ""
+"You do not have permission to overwrite the scheme you have chosen.\n"
+"Instead a copy will be created.\n"
+"\n"
+"Please make sure to choose a Name and ID that are not already in use.\n"
+msgstr ""
+"У вас нет полномочий для перезаписи выбранной схемы.\n"
+"Вместо этого будет создана копия.\n"
+"\n"
+"Пожалуйста, убедитесь, что вы выбрали имя и ID, которые ещё не "
+"используются.\n"
+
+#. there must have been some conflict, since it opened the wrong file
+#: plugins/colorschemer/schemer/schemer.py:378
+msgid "There was a problem opening the file"
+msgstr "Возникла проблема при открытии файла"
+
+#: plugins/colorschemer/schemer/schemer.py:379
+msgid "You appear to have schemes with the same IDs in different directories\n"
+msgstr "Похоже, у вас есть схемы с одинаковыми ID в разных каталогах\n"
+
+#: plugins/colorschemer/schemer.ui:137 plugins/colorschemer/schemer.ui:138
+msgid "Bold"
+msgstr "Жирный"
+
+#: plugins/colorschemer/schemer.ui:160 plugins/colorschemer/schemer.ui:161
+msgid "Italic"
+msgstr "Курсив"
+
+#: plugins/colorschemer/schemer.ui:183 plugins/colorschemer/schemer.ui:184
+msgid "Underline"
+msgstr "Подчёркнутый"
+
+#: plugins/colorschemer/schemer.ui:206 plugins/colorschemer/schemer.ui:207
+msgid "Strikethrough"
+msgstr "Перечёркнутый"
+
+#: plugins/colorschemer/schemer.ui:243
+msgid "Pick the background color"
+msgstr "Выбрать цвет фона"
+
+#: plugins/colorschemer/schemer.ui:259
+msgid "Pick the foreground color"
+msgstr "Выбрать цвет переднего плана"
+
+#: plugins/colorschemer/schemer.ui:270
+msgid "_Background"
+msgstr "_Фон"
+
+#: plugins/colorschemer/schemer.ui:288
+msgid "_Foreground"
+msgstr "_Передний план"
+
+#: plugins/colorschemer/schemer.ui:341
+msgid "_Clear"
+msgstr "_Очистить"
+
+#: plugins/colorschemer/schemer.ui:383
+msgid "Name"
+msgstr "Имя"
+
+#: plugins/colorschemer/schemer.ui:408
+msgid "ID"
+msgstr "ID"
+
+#: plugins/colorschemer/schemer.ui:433
+msgid "Description"
+msgstr "Описание"
+
+#: plugins/colorschemer/schemer.ui:459
+msgid "Author"
+msgstr "Автор"
+
+#: plugins/colorschemer/schemer.ui:503
+msgid "Sample"
+msgstr "Пример"
+
+#: plugins/drawspaces/drawspaces.plugin.desktop.in.in:5
+msgid "Draw Spaces"
+msgstr "Отображение пробелов"
+
+#: plugins/drawspaces/drawspaces.plugin.desktop.in.in:6
+msgid "Draw spaces and tabs"
+msgstr "Показать пробелы и символы табуляции"
+
+#: plugins/drawspaces/gedit-drawspaces.metainfo.xml.in:6
+msgid "Draw spaces"
+msgstr "Отображение пробелов"
+
+#: plugins/drawspaces/gedit-drawspaces.metainfo.xml.in:7
+msgid "Draw Spaces and Tabs"
+msgstr "Показать пробелы и символы табуляции"
+
+#: plugins/git/gedit-git.metainfo.xml.in:6
+#: plugins/git/git.plugin.desktop.in.in:6
+msgid "Git"
+msgstr "Git"
+
+#: plugins/git/gedit-git.metainfo.xml.in:7
+msgid ""
+"Use git information to display which lines and files changed since last "
+"commit"
+msgstr ""
+"Использование информации git для отображения строк и файлов изменённых с "
+"последнего коммита"
+
+#: plugins/git/git.plugin.desktop.in.in:7
+msgid "Highlight lines that have been changed since the last commit"
+msgstr "Подсветка строк которые изменились с последнего коммита"
+
+#: plugins/joinlines/gedit-joinlines.metainfo.xml.in:6
+#: plugins/joinlines/joinlines.plugin.desktop.in.in:6
+msgid "Join/Split Lines"
+msgstr "Объединение и разбивка строк"
+
+#: plugins/joinlines/gedit-joinlines.metainfo.xml.in:7
+msgid "Join or split multiple lines through Ctrl+J and Ctrl+Shift+J"
+msgstr "Объединение и разбивка строк с помощью Ctrl+J и Ctrl+Shift+J"
+
+#: plugins/joinlines/joinlines.plugin.desktop.in.in:7
+msgid "Join several lines or split long ones"
+msgstr "Объединение нескольких строк текста и разбивка длинных строк"
+
+#: plugins/joinlines/joinlines.py:111
+msgid "_Join Lines"
+msgstr "_Объединить строки"
+
+#: plugins/joinlines/joinlines.py:117
+msgid "_Split Lines"
+msgstr "Ра_збить строки"
+
+#: plugins/multiedit/gedit-multiedit.metainfo.xml.in:6
+msgid "Multi edit"
+msgstr "Мульти-редактирование"
+
+#: plugins/multiedit/gedit-multiedit.metainfo.xml.in:7
+#: plugins/multiedit/multiedit.plugin.desktop.in.in:7
+msgid "Edit document in multiple places at once"
+msgstr "Редактирование документа в нескольких местах одновременно"
+
+#: plugins/multiedit/multiedit/appactivatable.py:44
+#: plugins/multiedit/multiedit/viewactivatable.py:1351
+msgid "Multi Edit Mode"
+msgstr "Режим мульти-редактирования"
+
+#: plugins/multiedit/multiedit.plugin.desktop.in.in:6
+msgid "Multi Edit"
+msgstr "Мульти-редактирование"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:317
+msgid "Added edit point…"
+msgstr "Добавлена точка редактирования…"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:659
+msgid "Column Mode…"
+msgstr "Режим столбцов…"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:777
+msgid "Removed edit point…"
+msgstr "Удалена точка редактирования…"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:943
+msgid "Cancelled column mode…"
+msgstr "Режим столбцов отменён…"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1306
+msgid "Enter column edit mode using selection"
+msgstr "Войти в режим редактирования столбцов с помощью выделения"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1307
+msgid "Enter <b>smart</b> column edit mode using selection"
+msgstr ""
+"Войти в режим <b>умного</b> редактирования столбцов с помощью выделения"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1308
+msgid "<b>Smart</b> column align mode using selection"
+msgstr "Режим <b>Умного</b> выравнивания столбцов с помощью выделения"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1309
+msgid "<b>Smart</b> column align mode with additional space using selection"
+msgstr ""
+"Режим <b>Умного</b> выравнивания столбцов пробелами с помощью выделения"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1311
+msgid "Toggle edit point"
+msgstr "Переключить точку редактирования"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1312
+msgid "Add edit point at beginning of line/selection"
+msgstr "Добавить точку редактирования в начале строки/выделения"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1313
+msgid "Add edit point at end of line/selection"
+msgstr "Добавить точку редактирования в конце строки/выделения"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1314
+msgid "Align edit points"
+msgstr "Выровнять точки редактирования"
+
+#: plugins/multiedit/multiedit/viewactivatable.py:1315
+msgid "Align edit points with additional space"
+msgstr "Выровнять точки редактирования дополнительными пробелами"
+
+#: plugins/sessionsaver/sessionsaver/appactivatable.py:55
+msgid "_Manage Saved Sessions…"
+msgstr "_Управление сохранёнными сеансами…"
+
+#: plugins/sessionsaver/sessionsaver/appactivatable.py:58
+msgid "_Save Session…"
+msgstr "_Сохранить сеанс…"
+
+#: plugins/sessionsaver/sessionsaver/appactivatable.py:64
+#, python-brace-format
+msgid "Recover “{0}” Session"
+msgstr "Восстановить “{0}” сеанс"
+
+#: plugins/sessionsaver/sessionsaver/dialogs.py:153
+msgid "Session Name"
+msgstr "Имя сеанса"
+
+#: plugins/sessionsaver/sessionsaver.plugin.desktop.in.in:6
+msgid "Session Saver"
+msgstr "Сохранение сеанса"
+
+#: plugins/sessionsaver/sessionsaver.plugin.desktop.in.in:7
+msgid "Save and restore your working sessions"
+msgstr "Сохранение и восстановление сеансов работы"
+
+#: plugins/sessionsaver/sessionsaver/ui/sessionsaver.ui:8
+msgid "Save session"
+msgstr "Сохранить сеанс"
+
+#: plugins/sessionsaver/sessionsaver/ui/sessionsaver.ui:76
+msgid "Session name:"
+msgstr "Имя сеанса:"
+
+#: plugins/sessionsaver/sessionsaver/ui/sessionsaver.ui:120
+msgid "Saved Sessions"
+msgstr "Сохранённые сеансы"
+
+#: plugins/smartspaces/gedit-smartspaces.metainfo.xml.in:6
+#: plugins/smartspaces/smartspaces.plugin.desktop.in.in:5
+msgid "Smart Spaces"
+msgstr "Умные пробелы"
+
+#: plugins/smartspaces/gedit-smartspaces.metainfo.xml.in:7
+msgid "Allow to unindent like if you were using tabs while you’re using spaces"
+msgstr ""
+"Делает отступ при использовании пробелов таким, как если бы вы использовали "
+"табуляцию"
+
+#: plugins/smartspaces/smartspaces.plugin.desktop.in.in:6
+msgid "Forget you’re not using tabulations."
+msgstr "Забудьте о том, что вы не пользуетесь табуляцией."
+
+#: plugins/synctex/gedit-synctex.metainfo.xml.in:6
+#: plugins/synctex/synctex.plugin.desktop.in.in:6
+msgid "SyncTeX"
+msgstr "SyncTeX"
+
+#: plugins/synctex/gedit-synctex.metainfo.xml.in:7
+msgid "Synchronize between LaTeX and PDF with gedit and evince"
+msgstr "Синхронизация между LaTeX и PDF с помощью gedit и evince"
+
+#: plugins/synctex/synctex.plugin.desktop.in.in:7
+msgid "Synchronize between LaTeX and PDF with gedit and evince."
+msgstr "Синхронизация между LaTeX и PDF с помощью gedit и evince."
+
+#: plugins/synctex/synctex/synctex.py:342
+msgid "Forward Search"
+msgstr "Прямой поиск"
+
+#: plugins/terminal/gedit-terminal.metainfo.xml.in:6
+#: plugins/terminal/terminal.py:313
+msgid "Terminal"
+msgstr "Терминал"
+
+#: plugins/terminal/gedit-terminal.metainfo.xml.in:7
+msgid "A simple terminal widget accessible from the bottom panel"
+msgstr "Простой доступ к терминалу на нижней панели"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:16
+msgid "Whether to silence terminal bell"
+msgstr "Приглушать ли звуковые сигналы терминала"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:17
+msgid ""
+"If true, don’t make a noise when applications send the escape sequence for "
+"the terminal bell."
+msgstr ""
+"Если значение «true», не производить звук, когда приложения отправляют "
+"escape-последовательность для терминального звукового сигнала."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:24
+msgid "Number of lines to keep in scrollback"
+msgstr "Количество строк в области прокрутки"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:25
+msgid ""
+"Number of scrollback lines to keep around. You can scroll back in the "
+"terminal by this number of lines; lines that don’t fit in the scrollback are "
+"discarded. If scrollback-unlimited is true, this value is ignored."
+msgstr ""
+"Количество строк прокрутки, которые нужно сохранить. Вы можете прокрутить "
+"назад в терминале на это количество строк; строки, которые не помещаются в "
+"обратную прокрутку, отбрасываются. Если значение «scrollback-unlimited» "
+"равно «true», это значение игнорируется."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:34
+msgid "Whether an unlimited number of lines should be kept in scrollback"
+msgstr "Следует ли сохранять неограниченное количество строк прокрутки"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:37
+msgid ""
+"If true, scrollback lines will never be discarded. The scrollback history is "
+"stored on disk temporarily, so this may cause the system to run out of disk "
+"space if there is a lot of output to the terminal."
+msgstr ""
+"Если значение «true», строки прокрутки никогда не будут отбрасываться. "
+"История прокрутки временно сохраняется на диск, что может привести к "
+"дефициту свободного места на диске, если в терминале находится слишком "
+"длинный вывод."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:46
+msgid "Whether to scroll to the bottom when a key is pressed"
+msgstr "Прокручивать ли вниз при нажатии на клавишу"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:47
+msgid "If true, pressing a key jumps the scrollbar to the bottom."
+msgstr ""
+"Если значение «true», нажатие клавиш приводит к перемещению полосы прокрутки "
+"вниз."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:53
+msgid "Whether to scroll to the bottom when there’s new output"
+msgstr "Прокручивать ли вниз при поступлении нового вывода"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:54
+msgid ""
+"If true, whenever there’s new output the terminal will scroll to the bottom."
+msgstr ""
+"Если значение «true», каждый новый вывод в терминале будет прокручивать "
+"экран вниз."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:61
+msgid "Default color of text in the terminal"
+msgstr "Цвет текста по умолчанию для терминала"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:62
+msgid ""
+"Default color of text in the terminal, as a color specification (can be HTML-"
+"style hex digits, or a color name such as “red”)."
+msgstr ""
+"Цвет текста по умолчанию для терминала, цвет можно указывать в HTML-стиле "
+"шестнадцатиричными цифрами или указать название цвета, например «red»."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:70
+msgid "Default color of terminal background"
+msgstr "Цвет фона терминала по умолчанию"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:71
+msgid ""
+"Default color of terminal background, as a color specification (can be HTML-"
+"style hex digits, or a color name such as “red”)."
+msgstr ""
+"Цвет фона по умолчанию для терминала, цвет можно указывать в HTML-стиле "
+"шестнадцатиричными цифрами или указать название цвета, например «red»."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:94
+msgid "Palette for terminal applications"
+msgstr "Палитра для приложений терминала"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:95
+msgid ""
+"Terminals have a 16-color palette that applications inside the terminal can "
+"use. This is that palette, in the form of a colon-separated list of color "
+"names. Color names should be in hex format e.g. “#FF00FF”"
+msgstr ""
+"Терминалы используют 16-цветовую палитру, которую могут использовать "
+"приложения, запущенные в терминале. Палитра — список названий цветов, "
+"разделённых двоеточиями. Названия цветов записываются в hex-формате, "
+"например «#FF00FF»"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:104
+msgid "Whether to use the colors from the theme for the terminal widget"
+msgstr "Использовать ли цвета из темы оформления для виджета терминала"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:107
+msgid ""
+"If true, the theme color scheme used for text entry boxes will be used for "
+"the terminal, instead of colors provided by the user."
+msgstr ""
+"Если значение «true», цветовая схема оформления полей ввода текста будет "
+"использована для терминала вместо цветов, выбранных пользователем."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:114
+msgid "Whether to blink the cursor"
+msgstr "Использовать ли мигающий курсор"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:115
+msgid ""
+"The possible values are “system” to use the global cursor blinking settings, "
+"or “on” or “off” to set the mode explicitly."
+msgstr ""
+"Допустимые значения: «system» — системные параметры мигания курсора; «on» "
+"или «off» — непосредственная установка режима."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:122
+msgid "The cursor appearance"
+msgstr "Внешний вид курсора"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:123
+msgid ""
+"The possible values are “block” to use a block cursor, “ibeam” to use a "
+"vertical line cursor, or “underline” to use an underline cursor."
+msgstr ""
+"Допустимые значения: «block» — блочный курсор; «ibeam» — курсор в виде "
+"вертикальной линии; «underline» — курсор в виде подчёркивания."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:130
+msgid "Whether to use the system font"
+msgstr "Использовать ли системный шрифт"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:131
+msgid ""
+"If true, the terminal will use the desktop-global standard font if it’s "
+"monospace (and the most similar font it can come up with otherwise)."
+msgstr ""
+"Если значение «true», терминал будет использовать стандартный системный "
+"моноширный шрифт (если системный шрифт не моноширный, то будет "
+"использоваться наиболее подходящий шрифт)."
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:139
+msgid "Font"
+msgstr "Шрифт"
+
+#: plugins/terminal/org.gnome.gedit.plugins.terminal.gschema.xml:140
+msgid "A Pango font name. Examples are “Sans 12” or “Monospace Bold 14”."
+msgstr "Название Pango-шрифта. Например: «Sans 12» или «Monospace Bold 14»."
+
+#: plugins/terminal/terminal.plugin.desktop.in.in:6
+msgid "Embedded Terminal"
+msgstr "Встроенный терминал"
+
+#: plugins/terminal/terminal.plugin.desktop.in.in:7
+msgid "Embed a terminal in the bottom pane."
+msgstr "Добавление окна терминала на нижнюю панель."
+
+#: plugins/terminal/terminal.py:334
+msgid "C_hange Directory"
+msgstr "_Сменить каталог"
+
+#: plugins/textsize/gedit-textsize.metainfo.xml.in:6
+msgid "Text size"
+msgstr "Размер текста"
+
+#: plugins/textsize/gedit-textsize.metainfo.xml.in:7
+#: plugins/textsize/textsize.plugin.desktop.in.in:7
+msgid "Easily increase and decrease the text size"
+msgstr "Простое увеличение и уменьшение размеров текста"
+
+#: plugins/textsize/textsize/__init__.py:53
+msgid "_Normal size"
+msgstr "_Нормальный размер"
+
+#: plugins/textsize/textsize/__init__.py:55
+msgid "S_maller Text"
+msgstr "У_меньшить текст"
+
+#: plugins/textsize/textsize/__init__.py:57
+msgid "_Larger Text"
+msgstr "У_величить текст"
+
+#: plugins/textsize/textsize.plugin.desktop.in.in:6
+msgid "Text Size"
+msgstr "Размер текста"
+
+#: plugins/wordcompletion/gedit-word-completion-configure.ui:18
+msgid "Interactive completion"
+msgstr "Интерактивное автодополнение"
+
+#: plugins/wordcompletion/gedit-word-completion-configure.ui:43
+msgid "Minimum word size:"
+msgstr "Минимальный размер слова:"
+
+#: plugins/wordcompletion/gedit-wordcompletion.metainfo.xml.in:6
+msgid "Word completion"
+msgstr "Дополнение слов"
+
+#: plugins/wordcompletion/gedit-wordcompletion.metainfo.xml.in:7
+msgid ""
+"Propose automatic completion using words already present in the document"
+msgstr "Автодополнение на основе слов присутствующих в тексте"
+
+#: plugins/wordcompletion/gedit-word-completion-plugin.c:181
+msgid "Document Words"
+msgstr "Слова документа"
+
+#: plugins/wordcompletion/org.gnome.gedit.plugins.wordcompletion.gschema.xml:5
+msgid "Interactive Completion"
+msgstr "Интерактивное автодополнение"
+
+#: plugins/wordcompletion/org.gnome.gedit.plugins.wordcompletion.gschema.xml:6
+msgid "Whether to enable interactive completion."
+msgstr "Активирует интерактивное автодополнение."
+
+#: plugins/wordcompletion/org.gnome.gedit.plugins.wordcompletion.gschema.xml:11
+msgid "Minimum Word Size"
+msgstr "Минимальный размер слова"
+
+#: plugins/wordcompletion/org.gnome.gedit.plugins.wordcompletion.gschema.xml:12
+msgid "The minimum word size to complete."
+msgstr "Минимальный размер слова для дополнения."
+
+#: plugins/wordcompletion/wordcompletion.plugin.desktop.in.in:5
+msgid "Word Completion"
+msgstr "Дополнение слов"
+
+#: plugins/wordcompletion/wordcompletion.plugin.desktop.in.in:6
+msgid "Word completion using the completion framework"
+msgstr "Дополнение слов с помощью каркаса дополнений"
+
+#~ msgid "Commander Mode"
+#~ msgstr "Режим командного интерпретатора"
+
+#~ msgid "Commander"
+#~ msgstr "Командный интерпретатор"
+
+#~ msgid "Command line interface for advanced editing"
+#~ msgstr "Интерфейс командной строки для расширенного редактирования"
+
+#~ msgid "Empty Document"
+#~ msgstr "Новый документ"
+
+#~ msgid "Type here to search…"
+#~ msgstr "Введите для поиска…"
+
+#~ msgid "Dashboard"
+#~ msgstr "Информационная панель"
+
+#~ msgid "A Dashboard for new tabs"
+#~ msgstr "Информационная панель для новых вкладок"
+
+#~ msgid "Displays a grid of recently/most used files upon opening a new tab"
+#~ msgstr ""
+#~ "Показывает сетку недавних/часто используемых файлов до открытия новой "
+#~ "вкладки"
+
+#~ msgid "Show _White Space"
+#~ msgstr "_Показывать пробелы"
+
+#~ msgid "Draw tabs"
+#~ msgstr "Показать табуляцию"
+
+#~ msgid "Draw new lines"
+#~ msgstr "Показать переход строки"
+
+#~ msgid "Draw non-breaking spaces"
+#~ msgstr "Отображение неразрывных пробелов"
+
+#~ msgid "Draw leading spaces"
+#~ msgstr "Отображение предшествующих пробелов"
+
+#~ msgid "Draw spaces in text"
+#~ msgstr "Отображение пробелов в тексте"
+
+#~ msgid "Draw trailing spaces"
+#~ msgstr "Отображение замыкающих пробелов"
+
+#~ msgid "If TRUE drawing will be enabled."
+#~ msgstr "Если установлено, отображение будет включено."
+
+#~ msgid "The type of spaces to be drawn."
+#~ msgstr "Тип показываемых пробелов."
+
+#~ msgid "Find in Files"
+#~ msgstr "Найти в файлах"
+
+#~ msgid "_Close"
+#~ msgstr "_Закрыть"
+
+#~ msgid "Find in Files…"
+#~ msgstr "Найти в файлах…"
+
+#~ msgid "No results found"
+#~ msgstr "Результатов не найдено"
+
+#~ msgid "Stop the search"
+#~ msgstr "Остановить поиск"
+
+#~ msgid "Find text in all files of a folder."
+#~ msgstr "Искать текст во всех файлах в каталоге."
+
+#~ msgctxt "label of the find button"
+#~ msgid "_Find"
+#~ msgstr "_Найти"
+
+#~ msgctxt "label on the left of the GtkEntry containing text to search"
+#~ msgid "F_ind "
+#~ msgstr "Най_ти "
+
+#~ msgid "_In "
+#~ msgstr "_В"
+
+#~ msgid "Select a _folder"
+#~ msgstr "Выбрать _папку"
+
+#~ msgid "_Match case"
+#~ msgstr "_Учитывать регистр"
+
+#~ msgid "Match _entire word only"
+#~ msgstr "Искать только _полные слова"
+
+#~ msgid "Re_gular expression"
+#~ msgstr "Р_егулярное выражение"
+
+#~ msgid "Join lines/ Split lines"
+#~ msgstr "Объединение и разбивка строк"
+
+#~ msgid "Whether to allow bold text"
+#~ msgstr "Разрешить ли полужирный текст"
+
+#~ msgid "If true, allow applications in the terminal to make text boldface."
+#~ msgstr ""
+#~ "Если установлено, разрешить приложениям в терминале делать текст "
+#~ "полужирным."
+
+#~ msgid "Zeitgeist dataprovider"
+#~ msgstr "Поставщик данных Zeitgeist"
+
+#~ msgid "Logs access and leave event for documents used with gedit"
+#~ msgstr "Журнал обращений и событий для документов, используемых с gedit"
+
+#~ msgid "Zeitgeist Data provider"
+#~ msgstr "Поставщик данных Zeitgeist"
+
+#~ msgid ""
+#~ "Records user activity and giving easy access to recently-used and "
+#~ "frequently-used files"
+#~ msgstr ""
+#~ "Записывает активность пользователя и предоставляет лёгкий доступ к "
+#~ "недавно использованным и часто используемым файлам"
+
+#~ msgid "Toggle bookmark status of the current line"
+#~ msgstr "Добавить или удалить закладку в текущей строке"
+
+#~ msgid "Goto the next bookmark"
+#~ msgstr "Перейти к следующей закладке"
+
+#~ msgid "Goto the previous bookmark"
+#~ msgstr "Перейти к предыдущей закладке"
+
+#~ msgid "Comment the selected code"
+#~ msgstr "Закомментировать выделенный код"
+
+#~ msgid "Uncomment the selected code"
+#~ msgstr "Раскомментировать выделенный код"
+
+#~ msgid "Pick _Color..."
+#~ msgstr "Вставить _цвет…"
+
+#~ msgid "Pick a color from a dialog"
+#~ msgstr "Выбор цвета и вставка его шестнадцатиричного представления."
+
+#~ msgid "Start commander mode"
+#~ msgstr "Запустить командный интерпретатор"
+
+#~ msgid "Most Used"
+#~ msgstr "Наиболее часто используемые"
+
+#~ msgid "Recently Used"
+#~ msgstr "Недавно использованные"
+
+#~ msgid "Show spaces and tabs"
+#~ msgstr "Показывать пробелы и отступы"
+
+#~ msgid "Enabled"
+#~ msgstr "Включено"
+
+#~ msgid "Join the selected lines"
+#~ msgstr "Объединить выделенные строки"
+
+#~ msgid "Split the selected lines"
+#~ msgstr "Разбить выделенные строки"
+
+#~ msgid "Start multi edit mode"
+#~ msgstr "Запустить режим мульти-редактирования"
+
+#~ msgid "Characters that are considered \"part of a word\""
+#~ msgstr "Символы как часть слова"
+
+#~ msgid ""
+#~ "When selecting text by word, sequences of these characters are considered "
+#~ "single words. Ranges can be given as \"A-Z\". Literal hyphen (not "
+#~ "expressing a range) should be the first character given."
+#~ msgstr ""
+#~ "При выделении текста по словам последовательности этих символов считаются "
+#~ "отдельными словами. Диапазоны могут быть заданы как «A-Z». Литера «дефис» "
+#~ "должна указываться в начале (чтобы она не была похожа на обозначение "
+#~ "диапазона)."
+
+#~ msgid "_Increase font size"
+#~ msgstr "_Увеличить размер шрифта"
+
+#~ msgid "_Decrease font size"
+#~ msgstr "У_меньшить размер шрифта"
+
+#~ msgid "_Reset font size"
+#~ msgstr "_Размер шрифта по умолчанию"
