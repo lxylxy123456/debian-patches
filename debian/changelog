@@ -1,3 +1,9 @@
+gedit-plugins (48.1-2) unstable; urgency=medium
+
+  * Remove plugins other than git
+
+ -- Eric Li <ericli@example.com>  Sun, 24 Aug 2025 23:04:04 -0000
+
 gedit-plugins (44.1-2) unstable; urgency=medium
 
   * Add dependency on gir1.2-tepl-6 to plugins that use it (Closes: #1029386)

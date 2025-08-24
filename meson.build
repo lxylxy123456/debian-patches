@@ -1,6 +1,6 @@
 project(
   'gedit-plugins', 'c',
-  version: '44.1',
+  version: '48.1',
   meson_version: '>= 0.50'
 )
 
@@ -44,22 +44,7 @@ enabled_plugins = []
 disabled_plugins = []
 extra_languages = []
 all_plugins = {
-  'bookmarks': {'language': 'c'},
-  'bracketcompletion': {'language': 'python'},
-  'charmap': {'language': 'python'},
-  'codecomment': {'language': 'python'},
-  'colorpicker': {'language': 'python'},
-  'colorschemer': {'language': 'python'},
-  'drawspaces': {'language': 'c'},
   'git': {'language': 'python'},
-  'joinlines': {'language': 'python'},
-  'multiedit': {'language': 'python'},
-  'sessionsaver': {'language': 'python'},
-  'smartspaces': {'language': 'c'},
-  'synctex': {'language': 'python'},
-  'terminal': {'language': 'python'},
-  'textsize': {'language': 'python'},
-  'wordcompletion': {'language': 'c'},
 }
 
 foreach plugin_name, plugin_metadata : all_plugins
@@ -79,7 +64,6 @@ if 'python' in extra_languages
   python3 = python.find_installation('python3')
 endif
 
-subdir('po')
 subdir('plugins')
 
 if get_option('user_documentation')
