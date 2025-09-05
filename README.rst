@@ -93,6 +93,8 @@ libdrumstick: change keys' shape
 gedit-plugin-git: maintain gedit's Git plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+See also https://github.com/lxylxy123456/gedit-plugin-git
+
 +--------+------------------+---------+----------------------------+-------------+
 | Debian | Package          | Version | Branch                     | Commit      |
 +========+==================+=========+============================+=============+
