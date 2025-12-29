@@ -1,0 +1,118 @@
+diff --git a/src/backends/meta-cursor-tracker.c b/src/backends/meta-cursor-tracker.c
+index a67fc87..2059991 100644
+--- a/src/backends/meta-cursor-tracker.c
++++ b/src/backends/meta-cursor-tracker.c
+@@ -545,6 +545,10 @@ meta_cursor_tracker_get_pointer_visible (MetaCursorTracker *tracker)
+   return priv->is_showing;
+ }
+ 
++// Global variables for "touch move mouse".
++extern int lxy_tmm_mode;
++extern int lxy_tmm_valid;
++
+ void
+ meta_cursor_tracker_set_pointer_visible (MetaCursorTracker *tracker,
+                                          gboolean           visible)
+@@ -556,6 +560,12 @@ meta_cursor_tracker_set_pointer_visible (MetaCursorTracker *tracker,
+     meta_backend_get_clutter_backend (backend);
+   ClutterSeat *seat = clutter_backend_get_default_seat (clutter_backend);
+ 
++  if (lxy_tmm_mode == 3) {
++    if (lxy_tmm_valid) {
++      visible = 0;
++    }
++  }
++
+   if (visible == priv->is_showing)
+     return;
+   priv->is_showing = visible;
+diff --git a/src/backends/native/meta-seat-impl.c b/src/backends/native/meta-seat-impl.c
+index 921eef0..5268c41 100644
+--- a/src/backends/native/meta-seat-impl.c
++++ b/src/backends/native/meta-seat-impl.c
+@@ -764,6 +764,12 @@ update_device_coords_in_impl (MetaSeatImpl       *seat_impl,
+   g_rw_lock_writer_unlock (&seat_impl->state_lock);
+ }
+ 
++// Global variables for "touch move mouse".
++extern int lxy_tmm_mode;
++extern int lxy_tmm_valid;
++extern float lxy_tmm_x;
++extern float lxy_tmm_y;
++
+ void
+ meta_seat_impl_notify_relative_motion_in_impl (MetaSeatImpl       *seat_impl,
+                                                ClutterInputDevice *input_device,
+@@ -805,6 +811,14 @@ meta_seat_impl_notify_relative_motion_in_impl (MetaSeatImpl       *seat_impl,
+                          cur_y + dy,
+                          &x, &y);
+ 
++  if (lxy_tmm_mode == 2 || lxy_tmm_mode == 3) {
++    if (lxy_tmm_valid) {
++      lxy_tmm_valid = 0;
++      x = lxy_tmm_x;
++      y = lxy_tmm_y;
++    }
++  }
++
+   modifiers =
+     xkb_state_serialize_mods (seat_impl->xkb, XKB_STATE_MODS_EFFECTIVE) |
+     seat_impl->button_state;
+diff --git a/src/wayland/meta-wayland-touch.c b/src/wayland/meta-wayland-touch.c
+index b3c3017..4fa3823 100644
+--- a/src/wayland/meta-wayland-touch.c
++++ b/src/wayland/meta-wayland-touch.c
+@@ -338,6 +338,19 @@ handle_touch_update (MetaWaylandTouch   *touch,
+     }
+ }
+ 
++// Global variables for "touch move mouse".
++// Modes:
++//  0 = disable
++//  1 = warp_pointer
++//  2 = change coords computation later
++//  3 = mode 2 and delay set_pointer_visible
++int lxy_tmm_mode = 3;
++// When mode = 2 or 3, whether x and y are valid.
++int lxy_tmm_valid = 0;
++// When mode = 2 or 3, coordinates to move to.
++float lxy_tmm_x = 0;
++float lxy_tmm_y = 0;
++
+ static void
+ handle_touch_end (MetaWaylandTouch   *touch,
+                   const ClutterEvent *event)
+@@ -347,6 +360,33 @@ handle_touch_end (MetaWaylandTouch   *touch,
+   struct wl_resource *resource;
+   struct wl_list *l;
+ 
++  if (lxy_tmm_mode) {
++    gfloat x = 0, y = 0;
++    //x = event->touch.x; y = event->touch.y;
++    clutter_event_get_coords(event, &x, &y);
++    switch (lxy_tmm_mode) {
++    case 1:
++      {
++        ClutterBackend *b = clutter_get_default_backend();
++        if (b) {
++          ClutterSeat *seat = clutter_backend_get_default_seat(b);
++          if (seat) {
++            clutter_seat_warp_pointer(seat, (int)x, (int)y);
++          }
++        }
++      }
++      break;
++    case 2: /* fallthrough */
++    case 3:
++      lxy_tmm_valid = 1;
++      lxy_tmm_x = x;
++      lxy_tmm_y = y;
++      break;
++    default:
++      break;
++    }
++  }
++
+   sequence = clutter_event_get_event_sequence (event);
+   touch_info = touch_get_info (touch, sequence, FALSE);
+ 

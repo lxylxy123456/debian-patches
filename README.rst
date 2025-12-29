@@ -104,3 +104,16 @@ See also https://github.com/lxylxy123456/gedit-plugin-git
 .. _gedit-plugin-git_48.1-2: https://github.com/lxylxy123456/debian-patches/tree/gedit-plugin-git_48.1-2
 .. _75aeb537: https://github.com/lxylxy123456/debian-patches/commit/75aeb537775561bf355572e27ec1d639ba70366a
 
+
+libmutter-16-0: implement touch move mouse in Wayland
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++--------+----------------+---------+--------------------------+-----------------------+
+| Debian | Package        | Version | Branch                   | Diff                  |
++========+================+=========+==========================+=======================+
+|   13   | libmutter-16-0 | 48.4-2  | `libmutter-16-0_48.4-2`_ | `ce8c8c2d..19645f5c`_ |
++--------+----------------+---------+--------------------------+-----------------------+
+
+.. _libmutter-16-0_48.4-2: https://github.com/lxylxy123456/debian-patches/tree/libmutter-16-0_48.4-2
+.. _ce8c8c2d..19645f5c: https://github.com/lxylxy123456/debian-patches/compare/ce8c8c2db37960ad2c78d97369af530598aeaf72..19645f5c27da1ccaf9b60c1c01fd49931b726a21
+
