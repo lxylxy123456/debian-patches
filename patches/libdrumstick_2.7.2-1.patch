@@ -1,0 +1,27 @@
+diff --git a/library/widgets/pianoscene.cpp b/library/widgets/pianoscene.cpp
+index 12ed00b..de62977 100644
+--- a/library/widgets/pianoscene.cpp
++++ b/library/widgets/pianoscene.cpp
+@@ -236,7 +236,8 @@ public:
+ };
+ 
+ const int KEYWIDTH = 180;
+-const int KEYHEIGHT = 720;
++//const int KEYHEIGHT = 720;
++const int KEYHEIGHT = 1227.273;
+ 
+ static qreal sceneWidth(int keys) {
+     return KEYWIDTH * qCeil( keys * 7.0 / 12.0 );
+@@ -283,8 +284,10 @@ PianoScene::PianoScene ( const int baseOctave,
+             lbl = new KeyLabel(key);
+             lbl->setDefaultTextColor(d->m_foregroundPalette.getColor(0));
+         } else {
+-            x = (ocs + qFloor((j-adj) / 2.0)) * KEYWIDTH + KEYWIDTH * 0.6 + 1;
+-            key = new PianoKey( QRectF( x, 0, KEYWIDTH * 0.8 - 1, KEYHEIGHT * 0.6 ), true, i );
++            //x = (ocs + qFloor((j-adj) / 2.0)) * KEYWIDTH + KEYWIDTH * 0.6 + 1;
++            x = (ocs + qFloor((j-adj) / 2.0)) * KEYWIDTH + KEYWIDTH * 0.75 + 1;
++            //key = new PianoKey( QRectF( x, 0, KEYWIDTH * 0.8 - 1, KEYHEIGHT * 0.6 ), true, i );
++            key = new PianoKey( QRectF( x, 0, KEYWIDTH * 0.5 - 1, KEYHEIGHT * 0.633 ), true, i );
+             key->setZValue( 1 );
+             lbl = new KeyLabel(key);
+             lbl->setDefaultTextColor(d->m_foregroundPalette.getColor(1));
