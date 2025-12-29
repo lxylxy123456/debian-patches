@@ -7,7 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
-    - run: |
+    - name: check
+      run: |
         git pull
         ./check-patch-files.sh
 
