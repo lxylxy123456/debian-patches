@@ -1,0 +1,14 @@
+name: Check patch files
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - name: apt
+      run: |
+        git pull
+        ./check-patch-files.sh
+
