@@ -1,9 +1,21 @@
 #!/bin/bash
 set -xeo pipefail
 
-for i in patches/*.patch; do
-	branch="${i##patches/}"
-	branch="${branch%%.patch}"
-	git diff "$branch^" "$branch" | diff - "$i"
-done
+check () {
+	git diff "$1" "$2" | diff - "patches/$3.patch"
+	git rev-parse "origin/$3" | diff - <(echo "$2")
+}
+
+check 28fb800de968a8c382506f845557aeed1660a4cf fe3cbdd84933e7341b8d00ac1cba664d37850ab2 gnome-terminal-3.46.8
+check 5e7982a15a01d4d8557de3b644b76f161c806ce4 d7134765c43dee1fa7d5344adbc5e5073c711d98 gnome-terminal_3.56.2-2
+
+check be7e8775af11c352a5a408b949885b6490b79c79 bbd0faaf3c8317c46be1e058fc69317de4070a2c libvte-2.91-0_0.70.6-2_deb12u1
+check ad7b8b26cff490c8322fc9a37fa5f252d6233982 8482f4cc69f79656c8e6f213ab068123d615d372 libvte-2.91-0_0.80.1-1
+check 1b499c9fe60bb30f1dfd5ab5a12b5b297ce22866 53248a69677d05d7600d61ccaabaeebe610eea50 vte2.91-0.70.3
+check 4993fe32fe4e4d3c2d4e313a1c9e3c02b241eaae 4b71d300f504d8bc3d41803e8626f98217df5764 vte2.91-0.70.6
+
+check bf552448a69f98034f5a26a8afdc95594baeb451 1d038c11c7769e81db31ba59956a9b615f29ff67 libdrumstick_2.10.0-1
+check 0ae70fc518ab945509f74216379ad819d2f9870f e0497cde2b5694f669c5fe837d811fbc31b8c605 libdrumstick_2.7.2-1
+
+check 4b825dc642cb6eb9a060e54bf8d69288fbee4904 75aeb537775561bf355572e27ec1d639ba70366a gedit-plugin-git_48.1-2
 
