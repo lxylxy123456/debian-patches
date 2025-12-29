@@ -764,6 +764,12 @@ update_device_coords_in_impl (MetaSeatImpl       *seat_impl,
   g_rw_lock_writer_unlock (&seat_impl->state_lock);
 }
 
+// Global variables for "touch move mouse".
+extern int lxy_tmm_mode;
+extern int lxy_tmm_valid;
+extern float lxy_tmm_x;
+extern float lxy_tmm_y;
+
 void
 meta_seat_impl_notify_relative_motion_in_impl (MetaSeatImpl       *seat_impl,
                                                ClutterInputDevice *input_device,
@@ -804,6 +810,14 @@ meta_seat_impl_notify_relative_motion_in_impl (MetaSeatImpl       *seat_impl,
                          cur_x + dx,
                          cur_y + dy,
                          &x, &y);
+
+  if (lxy_tmm_mode == 2 || lxy_tmm_mode == 3) {
+    if (lxy_tmm_valid) {
+      lxy_tmm_valid = 0;
+      x = lxy_tmm_x;
+      y = lxy_tmm_y;
+    }
+  }
 
   modifiers =
     xkb_state_serialize_mods (seat_impl->xkb, XKB_STATE_MODS_EFFECTIVE) |

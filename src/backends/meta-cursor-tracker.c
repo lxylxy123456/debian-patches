@@ -545,6 +545,10 @@ meta_cursor_tracker_get_pointer_visible (MetaCursorTracker *tracker)
   return priv->is_showing;
 }
 
+// Global variables for "touch move mouse".
+extern int lxy_tmm_mode;
+extern int lxy_tmm_valid;
+
 void
 meta_cursor_tracker_set_pointer_visible (MetaCursorTracker *tracker,
                                          gboolean           visible)
@@ -555,6 +559,12 @@ meta_cursor_tracker_set_pointer_visible (MetaCursorTracker *tracker,
   ClutterBackend *clutter_backend =
     meta_backend_get_clutter_backend (backend);
   ClutterSeat *seat = clutter_backend_get_default_seat (clutter_backend);
+
+  if (lxy_tmm_mode == 3) {
+    if (lxy_tmm_valid) {
+      visible = 0;
+    }
+  }
 
   if (visible == priv->is_showing)
     return;

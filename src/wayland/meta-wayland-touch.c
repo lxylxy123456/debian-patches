@@ -338,6 +338,19 @@ handle_touch_update (MetaWaylandTouch   *touch,
     }
 }
 
+// Global variables for "touch move mouse".
+// Modes:
+//  0 = disable
+//  1 = warp_pointer
+//  2 = change coords computation later
+//  3 = mode 2 and delay set_pointer_visible
+int lxy_tmm_mode = 3;
+// When mode = 2 or 3, whether x and y are valid.
+int lxy_tmm_valid = 0;
+// When mode = 2 or 3, coordinates to move to.
+float lxy_tmm_x = 0;
+float lxy_tmm_y = 0;
+
 static void
 handle_touch_end (MetaWaylandTouch   *touch,
                   const ClutterEvent *event)
@@ -346,6 +359,33 @@ handle_touch_end (MetaWaylandTouch   *touch,
   ClutterEventSequence *sequence;
   struct wl_resource *resource;
   struct wl_list *l;
+
+  if (lxy_tmm_mode) {
+    gfloat x = 0, y = 0;
+    //x = event->touch.x; y = event->touch.y;
+    clutter_event_get_coords(event, &x, &y);
+    switch (lxy_tmm_mode) {
+    case 1:
+      {
+        ClutterBackend *b = clutter_get_default_backend();
+        if (b) {
+          ClutterSeat *seat = clutter_backend_get_default_seat(b);
+          if (seat) {
+            clutter_seat_warp_pointer(seat, (int)x, (int)y);
+          }
+        }
+      }
+      break;
+    case 2: /* fallthrough */
+    case 3:
+      lxy_tmm_valid = 1;
+      lxy_tmm_x = x;
+      lxy_tmm_y = y;
+      break;
+    default:
+      break;
+    }
+  }
 
   sequence = clutter_event_get_event_sequence (event);
   touch_info = touch_get_info (touch, sequence, FALSE);
