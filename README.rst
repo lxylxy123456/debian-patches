@@ -104,7 +104,6 @@ See also https://github.com/lxylxy123456/gedit-plugin-git
 .. _gedit-plugin-git_48.1-2: https://github.com/lxylxy123456/debian-patches/tree/gedit-plugin-git_48.1-2
 .. _75aeb537: https://github.com/lxylxy123456/debian-patches/commit/75aeb537775561bf355572e27ec1d639ba70366a
 
-
 libmutter-16-0: implement touch move mouse in Wayland
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -116,4 +115,16 @@ libmutter-16-0: implement touch move mouse in Wayland
 
 .. _libmutter-16-0_48.4-2: https://github.com/lxylxy123456/debian-patches/tree/libmutter-16-0_48.4-2
 .. _ce8c8c2d..19645f5c: https://github.com/lxylxy123456/debian-patches/compare/ce8c8c2db37960ad2c78d97369af530598aeaf72..19645f5c27da1ccaf9b60c1c01fd49931b726a21
+
+qt6-wayland: fix bug of multi-touch does not release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++--------+----------------------+---------+----------------------+-----------------------+
+| Debian | Package              | Version | Branch               | Diff                  |
++========+======================+=========+======================+=======================+
+|   13   | libqt6waylandclient6 | 6.8.2   | `qt6-wayland_6.8.2`_ | `ec6ecd65..af493274`_ |
++--------+----------------------+---------+----------------------+-----------------------+
+
+.. _qt6-wayland_6.8.2: https://github.com/lxylxy123456/debian-patches/tree/qt6-wayland_6.8.2
+.. _ec6ecd65..af493274: https://github.com/lxylxy123456/debian-patches/compare/ec6ecd65103cd5fec42b638bf152978e29f552f3..af4932749c92dfbe160a0bb8d10b47bfee1669b8
 
