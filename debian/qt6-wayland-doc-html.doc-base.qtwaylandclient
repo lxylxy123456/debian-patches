@@ -1,0 +1,9 @@
+Document: qt6-waylandclient-manual
+Title: Qt 6 Wayland Client
+Author: The Qt Company Ltd
+Abstract: This is the HTML documentation for Qt 6 Wayland Client
+Section: Programming/C++
+
+Format: HTML
+Index: /usr/share/doc/qt6-wayland-doc-html/html/qtwaylandclient/qtwaylandclient-index.html
+Files: /usr/share/doc/qt6-wayland-doc-html/html/qtwaylandclient/*.html

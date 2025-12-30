@@ -1,0 +1,11 @@
+usr/share/qt6/doc/qtwaylandclient/*.html
+usr/share/qt6/doc/qtwaylandclient/images/
+usr/share/qt6/doc/qtwaylandclient/qtwaylandclient.index
+usr/share/qt6/doc/qtwaylandclient/qtwaylandclient.qhp
+usr/share/qt6/doc/qtwaylandclient/style/
+usr/share/qt6/doc/qtwaylandcompositor/*.html
+usr/share/qt6/doc/qtwaylandcompositor/examples-manifest.xml
+usr/share/qt6/doc/qtwaylandcompositor/images
+usr/share/qt6/doc/qtwaylandcompositor/qtwaylandcompositor.index
+usr/share/qt6/doc/qtwaylandcompositor/qtwaylandcompositor.qhp
+usr/share/qt6/doc/qtwaylandcompositor/style
