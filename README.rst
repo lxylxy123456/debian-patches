@@ -107,6 +107,8 @@ See also https://github.com/lxylxy123456/gedit-plugin-git
 libmutter-16-0: implement touch move mouse in Wayland
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Demo: <https://www.youtube.com/shorts/8iK9Uqn2SsQ>
+
 +--------+----------------+---------+--------------------------+-----------------------+
 | Debian | Package        | Version | Branch                   | Diff                  |
 +========+================+=========+==========================+=======================+
