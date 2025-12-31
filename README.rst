@@ -107,7 +107,7 @@ See also https://github.com/lxylxy123456/gedit-plugin-git
 libmutter-16-0: implement touch move mouse in Wayland
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Demo: <https://www.youtube.com/shorts/8iK9Uqn2SsQ>
+Demo: https://www.youtube.com/shorts/8iK9Uqn2SsQ
 
 +--------+----------------+---------+--------------------------+-----------------------+
 | Debian | Package        | Version | Branch                   | Diff                  |
@@ -120,6 +120,10 @@ Demo: <https://www.youtube.com/shorts/8iK9Uqn2SsQ>
 
 qt6-wayland: fix bug of multi-touch does not release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Bug report: https://gist.github.com/lxylxy123456/7a6b36419831c2479d2d59a6efe6949d
+
+Demo: https://youtube.com/shorts/U-gIEVWHG-U
 
 +--------+----------------------+---------+----------------------+-----------------------+
 | Debian | Package              | Version | Branch               | Diff                  |
