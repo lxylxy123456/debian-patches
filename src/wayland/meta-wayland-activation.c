@@ -29,6 +29,8 @@
 
 #include "xdg-activation-v1-server-protocol.h"
 
+#include <string.h>
+
 typedef struct _MetaXdgActivationToken MetaXdgActivationToken;
 
 struct _MetaWaylandActivation
@@ -323,6 +325,10 @@ startup_sequence_is_recent (MetaDisplay         *display,
   return seq_timestamp_ms >= last_user_time_ms;
 }
 
+// Global variables for "activate gedit on wayland".
+int lxy_gedit_enable = 1;
+char lxy_gedit_name[32] = "gedit";
+
 static gboolean
 maybe_activate (MetaWaylandActivation *activation,
                 MetaWindow            *window,
@@ -353,7 +359,9 @@ maybe_activate (MetaWaylandActivation *activation,
     return TRUE;
 
   if ((token && token_can_activate (token)) ||
-      (!token && startup_sequence_is_recent (display, sequence)))
+      (!token && startup_sequence_is_recent (display, sequence)) ||
+      (lxy_gedit_enable &&
+       strncmp(lxy_gedit_name, window->res_name, sizeof(lxy_gedit_name)) == 0))
     {
       uint32_t timestamp;
       int32_t workspace_idx;
