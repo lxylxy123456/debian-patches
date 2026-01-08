@@ -104,19 +104,21 @@ See also https://github.com/lxylxy123456/gedit-plugin-git
 .. _gedit-plugin-git_48.1-2: https://github.com/lxylxy123456/debian-patches/tree/gedit-plugin-git_48.1-2
 .. _75aeb537: https://github.com/lxylxy123456/debian-patches/commit/75aeb537775561bf355572e27ec1d639ba70366a
 
-libmutter-16-0: implement touch move mouse in Wayland
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+libmutter-16-0: implement touch move mouse in Wayland, etc.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Demo: https://www.youtube.com/shorts/8iK9Uqn2SsQ
+* Implement touch move mouse in Wayland
+	* Demo: https://www.youtube.com/shorts/8iK9Uqn2SsQ
+* Implement activate gedit on Wayland
 
 +--------+----------------+---------+--------------------------+-----------------------+
 | Debian | Package        | Version | Branch                   | Diff                  |
 +========+================+=========+==========================+=======================+
-|   13   | libmutter-16-0 | 48.4-2  | `libmutter-16-0_48.4-2`_ | `1af84d54..9c6c1009`_ |
+|   13   | libmutter-16-0 | 48.4-2  | `libmutter-16-0_48.4-2`_ | `1af84d54..76cc6bc6`_ |
 +--------+----------------+---------+--------------------------+-----------------------+
 
 .. _libmutter-16-0_48.4-2: https://github.com/lxylxy123456/debian-patches/tree/libmutter-16-0_48.4-2
-.. _1af84d54..9c6c1009: https://github.com/lxylxy123456/debian-patches/compare/1af84d543e05dcfb174edfacb462db7c4d12a0b8..9c6c1009e39990c3d048fd5839b642a93278e988
+.. _1af84d54..76cc6bc6: https://github.com/lxylxy123456/debian-patches/compare/1af84d543e05dcfb174edfacb462db7c4d12a0b8..76cc6bc6318588db1a8635d40b34f32119d518bc
 
 qt6-wayland: fix bug of multi-touch does not release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

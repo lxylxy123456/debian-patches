@@ -58,6 +58,41 @@ index 921eef0..5268c41 100644
    modifiers =
      xkb_state_serialize_mods (seat_impl->xkb, XKB_STATE_MODS_EFFECTIVE) |
      seat_impl->button_state;
+diff --git a/src/wayland/meta-wayland-activation.c b/src/wayland/meta-wayland-activation.c
+index 4caf1f9..8ca8d2b 100644
+--- a/src/wayland/meta-wayland-activation.c
++++ b/src/wayland/meta-wayland-activation.c
+@@ -29,6 +29,8 @@
+ 
+ #include "xdg-activation-v1-server-protocol.h"
+ 
++#include <string.h>
++
+ typedef struct _MetaXdgActivationToken MetaXdgActivationToken;
+ 
+ struct _MetaWaylandActivation
+@@ -323,6 +325,10 @@ startup_sequence_is_recent (MetaDisplay         *display,
+   return seq_timestamp_ms >= last_user_time_ms;
+ }
+ 
++// Global variables for "activate gedit on wayland".
++int lxy_gedit_enable = 1;
++char lxy_gedit_name[32] = "gedit";
++
+ static gboolean
+ maybe_activate (MetaWaylandActivation *activation,
+                 MetaWindow            *window,
+@@ -353,7 +359,9 @@ maybe_activate (MetaWaylandActivation *activation,
+     return TRUE;
+ 
+   if ((token && token_can_activate (token)) ||
+-      (!token && startup_sequence_is_recent (display, sequence)))
++      (!token && startup_sequence_is_recent (display, sequence)) ||
++      (lxy_gedit_enable &&
++       strncmp(lxy_gedit_name, window->res_name, sizeof(lxy_gedit_name)) == 0))
+     {
+       uint32_t timestamp;
+       int32_t workspace_idx;
 diff --git a/src/wayland/meta-wayland-touch.c b/src/wayland/meta-wayland-touch.c
 index b3c3017..4fa3823 100644
 --- a/src/wayland/meta-wayland-touch.c
