@@ -112,11 +112,11 @@ Demo: https://www.youtube.com/shorts/8iK9Uqn2SsQ
 +--------+----------------+---------+--------------------------+-----------------------+
 | Debian | Package        | Version | Branch                   | Diff                  |
 +========+================+=========+==========================+=======================+
-|   13   | libmutter-16-0 | 48.4-2  | `libmutter-16-0_48.4-2`_ | `ce8c8c2d..19645f5c`_ |
+|   13   | libmutter-16-0 | 48.4-2  | `libmutter-16-0_48.4-2`_ | `1af84d54..9c6c1009`_ |
 +--------+----------------+---------+--------------------------+-----------------------+
 
 .. _libmutter-16-0_48.4-2: https://github.com/lxylxy123456/debian-patches/tree/libmutter-16-0_48.4-2
-.. _ce8c8c2d..19645f5c: https://github.com/lxylxy123456/debian-patches/compare/ce8c8c2db37960ad2c78d97369af530598aeaf72..19645f5c27da1ccaf9b60c1c01fd49931b726a21
+.. _1af84d54..9c6c1009: https://github.com/lxylxy123456/debian-patches/compare/1af84d543e05dcfb174edfacb462db7c4d12a0b8..9c6c1009e39990c3d048fd5839b642a93278e988
 
 qt6-wayland: fix bug of multi-touch does not release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
