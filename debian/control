@@ -1,0 +1,102 @@
+Source: gedit
+Section: gnome
+Priority: optional
+Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
+Uploaders: Amin Bandali <bandali@ubuntu.com>, Jeremy Bícha <jbicha@ubuntu.com>, Iain Lane <laney@debian.org>, Laurent Bigonville <bigon@debian.org>, Michael Biebl <biebl@debian.org>
+Build-Depends: appstream <!nocheck>,
+               debhelper-compat (= 13),
+               desktop-file-utils <!nocheck>,
+               dh-sequence-gir,
+               dh-sequence-gnome,
+               gsettings-desktop-schemas-dev,
+               gtk-doc-tools (>= 1.0),
+               itstool,
+               libatk1.0-doc,
+               libgirepository1.0-dev (>= 0.9.3),
+               libglib2.0-dev (>= 2.76),
+               libglib2.0-doc,
+               libgspell-1-dev (>= 1.0),
+               libgtk-3-dev (>= 3.22),
+               libgtk-3-doc,
+               libgedit-gtksourceview-dev,
+               libgedit-gtksourceview-300-doc,
+               libgedit-tepl-dev  (>= 6.12),
+               libpeas-dev (>= 1.14.1),
+               libpeas-doc,
+               libxml2-dev (>= 2.5.0),
+               libxml2-utils,
+               meson (>= 0.59),
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Vcs-Browser: https://salsa.debian.org/gnome-team/gedit
+Vcs-Git: https://salsa.debian.org/gnome-team/gedit.git
+Homepage: https://gedit-text-editor.org/
+
+Package: gedit
+Architecture: any
+Depends: gedit-common (<< ${gnome:NextVersion}),
+         gedit-common (>= ${gnome:Version}),
+         gsettings-desktop-schemas,
+         iso-codes,
+         ${gir:Depends},
+         ${misc:Depends},
+         ${shlibs:Depends}
+Recommends: yelp, zenity
+Breaks: gedit-plugin-text-size (<< 48)
+Replaces: gedit-plugin-text-size (<< 48)
+Suggests: gedit-plugins
+Description: popular text editor for the GNOME desktop environment
+ gedit is a text editor which supports most standard editor features,
+ extending this basic functionality with other features not usually
+ found in simple text editors. gedit is a graphical application which
+ supports editing multiple text files in one window (known sometimes as
+ tabs or MDI).
+ .
+ gedit fully supports international text through its use of the Unicode
+ UTF-8 encoding in edited files. Its core feature set includes syntax
+ highlighting of source code, auto indentation and printing and print preview
+ support.
+ .
+ gedit is also extensible through its plugin system, which currently
+ includes support for spell checking, comparing files, viewing CVS
+ ChangeLogs, and adjusting indentation levels.
+
+Package: gedit-common
+Architecture: all
+Depends: python3:any (>= 3.3.2-2~), ${misc:Depends}
+Recommends: gedit
+Description: popular text editor for the GNOME desktop environment (support files)
+ gedit is a text editor which supports most standard editor features,
+ extending this basic functionality with other features not usually
+ found in simple text editors.
+ .
+ This package contains gedit's architecture-independent support files.
+
+Package: gedit-dev
+Architecture: any
+Section: devel
+Depends: gedit (<< ${gnome:NextVersion}),
+         gedit (>= ${gnome:Version}),
+         libglib2.0-dev (>= 2.76),
+         libgtk-3-dev (>= 3.22),
+         libgedit-gtksourceview-dev,
+         libgedit-tepl-dev  (>= 6.12),
+         libpeas-dev (>= 1.14.1),
+         ${misc:Depends}
+Description: popular text editor for the GNOME desktop environment (dev files)
+ gedit is a text editor which supports most standard editor features,
+ extending this basic functionality with other features not usually
+ found in simple text editors. gedit is a graphical application which
+ supports editing multiple text files in one window (known sometimes as
+ tabs or MDI).
+ .
+ gedit fully supports international text through its use of the Unicode
+ UTF-8 encoding in edited files. Its core feature set includes syntax
+ highlighting of source code, auto indentation and printing and print preview
+ support.
+ .
+ gedit is also extensible through its plugin system, which currently
+ includes support for spell checking, comparing files, viewing CVS
+ ChangeLogs, and adjusting indentation levels.
+ .
+ This package is required to build plugins for gedit.

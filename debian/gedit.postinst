@@ -1,0 +1,26 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    configure)
+        # remove the gnome-text-editor alternative in the alternatives
+        # system now that gnome-text-editor is an actual, separate
+        # program, provided in the gnome-text-editor package
+        if update-alternatives --list gnome-text-editor >/dev/null 2>&1; then
+            update-alternatives --remove gnome-text-editor /usr/bin/gedit
+        fi
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+
+#DEBHELPER#
+
+exit 0
