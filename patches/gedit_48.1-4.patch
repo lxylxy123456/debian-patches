@@ -1,0 +1,33 @@
+diff --git a/gedit/gedit-documents-panel.c b/gedit/gedit-documents-panel.c
+index c41d224..fbb6bfa 100644
+--- a/gedit/gedit-documents-panel.c
++++ b/gedit/gedit-documents-panel.c
+@@ -124,6 +124,7 @@ struct _GeditDocumentsPanel
+ 	guint               row_placeholder_index;
+ 	guint               row_destination_index;
+ 	GtkWidget          *drag_document_row;
++	gint                lxy_drag_document_row_count;
+ 	gint                row_source_row_offset;
+ 	gint                document_row_height;
+ 	gint                drag_document_row_x;
+@@ -1307,7 +1308,11 @@ panel_on_motion_notify (GtkWidget      *widget,
+ 
+ 	if (!(event->state & GDK_BUTTON1_MASK))
+ 	{
+-		panel->drag_document_row = NULL;
++		if (panel->lxy_drag_document_row_count) {
++			panel->lxy_drag_document_row_count--;
++		} else {
++			panel->drag_document_row = NULL;
++		}
+ 
+ 		return FALSE;
+ 	}
+@@ -1472,6 +1477,7 @@ row_on_button_pressed (GtkWidget      *row_event_box,
+ 		{
+ 			/* memorize row and clicked position for possible drag'n drop */
+ 			panel->drag_document_row = row;
++			panel->lxy_drag_document_row_count = 1;
+ 			panel->drag_document_row_x = (gint)event->x;
+ 			panel->drag_document_row_y = (gint)event->y;
+ 

@@ -1,0 +1,24 @@
+diff --git a/gtk/gtkeventbox.c b/gtk/gtkeventbox.c
+index 288b5ff..03d1f35 100644
+--- a/gtk/gtkeventbox.c
++++ b/gtk/gtkeventbox.c
+@@ -386,6 +386,8 @@ gtk_event_box_set_above_child (GtkEventBox *event_box,
+     }
+ }
+ 
++int lxy_gtk_event_box_event_mask_touch = 1;
++
+ static void
+ gtk_event_box_realize (GtkWidget *widget)
+ {
+@@ -413,6 +415,10 @@ gtk_event_box_realize (GtkWidget *widget)
+                         | GDK_ENTER_NOTIFY_MASK
+                         | GDK_LEAVE_NOTIFY_MASK;
+ 
++  if (lxy_gtk_event_box_event_mask_touch) {
++    attributes.event_mask |= GDK_TOUCH_MASK;
++  }
++
+   priv = GTK_EVENT_BOX (widget)->priv;
+ 
+   visible_window = gtk_widget_get_has_window (widget);
