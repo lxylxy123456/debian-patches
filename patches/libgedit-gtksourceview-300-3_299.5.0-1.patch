@@ -1,3 +1,35 @@
+diff --git a/data/language-specs/default-language-specs/markdown.lang b/data/language-specs/default-language-specs/markdown.lang
+index 2ee8fbf..9a46d36 100644
+--- a/data/language-specs/default-language-specs/markdown.lang
++++ b/data/language-specs/default-language-specs/markdown.lang
+@@ -160,6 +160,11 @@
+       <match>(?&lt;!`)``[^`]+((`|`{3,})[^`]+)*``(?!`)</match>
+     </context>
+ 
++    <context id="3-backticks-code-span" class="no-spell-check" style-ref="code">
++      <start>^```.*$</start>
++      <end>^```$</end>
++    </context>
++
+     <!-- Example:
+          > Quoted text.
+          > Quoted text with `code span`.
+@@ -175,6 +180,7 @@
+         <context sub-pattern="1" where="start" style-ref="blockquote-marker"/>
+         <context ref="1-backtick-code-span"/>
+         <context ref="2-backticks-code-span"/>
++        <context ref="3-backticks-code-span"/>
+         <context ref="automatic-link"/>
+         <context ref="inline-link"/>
+         <context ref="reference-link"/>
+@@ -371,6 +377,7 @@
+         <context ref="code-block"/>
+         <context ref="1-backtick-code-span"/>
+         <context ref="2-backticks-code-span"/>
++        <context ref="3-backticks-code-span"/>
+         <context ref="blockquote"/>
+         <context ref="automatic-link"/>
+         <context ref="inline-link"/>
 diff --git a/data/language-specs/default-language-specs/yaml.lang b/data/language-specs/default-language-specs/yaml.lang
 index 99db2ca..cc65138 100644
 --- a/data/language-specs/default-language-specs/yaml.lang

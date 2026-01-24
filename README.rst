@@ -137,18 +137,20 @@ Demo: https://youtube.com/shorts/U-gIEVWHG-U
 .. _qt6-wayland_6.8.2: https://github.com/lxylxy123456/debian-patches/tree/qt6-wayland_6.8.2
 .. _ec6ecd65..af493274: https://github.com/lxylxy123456/debian-patches/compare/ec6ecd65103cd5fec42b638bf152978e29f552f3..af4932749c92dfbe160a0bb8d10b47bfee1669b8
 
-libgedit-gtksourceview-300-3: fix yaml highlighting problems
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+libgedit-gtksourceview-300-3: fix highlighting problems
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Backport work by Christian Hergert and Роман Донченко:
-https://gitlab.gnome.org/World/gedit/libgedit-gtksourceview/-/merge_requests/1
+* Backport work by Christian Hergert and Роман Донченко, fix yaml highlighting:
+  https://gitlab.gnome.org/World/gedit/libgedit-gtksourceview/-/merge_requests/1
+* Backport work by Ole Christian Eidheim, fix markdown highlighting:
+  https://gitlab.gnome.org/World/gedit/libgedit-gtksourceview/-/merge_requests/2
 
 +--------+-----------------------------------+-----------+-------------------------------------------+-----------------------+
 | Debian | Package                           | Version   | Branch                                    | Diff                  |
 +========+===================================+===========+===========================================+=======================+
-|   13   | libgedit-gtksourceview-300-common | 299.5.0-1 | `libgedit-gtksourceview-300-3_299.5.0-1`_ | `e8753402..7d36eced`_ |
+|   13   | libgedit-gtksourceview-300-common | 299.5.0-1 | `libgedit-gtksourceview-300-3_299.5.0-1`_ | `e8753402..df33b810`_ |
 +--------+-----------------------------------+-----------+-------------------------------------------+-----------------------+
 
 .. _libgedit-gtksourceview-300-3_299.5.0-1: https://github.com/lxylxy123456/debian-patches/tree/libgedit-gtksourceview-300-3_299.5.0-1
-.. _e8753402..7d36eced: https://github.com/lxylxy123456/debian-patches/compare/e8753402fe37b84e1faf1ade06198f2385736786..7d36eced6332e1a7e39cac1c6525df15e9787686
+.. _e8753402..df33b810: https://github.com/lxylxy123456/debian-patches/compare/e8753402fe37b84e1faf1ade06198f2385736786..df33b8101be585eed2337905c38f5d7975714160
 
