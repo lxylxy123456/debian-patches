@@ -132,13 +132,13 @@ Bug report: https://qt-project.atlassian.net/browse/QTBUG-143205 (`old version`_
 
 Demo: https://youtube.com/shorts/U-gIEVWHG-U
 
-+--------+----------------------+---------+----------------------+-----------------------+
-| Debian | Package              | Version | Branch               | Diff                  |
-+========+======================+=========+======================+=======================+
-|   13   | libqt6waylandclient6 | 6.8.2   | `qt6-wayland_6.8.2`_ | `ec6ecd65..af493274`_ |
-+--------+----------------------+---------+----------------------+-----------------------+
++--------+----------------------+---------+------------------------+-----------------------+
+| Debian | Package              | Version | Branch                 | Diff                  |
++========+======================+=========+========================+=======================+
+|   13   | libqt6waylandclient6 | 6.8.2-4 | `qt6-wayland_6.8.2-4`_ | `ec6ecd65..af493274`_ |
++--------+----------------------+---------+------------------------+-----------------------+
 
-.. _qt6-wayland_6.8.2: https://github.com/lxylxy123456/debian-patches/tree/qt6-wayland_6.8.2
+.. _qt6-wayland_6.8.2-4: https://github.com/lxylxy123456/debian-patches/tree/qt6-wayland_6.8.2-4
 .. _ec6ecd65..af493274: https://github.com/lxylxy123456/debian-patches/compare/ec6ecd65103cd5fec42b638bf152978e29f552f3..af4932749c92dfbe160a0bb8d10b47bfee1669b8
 
 libgedit-gtksourceview-300-3: fix highlighting problems
