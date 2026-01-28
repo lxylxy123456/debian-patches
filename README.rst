@@ -110,12 +110,16 @@ libmutter-16-0: implement touch move mouse in Wayland, etc.
 * Implement touch move mouse in Wayland (demo: https://www.youtube.com/shorts/8iK9Uqn2SsQ)
 * Implement activate gedit on Wayland
 
-+--------+----------------+---------+--------------------------+-----------------------+
-| Debian | Package        | Version | Branch                   | Diff                  |
-+========+================+=========+==========================+=======================+
-|   13   | libmutter-16-0 | 48.4-2  | `libmutter-16-0_48.4-2`_ | `1af84d54..76cc6bc6`_ |
-+--------+----------------+---------+--------------------------+-----------------------+
++--------+----------------+----------------+----------------------------------+-----------------------+
+| Debian | Package        | Version        | Branch                           | Diff                  |
++========+================+================+==================================+=======================+
+|   13   | libmutter-16-0 | 48.7-0+deb13u1 | `libmutter-16-0_48.7-0_deb13u1`_ | `1af84d54..76cc6bc6`_ |
+|        |                +----------------+----------------------------------+-----------------------+
+|        |                | 48.4-2         | `libmutter-16-0_48.4-2`_         | `1af84d54..76cc6bc6`_ |
++--------+----------------+----------------+----------------------------------+-----------------------+
 
+.. _libmutter-16-0_48.7-0_deb13u1: https://github.com/lxylxy123456/debian-patches/tree/libmutter-16-0_48.7-0_deb13u1
+.. _cee3c2f1..e28b138b: https://github.com/lxylxy123456/debian-patches/compare/cee3c2f1c9fce62a57651deb10128732b3e2c589..e28b138b31f6baf182a57646c1b40998116fa33e
 .. _libmutter-16-0_48.4-2: https://github.com/lxylxy123456/debian-patches/tree/libmutter-16-0_48.4-2
 .. _1af84d54..76cc6bc6: https://github.com/lxylxy123456/debian-patches/compare/1af84d543e05dcfb174edfacb462db7c4d12a0b8..76cc6bc6318588db1a8635d40b34f32119d518bc
 
