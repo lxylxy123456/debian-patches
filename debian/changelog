@@ -1,3 +1,74 @@
+mutter (48.7-0+deb13u1) trixie; urgency=medium
+
+  * Team upload
+  * New upstream stable release 48.6
+    - Fix drag-and-drop actions not working reliably in some X11 clients
+      (mutter#4288 upstream)
+    - Fix delayed frame presentation with the commit-timing-v1 Wayland
+      extension (mutter#4258 upstream)
+    - Avoid a crash if a GNOME Shell extension tries to delete the same
+      window more than once (mutter#4319 upstream)
+    - Avoid a crash in the Wayland session if a non-GNOME desktop
+      environment previously set the cursor size in GSettings to zero;
+      recover by resetting it to the default, 24px (mutter#3933 upstream)
+    - Fix crashes if a GNOME Shell extension uses certain Cogl pipeline
+      APIs (mutter#4352 upstream)
+    - Save the intended size for tiled windows when saving session state
+      (mutter!4697 upstream)
+    - Avoid potential crashes when saving the state of a window with no
+      valid toplevel state (mutter!4697 upstream)
+    - Remove dead code detected by static analysis (mutter!4697 upstream)
+  * New upstream stable release 48.7
+    - For fullscreen Wayland windows, if the window has a size limit
+      smaller than the screen, add black borders around the limited size
+      and log a warning
+      (mutter!4587 upstream)
+    - Avoid a crash when activating a notification that has no app info
+      (mutter!4705 upstream)
+    - Avoid a potential crash when checking whether a client owns a window
+      that is disappearing
+      (mutter!4643 upstream)
+    - Test suite enhancements
+
+  [ Simon McVittie ]
+  * d/libmutter-test-16.symbols:
+    Update for new ABI added by the test suite enhancements
+    (nothing in Debian outside the mutter source package is likely to
+    use this, except possibly a future version of gnome-shell)
+  * Revert "d/gbp/conf, d/control: Switch packaging branch for forky"
+  * Add a mention of #1121170 to the previous changelog entry
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 09 Dec 2025 11:38:47 +0000
+
+mutter (48.5-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream stable release
+    - Fix X11 drag-and-drop with a graphics tablet stylus, which would
+      previously freeze the application
+      (mutter#3914 upstream)
+    - Fix a file descriptor leak that would cause a crash after a long
+      screencast
+      (mutter#4251 upstream, Closes: #1121170)
+    - Fix crash with an assertion failure when screencasting from an
+      Apple aarch64 system
+      (mutter#4224 upstream)
+    - Fix detection of the "Privacy Screen" feature on hardware that
+      supports it
+      (mutter#4259 upstream)
+    - Update the EIS viewport used for input capture when a virtual monitor
+      stream is resized
+      (mutter!4622 upstream)
+    - Fix a crash when combining the screen time limit's greyscale effect,
+      the screen magnifier and the screenshot tool
+      (mutter#8634 upstream)
+    - Fix a crash when unplugging a docking station with two monitors
+      (mutter#4262 upstream)
+    - Translation update: th
+  * d/gbp/conf, d/control: Switch packaging branch for forky
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 18 Sep 2025 10:16:31 +0100
+
 mutter (48.4-2) unstable; urgency=medium
 
   * Team upload
