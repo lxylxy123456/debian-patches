@@ -161,6 +161,8 @@ libgedit-gtksourceview-300-3: fix highlighting problems
 libgtk-3-0t64: fix touch screen support EventBox
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Bug report: https://gitlab.gnome.org/GNOME/gtk/-/issues/8008
+
 See also: https://github.com/lxylxy123456/2026-gedit-documents-panel-bug-fixing-challenge/
 
 +--------+---------------+-----------+----------------------------+-----------------------+
