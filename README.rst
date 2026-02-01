@@ -158,3 +158,31 @@ libgedit-gtksourceview-300-3: fix highlighting problems
 .. _libgedit-gtksourceview-300-3_299.5.0-1: https://github.com/lxylxy123456/debian-patches/tree/libgedit-gtksourceview-300-3_299.5.0-1
 .. _e8753402..df33b810: https://github.com/lxylxy123456/debian-patches/compare/e8753402fe37b84e1faf1ade06198f2385736786..df33b8101be585eed2337905c38f5d7975714160
 
+libgtk-3-0t64: fix touch screen support EventBox
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+See also: https://github.com/lxylxy123456/2026-gedit-documents-panel-bug-fixing-challenge/
+
++--------+---------------+-----------+----------------------------+-----------------------+
+| Debian | Package       | Version   | Branch                     | Diff                  |
++========+===============+===========+============================+=======================+
+|   13   | libgtk-3-0t64 | 3.24.49-3 | `libgtk-3-0t64_3.24.49-3`_ | `8a4e3600..5a225c6a`_ |
++--------+---------------+-----------+----------------------------+-----------------------+
+
+.. _libgtk-3-0t64_3.24.49-3: https://github.com/lxylxy123456/debian-patches/tree/libgtk-3-0t64_3.24.49-3
+.. _8a4e3600..5a225c6a: https://github.com/lxylxy123456/debian-patches/compare/8a4e3600d770e5fd93fe8d8b08badbd0e82c08eb..5a225c6ac3b518bfa9ddf5c4e12bb4f13feb95c5
+
+gedit: fix touch screen support for documents panel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+See also: https://github.com/lxylxy123456/2026-gedit-documents-panel-bug-fixing-challenge/
+
++--------+---------+---------+-----------------+-----------------------+
+| Debian | Package | Version | Branch          | Diff                  |
++========+=========+=========+=================+=======================+
+|   13   | gedit   | 48.1-4  | `gedit_48.1-4`_ | `a690205d..2f90e103`_ |
++--------+---------+---------+-----------------+-----------------------+
+
+.. _gedit_48.1-4: https://github.com/lxylxy123456/debian-patches/tree/gedit_48.1-4
+.. _a690205d..2f90e103: https://github.com/lxylxy123456/debian-patches/compare/a690205d1b6da17a5b3e61dc2f6cee573dff6a10..2f90e10332bbfcf70b7a0f2122769cd2fed3f3d7
+
