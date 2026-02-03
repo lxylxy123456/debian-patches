@@ -1549,6 +1549,7 @@ row_create (GtkWidget *row)
 	event_box = gtk_event_box_new ();
 	generic_row->box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
 
+	gtk_widget_set_events (event_box, GDK_TOUCH_MASK);
 	gtk_container_add (GTK_CONTAINER (event_box), generic_row->box);
 
 	generic_row->label = gtk_label_new (NULL);
