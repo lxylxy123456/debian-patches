@@ -163,6 +163,8 @@ libgtk-3-0t64: fix touch screen support EventBox
 
 Bug report: https://gitlab.gnome.org/GNOME/gtk/-/issues/8008
 
+MR: https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/9418
+
 See also: https://github.com/lxylxy123456/2026-gedit-documents-panel-bug-fixing-challenge/
 
 +--------+---------------+-----------+----------------------------+-----------------------+
@@ -177,14 +179,18 @@ See also: https://github.com/lxylxy123456/2026-gedit-documents-panel-bug-fixing-
 gedit: fix touch screen support for documents panel
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Bug report: https://gitlab.gnome.org/World/gedit/gedit/-/issues/637
+
+MR: https://gitlab.gnome.org/World/gedit/gedit/-/merge_requests/179
+
 See also: https://github.com/lxylxy123456/2026-gedit-documents-panel-bug-fixing-challenge/
 
 +--------+---------+---------+-----------------+-----------------------+
 | Debian | Package | Version | Branch          | Diff                  |
 +========+=========+=========+=================+=======================+
-|   13   | gedit   | 48.1-4  | `gedit_48.1-4`_ | `a690205d..2f90e103`_ |
+|   13   | gedit   | 48.1-4  | `gedit_48.1-4`_ | `a690205d..12514170`_ |
 +--------+---------+---------+-----------------+-----------------------+
 
 .. _gedit_48.1-4: https://github.com/lxylxy123456/debian-patches/tree/gedit_48.1-4
-.. _a690205d..2f90e103: https://github.com/lxylxy123456/debian-patches/compare/a690205d1b6da17a5b3e61dc2f6cee573dff6a10..2f90e10332bbfcf70b7a0f2122769cd2fed3f3d7
+.. _a690205d..12514170: https://github.com/lxylxy123456/debian-patches/compare/a690205d1b6da17a5b3e61dc2f6cee573dff6a10..12514170ee028f49d3b0314895141841999ed850
 
