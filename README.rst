@@ -152,11 +152,11 @@ libgedit-gtksourceview-300-3: fix highlighting problems
 +--------+-----------------------------------+-----------+-------------------------------------------+-----------------------+
 | Debian | Package                           | Version   | Branch                                    | Diff                  |
 +========+===================================+===========+===========================================+=======================+
-|   13   | libgedit-gtksourceview-300-common | 299.5.0-1 | `libgedit-gtksourceview-300-3_299.5.0-1`_ | `e8753402..df33b810`_ |
+|   13   | libgedit-gtksourceview-300-common | 299.5.0-1 | `libgedit-gtksourceview-300-3_299.5.0-1`_ | `e8753402..f995c01c`_ |
 +--------+-----------------------------------+-----------+-------------------------------------------+-----------------------+
 
 .. _libgedit-gtksourceview-300-3_299.5.0-1: https://github.com/lxylxy123456/debian-patches/tree/libgedit-gtksourceview-300-3_299.5.0-1
-.. _e8753402..df33b810: https://github.com/lxylxy123456/debian-patches/compare/e8753402fe37b84e1faf1ade06198f2385736786..df33b8101be585eed2337905c38f5d7975714160
+.. _e8753402..f995c01c: https://github.com/lxylxy123456/debian-patches/compare/e8753402fe37b84e1faf1ade06198f2385736786..f995c01cb37dd540c0e14ce78ab49aa7ac647405
 
 libgtk-3-0t64: fix touch screen support EventBox
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
