@@ -171,6 +171,8 @@ libgtk-3-0t64: fix touch screen problems
 
 * Fix touch screen drag right after using the mouse
 
+  * Bug report: https://gitlab.gnome.org/GNOME/gtk/-/issues/8065
+
 +--------+---------------+-----------+----------------------------+-----------------------+
 | Debian | Package       | Version   | Branch                     | Diff                  |
 +========+===============+===========+============================+=======================+
