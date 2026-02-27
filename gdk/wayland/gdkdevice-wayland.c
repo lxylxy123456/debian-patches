@@ -1804,7 +1804,7 @@ pointer_handle_button (void              *data,
   if (!seat->pointer_info.focus)
     return;
 
-  _gdk_wayland_display_update_serial (display, serial);
+  _gdk_wayland_display_update_serial_press (display, serial);
 
   switch (button)
     {
@@ -2603,7 +2603,7 @@ touch_handle_down (void              *data,
   GdkWaylandTouchData *touch;
   GdkEvent *event;
 
-  _gdk_wayland_display_update_serial (display, serial);
+  _gdk_wayland_display_update_serial_press (display, serial);
 
   if (!wl_surface)
     return;
@@ -3917,7 +3917,7 @@ tablet_tool_handle_down (void                      *data,
   if (!tablet || !tablet->pointer_info.focus)
     return;
 
-  _gdk_wayland_display_update_serial (display_wayland, serial);
+  _gdk_wayland_display_update_serial_press (display_wayland, serial);
   tablet->pointer_info.press_serial = serial;
 
   tablet_create_button_event_frame (tablet, GDK_BUTTON_PRESS, GDK_BUTTON_PRIMARY);

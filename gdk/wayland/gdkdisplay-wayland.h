@@ -77,6 +77,7 @@ struct _GdkWaylandDisplay
 
   /* Most recent serial */
   guint32 serial;
+  guint32 serial_press;
 
   uint32_t xdg_wm_base_id;
   int xdg_wm_base_version;

@@ -405,7 +405,7 @@ gdk_wayland_drag_context_manage_dnd (GdkDragContext *context,
                              context_wayland->data_source,
                              gdk_wayland_window_get_wl_surface (toplevel),
 			     context_wayland->dnd_surface,
-                             _gdk_wayland_display_get_serial (display_wayland));
+                             _gdk_wayland_display_get_serial_press (display_wayland));
 
   gdk_seat_ungrab (gdk_device_get_seat (device));
 

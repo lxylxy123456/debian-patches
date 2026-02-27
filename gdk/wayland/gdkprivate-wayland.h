@@ -239,8 +239,11 @@ void _gdk_wayland_window_set_grab_seat (GdkWindow      *window,
                                         GdkSeat        *seat);
 
 guint32 _gdk_wayland_display_get_serial (GdkWaylandDisplay *display_wayland);
+guint32 _gdk_wayland_display_get_serial_press (GdkWaylandDisplay *display_wayland);
 void _gdk_wayland_display_update_serial (GdkWaylandDisplay *display_wayland,
                                          guint32            serial);
+void _gdk_wayland_display_update_serial_press (GdkWaylandDisplay *display_wayland,
+                                               guint32            serial);
 
 cairo_surface_t * _gdk_wayland_display_create_shm_surface (GdkWaylandDisplay *display,
                                                            int                width,

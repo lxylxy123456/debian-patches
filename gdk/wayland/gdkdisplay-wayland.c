@@ -1246,11 +1246,29 @@ _gdk_wayland_display_get_serial (GdkWaylandDisplay *display_wayland)
   return display_wayland->serial;
 }
 
+guint32
+_gdk_wayland_display_get_serial_press (GdkWaylandDisplay *display_wayland)
+{
+  if (display_wayland->serial_press) {
+    return display_wayland->serial_press;
+  } else {
+    return display_wayland->serial;
+  }
+}
+
 void
 _gdk_wayland_display_update_serial (GdkWaylandDisplay *display_wayland,
                                     guint32            serial)
 {
   display_wayland->serial = serial;
+}
+
+void
+_gdk_wayland_display_update_serial_press (GdkWaylandDisplay *display_wayland,
+                                          guint32            serial)
+{
+  display_wayland->serial = serial;
+  display_wayland->serial_press = serial;
 }
 
 /**
