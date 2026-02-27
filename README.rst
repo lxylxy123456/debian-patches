@@ -148,6 +148,8 @@ libgedit-gtksourceview-300-3: fix highlighting problems
   https://gitlab.gnome.org/World/gedit/libgedit-gtksourceview/-/merge_requests/1
 * Backport work by Ole Christian Eidheim, fix markdown highlighting:
   https://gitlab.gnome.org/World/gedit/libgedit-gtksourceview/-/merge_requests/2
+* Backport work by Jeffery To, fix html highlighting:
+  https://gitlab.gnome.org/World/gedit/libgedit-gtksourceview/-/merge_requests/3
 
 +--------+-----------------------------------+-----------+-------------------------------------------+-----------------------+
 | Debian | Package                           | Version   | Branch                                    | Diff                  |
@@ -158,23 +160,25 @@ libgedit-gtksourceview-300-3: fix highlighting problems
 .. _libgedit-gtksourceview-300-3_299.5.0-1: https://github.com/lxylxy123456/debian-patches/tree/libgedit-gtksourceview-300-3_299.5.0-1
 .. _e8753402..f995c01c: https://github.com/lxylxy123456/debian-patches/compare/e8753402fe37b84e1faf1ade06198f2385736786..f995c01cb37dd540c0e14ce78ab49aa7ac647405
 
-libgtk-3-0t64: fix touch screen support EventBox
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+libgtk-3-0t64: fix touch screen problems
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Bug report: https://gitlab.gnome.org/GNOME/gtk/-/issues/8008
+* Fix touch screen support EventBox
 
-MR: https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/9418
+	* Bug report: https://gitlab.gnome.org/GNOME/gtk/-/issues/8008
+	* MR: https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/9418
+	* See also: https://github.com/lxylxy123456/2026-gedit-documents-panel-bug-fixing-challenge/
 
-See also: https://github.com/lxylxy123456/2026-gedit-documents-panel-bug-fixing-challenge/
+* Fix touch screen drag right after using the mouse
 
 +--------+---------------+-----------+----------------------------+-----------------------+
 | Debian | Package       | Version   | Branch                     | Diff                  |
 +========+===============+===========+============================+=======================+
-|   13   | libgtk-3-0t64 | 3.24.49-3 | `libgtk-3-0t64_3.24.49-3`_ | `8a4e3600..5a225c6a`_ |
+|   13   | libgtk-3-0t64 | 3.24.49-3 | `libgtk-3-0t64_3.24.49-3`_ | `8a4e3600..15887f45`_ |
 +--------+---------------+-----------+----------------------------+-----------------------+
 
 .. _libgtk-3-0t64_3.24.49-3: https://github.com/lxylxy123456/debian-patches/tree/libgtk-3-0t64_3.24.49-3
-.. _8a4e3600..5a225c6a: https://github.com/lxylxy123456/debian-patches/compare/8a4e3600d770e5fd93fe8d8b08badbd0e82c08eb..5a225c6ac3b518bfa9ddf5c4e12bb4f13feb95c5
+.. _8a4e3600..15887f45: https://github.com/lxylxy123456/debian-patches/compare/8a4e3600d770e5fd93fe8d8b08badbd0e82c08eb..15887f4583dabac2e062d98da596ea60729bbf9b
 
 gedit: fix touch screen support for documents panel
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

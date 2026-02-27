@@ -1,3 +1,111 @@
+diff --git a/gdk/wayland/gdkdevice-wayland.c b/gdk/wayland/gdkdevice-wayland.c
+index 0b0c966..b7b4f58 100644
+--- a/gdk/wayland/gdkdevice-wayland.c
++++ b/gdk/wayland/gdkdevice-wayland.c
+@@ -1804,7 +1804,7 @@ pointer_handle_button (void              *data,
+   if (!seat->pointer_info.focus)
+     return;
+ 
+-  _gdk_wayland_display_update_serial (display, serial);
++  _gdk_wayland_display_update_serial_press (display, serial);
+ 
+   switch (button)
+     {
+@@ -2603,7 +2603,7 @@ touch_handle_down (void              *data,
+   GdkWaylandTouchData *touch;
+   GdkEvent *event;
+ 
+-  _gdk_wayland_display_update_serial (display, serial);
++  _gdk_wayland_display_update_serial_press (display, serial);
+ 
+   if (!wl_surface)
+     return;
+@@ -3917,7 +3917,7 @@ tablet_tool_handle_down (void                      *data,
+   if (!tablet || !tablet->pointer_info.focus)
+     return;
+ 
+-  _gdk_wayland_display_update_serial (display_wayland, serial);
++  _gdk_wayland_display_update_serial_press (display_wayland, serial);
+   tablet->pointer_info.press_serial = serial;
+ 
+   tablet_create_button_event_frame (tablet, GDK_BUTTON_PRESS, GDK_BUTTON_PRIMARY);
+diff --git a/gdk/wayland/gdkdisplay-wayland.c b/gdk/wayland/gdkdisplay-wayland.c
+index 7da4ed0..6b475d8 100644
+--- a/gdk/wayland/gdkdisplay-wayland.c
++++ b/gdk/wayland/gdkdisplay-wayland.c
+@@ -1246,6 +1246,16 @@ _gdk_wayland_display_get_serial (GdkWaylandDisplay *display_wayland)
+   return display_wayland->serial;
+ }
+ 
++guint32
++_gdk_wayland_display_get_serial_press (GdkWaylandDisplay *display_wayland)
++{
++  if (display_wayland->serial_press) {
++    return display_wayland->serial_press;
++  } else {
++    return display_wayland->serial;
++  }
++}
++
+ void
+ _gdk_wayland_display_update_serial (GdkWaylandDisplay *display_wayland,
+                                     guint32            serial)
+@@ -1253,6 +1263,14 @@ _gdk_wayland_display_update_serial (GdkWaylandDisplay *display_wayland,
+   display_wayland->serial = serial;
+ }
+ 
++void
++_gdk_wayland_display_update_serial_press (GdkWaylandDisplay *display_wayland,
++                                          guint32            serial)
++{
++  display_wayland->serial = serial;
++  display_wayland->serial_press = serial;
++}
++
+ /**
+  * gdk_wayland_display_get_wl_display:
+  * @display: (type GdkWaylandDisplay): a #GdkDisplay
+diff --git a/gdk/wayland/gdkdisplay-wayland.h b/gdk/wayland/gdkdisplay-wayland.h
+index d379d1c..c310cbe 100644
+--- a/gdk/wayland/gdkdisplay-wayland.h
++++ b/gdk/wayland/gdkdisplay-wayland.h
+@@ -77,6 +77,7 @@ struct _GdkWaylandDisplay
+ 
+   /* Most recent serial */
+   guint32 serial;
++  guint32 serial_press;
+ 
+   uint32_t xdg_wm_base_id;
+   int xdg_wm_base_version;
+diff --git a/gdk/wayland/gdkdnd-wayland.c b/gdk/wayland/gdkdnd-wayland.c
+index 86b159c..c85fd70 100644
+--- a/gdk/wayland/gdkdnd-wayland.c
++++ b/gdk/wayland/gdkdnd-wayland.c
+@@ -405,7 +405,7 @@ gdk_wayland_drag_context_manage_dnd (GdkDragContext *context,
+                              context_wayland->data_source,
+                              gdk_wayland_window_get_wl_surface (toplevel),
+ 			     context_wayland->dnd_surface,
+-                             _gdk_wayland_display_get_serial (display_wayland));
++                             _gdk_wayland_display_get_serial_press (display_wayland));
+ 
+   gdk_seat_ungrab (gdk_device_get_seat (device));
+ 
+diff --git a/gdk/wayland/gdkprivate-wayland.h b/gdk/wayland/gdkprivate-wayland.h
+index 1916a12..56a272a 100644
+--- a/gdk/wayland/gdkprivate-wayland.h
++++ b/gdk/wayland/gdkprivate-wayland.h
+@@ -239,8 +239,11 @@ void _gdk_wayland_window_set_grab_seat (GdkWindow      *window,
+                                         GdkSeat        *seat);
+ 
+ guint32 _gdk_wayland_display_get_serial (GdkWaylandDisplay *display_wayland);
++guint32 _gdk_wayland_display_get_serial_press (GdkWaylandDisplay *display_wayland);
+ void _gdk_wayland_display_update_serial (GdkWaylandDisplay *display_wayland,
+                                          guint32            serial);
++void _gdk_wayland_display_update_serial_press (GdkWaylandDisplay *display_wayland,
++                                               guint32            serial);
+ 
+ cairo_surface_t * _gdk_wayland_display_create_shm_surface (GdkWaylandDisplay *display,
+                                                            int                width,
 diff --git a/gtk/gtkeventbox.c b/gtk/gtkeventbox.c
 index 288b5ff..03d1f35 100644
 --- a/gtk/gtkeventbox.c
