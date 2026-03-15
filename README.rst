@@ -200,3 +200,15 @@ See also: https://github.com/lxylxy123456/2026-gedit-documents-panel-bug-fixing-
 .. _gedit_48.1-4: https://github.com/lxylxy123456/debian-patches/tree/gedit_48.1-4
 .. _a690205d..12514170: https://github.com/lxylxy123456/debian-patches/compare/a690205d1b6da17a5b3e61dc2f6cee573dff6a10..12514170ee028f49d3b0314895141841999ed850
 
+vlc-plugin-qt: fix row height in Metadata tab
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++--------+---------------+-------------------+-----------------------------------+-----------------------+
+| Debian | Package       | Version           | Branch                            | Diff                  |
++========+===============+===================+===================================+=======================+
+|   13   | vlc-plugin-qt | 3.0.23-0+deb13u1  | `vlc-plugin-qt_3.0.23-0_deb13u1`_ | `f6d4961c..b43b9015`_ |
++--------+---------------+-------------------+-----------------------------------+-----------------------+
+
+.. _vlc-plugin-qt_3.0.23-0_deb13u1: https://github.com/lxylxy123456/debian-patches/tree/vlc-plugin-qt_3.0.23-0_deb13u1
+.. _f6d4961c..b43b9015: https://github.com/lxylxy123456/debian-patches/compare/f6d4961c3edbbc449a681c7e4fc8216e382fff3c..b43b901576ac19ebe62e1103741dfb482acc9015
+
