@@ -1,5 +1,5 @@
 diff --git a/src/fonts-pangocairo.cc b/src/fonts-pangocairo.cc
-index 1479ebb..6e01c80 100644
+index 1479ebb14b339ba89ee8504ca1bba03f28d669b1..6e01c802937b90320104e49b385fcdb943184a61 100644
 --- a/src/fonts-pangocairo.cc
 +++ b/src/fonts-pangocairo.cc
 @@ -220,7 +220,7 @@ FontInfo::FontInfo(vte::glib::RefPtr<PangoContext> context)

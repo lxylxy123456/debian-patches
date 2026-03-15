@@ -1,5 +1,5 @@
 diff --git a/data/language-specs/default-language-specs/html.lang b/data/language-specs/default-language-specs/html.lang
-index 5db6baa..30145c2 100644
+index 5db6baaa1ed2fcf2f7aafc3352cf21b52f38f00a..30145c2a9c3e31990edd0f9f1ad53815e5df4252 100644
 --- a/data/language-specs/default-language-specs/html.lang
 +++ b/data/language-specs/default-language-specs/html.lang
 @@ -6,6 +6,7 @@
@@ -311,7 +311,7 @@ index 5db6baa..30145c2 100644
          <context sub-pattern="0" where="start" style-ref="tag"/>
          <context sub-pattern="0" where="end" style-ref="tag"/>
 diff --git a/data/language-specs/default-language-specs/markdown.lang b/data/language-specs/default-language-specs/markdown.lang
-index 2ee8fbf..9a46d36 100644
+index 2ee8fbf404232d4249cb983dd1833629699c34e3..9a46d3659101bdba1cb763a3d832ecf29e40ed72 100644
 --- a/data/language-specs/default-language-specs/markdown.lang
 +++ b/data/language-specs/default-language-specs/markdown.lang
 @@ -160,6 +160,11 @@
@@ -343,7 +343,7 @@ index 2ee8fbf..9a46d36 100644
          <context ref="automatic-link"/>
          <context ref="inline-link"/>
 diff --git a/data/language-specs/default-language-specs/yaml.lang b/data/language-specs/default-language-specs/yaml.lang
-index 99db2ca..cc65138 100644
+index 99db2cae73b10a3d919c95b40b27e6fce2f7f08f..cc65138b96d74cff3ab755838ba360100ba5ac6c 100644
 --- a/data/language-specs/default-language-specs/yaml.lang
 +++ b/data/language-specs/default-language-specs/yaml.lang
 @@ -21,14 +21,17 @@

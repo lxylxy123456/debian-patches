@@ -1,5 +1,5 @@
 diff --git a/modules/gui/qt/components/info_panels.cpp b/modules/gui/qt/components/info_panels.cpp
-index 8ea0fd4f..cbcdb227 100644
+index 8ea0fd4f7323ca8ae39a5a4d48bc893a55c34271..cbcdb22784868c6ccc1358452ec18bece664ec33 100644
 --- a/modules/gui/qt/components/info_panels.cpp
 +++ b/modules/gui/qt/components/info_panels.cpp
 @@ -398,6 +398,22 @@ ExtraMetaPanel::ExtraMetaPanel( QWidget *parent ) : QWidget( parent )
@@ -26,7 +26,7 @@ index 8ea0fd4f..cbcdb227 100644
   * Update the Extra Metadata from p_meta->i_extras
   **/
 diff --git a/modules/gui/qt/components/info_panels.hpp b/modules/gui/qt/components/info_panels.hpp
-index c5549f70..a4ebca8a 100644
+index c5549f70c88f5a4c27ed9969fd059d368687767b..a4ebca8aa3428e843789c6e6b0670baeffcbe226 100644
 --- a/modules/gui/qt/components/info_panels.hpp
 +++ b/modules/gui/qt/components/info_panels.hpp
 @@ -100,6 +100,9 @@ class ExtraMetaPanel: public QWidget

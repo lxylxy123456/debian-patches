@@ -1,5 +1,5 @@
 diff --git a/src/backends/meta-cursor-tracker.c b/src/backends/meta-cursor-tracker.c
-index a67fc87..2059991 100644
+index a67fc873f905c9523559c634338479c36ff0fa52..205999138f9d831c17bf159b3ff663160e6e037c 100644
 --- a/src/backends/meta-cursor-tracker.c
 +++ b/src/backends/meta-cursor-tracker.c
 @@ -545,6 +545,10 @@ meta_cursor_tracker_get_pointer_visible (MetaCursorTracker *tracker)
@@ -27,7 +27,7 @@ index a67fc87..2059991 100644
      return;
    priv->is_showing = visible;
 diff --git a/src/backends/native/meta-seat-impl.c b/src/backends/native/meta-seat-impl.c
-index df5ad83..fe1df59 100644
+index df5ad833fdccd22c19004c076e5c72a81a0bc487..fe1df59093a9cb08f3de0ba3b0bcb9614244c6ef 100644
 --- a/src/backends/native/meta-seat-impl.c
 +++ b/src/backends/native/meta-seat-impl.c
 @@ -764,6 +764,12 @@ update_device_coords_in_impl (MetaSeatImpl       *seat_impl,
@@ -59,7 +59,7 @@ index df5ad83..fe1df59 100644
  
    dx_constrained = x - cur_x;
 diff --git a/src/wayland/meta-wayland-activation.c b/src/wayland/meta-wayland-activation.c
-index 4caf1f9..8ca8d2b 100644
+index 4caf1f91b18aad4899bf9b0a14925c9fce0695ec..8ca8d2b3b6a87b33e5fff8dd755755d5b06c68e8 100644
 --- a/src/wayland/meta-wayland-activation.c
 +++ b/src/wayland/meta-wayland-activation.c
 @@ -29,6 +29,8 @@
@@ -94,7 +94,7 @@ index 4caf1f9..8ca8d2b 100644
        uint32_t timestamp;
        int32_t workspace_idx;
 diff --git a/src/wayland/meta-wayland-touch.c b/src/wayland/meta-wayland-touch.c
-index b3c3017..4fa3823 100644
+index b3c30178183b1686f567b59abbdffaab3177dcfc..4fa3823a89782567de705b81715f2dda9f119ec4 100644
 --- a/src/wayland/meta-wayland-touch.c
 +++ b/src/wayland/meta-wayland-touch.c
 @@ -338,6 +338,19 @@ handle_touch_update (MetaWaylandTouch   *touch,

@@ -2,7 +2,7 @@
 set -xeo pipefail
 
 check () {
-	git diff "$1" "$2" | diff - "patches/$3.patch"
+	git diff --full-index "$1" "$2" | diff - "patches/$3.patch"
 	git rev-parse "origin/$3" | diff - <(echo "$2")
 }
 

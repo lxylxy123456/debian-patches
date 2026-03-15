@@ -1,5 +1,5 @@
 diff --git a/library/widgets/pianoscene.cpp b/library/widgets/pianoscene.cpp
-index bef133e..73faf9f 100644
+index bef133e954adc68a1f7cf03f28ba3f4d18a29996..73faf9f261eccf9ea06f2635f5a1e639d807db16 100644
 --- a/library/widgets/pianoscene.cpp
 +++ b/library/widgets/pianoscene.cpp
 @@ -236,7 +236,8 @@ public:
