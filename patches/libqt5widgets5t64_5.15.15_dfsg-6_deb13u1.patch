@@ -1,0 +1,49 @@
+diff --git a/debian/libqt5gui5t64.install b/debian/libqt5gui5t64.install
+index 552c9e6c..f72468e3 100755
+--- a/debian/libqt5gui5t64.install
++++ b/debian/libqt5gui5t64.install
+@@ -17,6 +17,7 @@
+ [linux-any] usr/lib/${DEB_HOST_MULTIARCH}/qt5/plugins/platforms/libqminimalegl.so
+ usr/lib/${DEB_HOST_MULTIARCH}/libQt5Gui.so.*
+ usr/lib/${DEB_HOST_MULTIARCH}/libQt5XcbQpa.so.*
++usr/lib/${DEB_HOST_MULTIARCH}/qt5/plugins/generic/libqtslibplugin.so
+ usr/lib/${DEB_HOST_MULTIARCH}/qt5/plugins/generic/libqtuiotouchplugin.so
+ usr/lib/${DEB_HOST_MULTIARCH}/qt5/plugins/imageformats/libqgif.so
+ usr/lib/${DEB_HOST_MULTIARCH}/qt5/plugins/imageformats/libqico.so
+diff --git a/debian/qtbase5-dev.install b/debian/qtbase5-dev.install
+index 6a49da85..c48e59ec 100755
+--- a/debian/qtbase5-dev.install
++++ b/debian/qtbase5-dev.install
+@@ -1691,6 +1691,7 @@ usr/lib/${DEB_HOST_MULTIARCH}/cmake/Qt5Gui/Qt5Gui_QIbusPlatformInputContextPlugi
+ usr/lib/${DEB_HOST_MULTIARCH}/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake
+ usr/lib/${DEB_HOST_MULTIARCH}/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake
+ usr/lib/${DEB_HOST_MULTIARCH}/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake
++usr/lib/${DEB_HOST_MULTIARCH}/cmake/Qt5Gui/Qt5Gui_QTsLibPlugin.cmake
+ usr/lib/${DEB_HOST_MULTIARCH}/cmake/Qt5Gui/Qt5Gui_QTuioTouchPlugin.cmake
+ usr/lib/${DEB_HOST_MULTIARCH}/cmake/Qt5Gui/Qt5Gui_QVncIntegrationPlugin.cmake
+ usr/lib/${DEB_HOST_MULTIARCH}/cmake/Qt5Gui/Qt5Gui_QXcbEglIntegrationPlugin.cmake
+diff --git a/src/widgets/styles/qcommonstyle.cpp b/src/widgets/styles/qcommonstyle.cpp
+index a79c3300..ceb3346d 100644
+--- a/src/widgets/styles/qcommonstyle.cpp
++++ b/src/widgets/styles/qcommonstyle.cpp
+@@ -872,14 +872,14 @@ static QSizeF viewItemTextLayout(QTextLayout &textLayout, int lineWidth, int max
+             break;
+         line.setLineWidth(lineWidth);
+         line.setPosition(QPointF(0, height));
+-        height += line.height();
+-        widthUsed = qMax(widthUsed, line.naturalTextWidth());
+-        // we assume that the height of the next line is the same as the current one
+-        if (maxHeight > 0 && lastVisibleLine && height + line.height() > maxHeight) {
+-            const QTextLine nextLine = textLayout.createLine();
+-            *lastVisibleLine = nextLine.isValid() ? i : -1;
++        // Assume that when maxHeight > 0, we can draw extra things.
++        // To preserve behavior, ignore overflow when i == 0.
++        if (i && maxHeight > 0 && lastVisibleLine && height + line.height() > maxHeight) {
++            *lastVisibleLine = i - 1;
+             break;
+         }
++        height += line.height();
++        widthUsed = qMax(widthUsed, line.naturalTextWidth());
+         ++i;
+     }
+     textLayout.endLayout();

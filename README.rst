@@ -212,3 +212,17 @@ vlc-plugin-qt: fix row height in Metadata tab
 .. _vlc-plugin-qt_3.0.23-0_deb13u1: https://github.com/lxylxy123456/debian-patches/tree/vlc-plugin-qt_3.0.23-0_deb13u1
 .. _f6d4961c..b43b9015: https://github.com/lxylxy123456/debian-patches/compare/f6d4961c3edbbc449a681c7e4fc8216e382fff3c..b43b901576ac19ebe62e1103741dfb482acc9015
 
+libqt5widgets5t64: fix calculateElidedText when line height changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Bug report: https://qt-project.atlassian.net/browse/QTBUG-144987
+
++--------+-------------------+-------------------------+---------------------------------------------+-----------------------+
+| Debian | Package           | Version                 | Branch                                      | Diff                  |
++========+===================+=========================+=============================================+=======================+
+|   13   | libqt5widgets5t64 | 5.15.15+dfsg-6+deb13u1  | `libqt5widgets5t64_5.15.15_dfsg-6_deb13u1`_ | `a4eabe75..edc9d521`_ |
++--------+-------------------+-------------------------+---------------------------------------------+-----------------------+
+
+.. _libqt5widgets5t64_5.15.15_dfsg-6_deb13u1: https://github.com/lxylxy123456/debian-patches/tree/libqt5widgets5t64_5.15.15_dfsg-6_deb13u1
+.. _a4eabe75..edc9d521: https://github.com/lxylxy123456/debian-patches/compare/a4eabe7538f4067a5a3cbff99d5959f76127632b..edc9d52165d50ba36464626d1738d9d620d9740c
+
