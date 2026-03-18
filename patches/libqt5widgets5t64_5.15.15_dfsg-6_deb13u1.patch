@@ -1,5 +1,5 @@
 diff --git a/debian/libqt5gui5t64.install b/debian/libqt5gui5t64.install
-index 552c9e6c..f72468e3 100755
+index 552c9e6cbdeeec34e906cf98b96a5c9f4623baad..f72468e3cd2d6a210c5956425b3b97e42f55cd2d 100755
 --- a/debian/libqt5gui5t64.install
 +++ b/debian/libqt5gui5t64.install
 @@ -17,6 +17,7 @@
@@ -11,7 +11,7 @@ index 552c9e6c..f72468e3 100755
  usr/lib/${DEB_HOST_MULTIARCH}/qt5/plugins/imageformats/libqgif.so
  usr/lib/${DEB_HOST_MULTIARCH}/qt5/plugins/imageformats/libqico.so
 diff --git a/debian/qtbase5-dev.install b/debian/qtbase5-dev.install
-index 6a49da85..c48e59ec 100755
+index 6a49da850684e1972e148b51e7391c40edd56eff..c48e59ece091e3fa4818a898f8b3ba3ba7b983c4 100755
 --- a/debian/qtbase5-dev.install
 +++ b/debian/qtbase5-dev.install
 @@ -1691,6 +1691,7 @@ usr/lib/${DEB_HOST_MULTIARCH}/cmake/Qt5Gui/Qt5Gui_QIbusPlatformInputContextPlugi
@@ -23,7 +23,7 @@ index 6a49da85..c48e59ec 100755
  usr/lib/${DEB_HOST_MULTIARCH}/cmake/Qt5Gui/Qt5Gui_QVncIntegrationPlugin.cmake
  usr/lib/${DEB_HOST_MULTIARCH}/cmake/Qt5Gui/Qt5Gui_QXcbEglIntegrationPlugin.cmake
 diff --git a/src/widgets/styles/qcommonstyle.cpp b/src/widgets/styles/qcommonstyle.cpp
-index a79c3300..ceb3346d 100644
+index a79c33005c6b3c8fb6180dfd5d8890b26b84fcf8..ceb3346d03f2c3239ee8422519b8ce5520429109 100644
 --- a/src/widgets/styles/qcommonstyle.cpp
 +++ b/src/widgets/styles/qcommonstyle.cpp
 @@ -872,14 +872,14 @@ static QSizeF viewItemTextLayout(QTextLayout &textLayout, int lineWidth, int max
