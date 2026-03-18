@@ -220,9 +220,9 @@ Bug report: https://qt-project.atlassian.net/browse/QTBUG-144987
 +--------+-------------------+-------------------------+---------------------------------------------+-----------------------+
 | Debian | Package           | Version                 | Branch                                      | Diff                  |
 +========+===================+=========================+=============================================+=======================+
-|   13   | libqt5widgets5t64 | 5.15.15+dfsg-6+deb13u1  | `libqt5widgets5t64_5.15.15_dfsg-6_deb13u1`_ | `a4eabe75..edc9d521`_ |
+|   13   | libqt5widgets5t64 | 5.15.15+dfsg-6+deb13u1  | `libqt5widgets5t64_5.15.15_dfsg-6_deb13u1`_ | `a4eabe75..84561a12`_ |
 +--------+-------------------+-------------------------+---------------------------------------------+-----------------------+
 
 .. _libqt5widgets5t64_5.15.15_dfsg-6_deb13u1: https://github.com/lxylxy123456/debian-patches/tree/libqt5widgets5t64_5.15.15_dfsg-6_deb13u1
-.. _a4eabe75..edc9d521: https://github.com/lxylxy123456/debian-patches/compare/a4eabe7538f4067a5a3cbff99d5959f76127632b..edc9d52165d50ba36464626d1738d9d620d9740c
+.. _a4eabe75..84561a12: https://github.com/lxylxy123456/debian-patches/compare/a4eabe7538f4067a5a3cbff99d5959f76127632b..84561a125fdbd58aa7806f1ff8aee28188da6a24
 
