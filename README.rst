@@ -203,6 +203,9 @@ See also: https://github.com/lxylxy123456/2026-gedit-documents-panel-bug-fixing-
 vlc-plugin-qt: fix row height in Metadata tab
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+* https://code.videolan.org/videolan/vlc/-/issues/29713
+* https://code.videolan.org/videolan/vlc/-/merge_requests/8787
+
 +--------+---------------+-------------------+-----------------------------------+-----------------------+
 | Debian | Package       | Version           | Branch                            | Diff                  |
 +========+===============+===================+===================================+=======================+
