@@ -298,6 +298,8 @@ data_offer_choose_action (MetaWaylandDataOffer *offer)
   return 1 << (ffs (available_actions) - 1);
 }
 
+int lxy_dnd_workaround = 1;
+
 void
 meta_wayland_data_offer_update_action (MetaWaylandDataOffer *offer)
 {
@@ -311,10 +313,10 @@ meta_wayland_data_offer_update_action (MetaWaylandDataOffer *offer)
   current_action = meta_wayland_data_source_get_current_action (source);
   action = data_offer_choose_action (offer);
 
-  if (current_action == action)
+  if (current_action != action)
+    meta_wayland_data_source_set_current_action (source, action);
+  else if (!action || !lxy_dnd_workaround)
     return;
-
-  meta_wayland_data_source_set_current_action (source, action);
 
   if (!meta_wayland_data_source_get_in_ask (source) &&
       wl_resource_get_version (offer->resource) >=
