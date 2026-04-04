@@ -93,6 +93,34 @@ index 4caf1f91b18aad4899bf9b0a14925c9fce0695ec..8ca8d2b3b6a87b33e5fff8dd755755d5
      {
        uint32_t timestamp;
        int32_t workspace_idx;
+diff --git a/src/wayland/meta-wayland-data-offer.c b/src/wayland/meta-wayland-data-offer.c
+index 7237ad95d7db81893280f1df4ef25cfbf294c4f7..487c32d99b35987dddd164763b76aaabcd914631 100644
+--- a/src/wayland/meta-wayland-data-offer.c
++++ b/src/wayland/meta-wayland-data-offer.c
+@@ -298,6 +298,8 @@ data_offer_choose_action (MetaWaylandDataOffer *offer)
+   return 1 << (ffs (available_actions) - 1);
+ }
+ 
++int lxy_dnd_workaround = 1;
++
+ void
+ meta_wayland_data_offer_update_action (MetaWaylandDataOffer *offer)
+ {
+@@ -311,11 +313,11 @@ meta_wayland_data_offer_update_action (MetaWaylandDataOffer *offer)
+   current_action = meta_wayland_data_source_get_current_action (source);
+   action = data_offer_choose_action (offer);
+ 
+-  if (current_action == action)
++  if (current_action != action)
++    meta_wayland_data_source_set_current_action (source, action);
++  else if (!action || !lxy_dnd_workaround)
+     return;
+ 
+-  meta_wayland_data_source_set_current_action (source, action);
+-
+   if (!meta_wayland_data_source_get_in_ask (source) &&
+       wl_resource_get_version (offer->resource) >=
+       WL_DATA_OFFER_ACTION_SINCE_VERSION)
 diff --git a/src/wayland/meta-wayland-touch.c b/src/wayland/meta-wayland-touch.c
 index b3c30178183b1686f567b59abbdffaab3177dcfc..4fa3823a89782567de705b81715f2dda9f119ec4 100644
 --- a/src/wayland/meta-wayland-touch.c
