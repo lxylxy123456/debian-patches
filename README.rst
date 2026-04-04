@@ -111,6 +111,8 @@ libmutter-16-0: implement touch move mouse in Wayland, etc.
 * Implement activate gedit on Wayland
 * Fix dnd "premature finish request"
 
+  * Bug report: https://gitlab.gnome.org/GNOME/mutter/-/issues/4710
+
 +--------+----------------+----------------+----------------------------------+-----------------------+
 | Debian | Package        | Version        | Branch                           | Diff                  |
 +========+================+================+==================================+=======================+
