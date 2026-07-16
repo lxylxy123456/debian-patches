@@ -9,7 +9,7 @@ jobs:
   build:
     strategy:
       matrix:
-        debian_version: [12, 13]
+        debian_version: [13]
     runs-on: ubuntu-latest
     container:
       image: debian:${{ matrix.debian_version }}
