@@ -1,0 +1,61 @@
+From d6a9799fc04e6ada5fd7fd7bbde14fb14981fc8b Mon Sep 17 00:00:00 2001
+From: Bernd Schubert <bschubert@ddn.com>
+Date: Tue, 15 Apr 2025 22:03:09 +0200
+Subject: [PATCH] Add container_of and ROUND_UP macros
+
+Needed by follow up commits. container_of is actually
+just moved/consolidated to util.h.
+
+Signed-off-by: Bernd Schubert <bschubert@ddn.com>
+(cherry picked from commit c5a032b3410d7225ac0355355faa63565a209943)
+---
+ lib/fuse.c          | 4 ----
+ lib/fuse_lowlevel.c | 4 ----
+ lib/util.h          | 6 ++++++
+ 3 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/lib/fuse.c b/lib/fuse.c
+index c0d00edbc..4964de20f 100644
+--- a/lib/fuse.c
++++ b/lib/fuse.c
+@@ -92,10 +92,6 @@ struct node_table {
+ 	size_t split;
+ };
+ 
+-#define container_of(ptr, type, member) ({                              \
+-			const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+-			(type *)( (char *)__mptr - offsetof(type,member) );})
+-
+ #define list_entry(ptr, type, member)           \
+ 	container_of(ptr, type, member)
+ 
+diff --git a/lib/fuse_lowlevel.c b/lib/fuse_lowlevel.c
+index 9ee88b160..cb046aae0 100644
+--- a/lib/fuse_lowlevel.c
++++ b/lib/fuse_lowlevel.c
+@@ -44,10 +44,6 @@
+ #define PARAM(inarg) (((char *)(inarg)) + sizeof(*(inarg)))
+ #define OFFSET_MAX 0x7fffffffffffffffLL
+ 
+-#define container_of(ptr, type, member) ({				\
+-			const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+-			(type *)( (char *)__mptr - offsetof(type,member) );})
+-
+ struct fuse_pollhandle {
+ 	uint64_t kh;
+ 	struct fuse_session *se;
+diff --git a/lib/util.h b/lib/util.h
+index 508fafb12..ed03ad40e 100644
+--- a/lib/util.h
++++ b/lib/util.h
+@@ -30,4 +30,10 @@ static inline uint64_t fuse_higher_32_bits(uint64_t nr)
+ #define FUSE_VAR_UNUSED(var) (__attribute__((unused)) var)
+ #endif
+ 
++#define container_of(ptr, type, member)                      \
++	({                                                   \
++		unsigned long __mptr = (unsigned long)(ptr); \
++		((type *)(__mptr - offsetof(type, member))); \
++	})
++
+ #endif

@@ -1,0 +1,354 @@
+fuse3 (3.17.2-3) unstable; urgency=medium
+
+  * Backport upstream fixes:
+    - fix the close_range ifdef,
+    - fix deadlock in truncate operation in memfs_ll.cc example. 
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Wed, 16 Jul 2025 17:27:21 +0000
+
+fuse3 (3.17.2-2) unstable; urgency=medium
+
+  [ Laszlo Boszormenyi (GCS) ]
+  * Backport upstream fixes (closes: #1101305):
+    - make conn->want/want_ext conversion non fatal,
+    - add container_of and ROUND_UP macros,
+    - conn->want conversion: fix fuse_apply_conn_info_opts() .
+  * Update symbols file (closes: #1105099).
+
+  [ Helmut Grohne <helmut@subdivi.de> ]
+  * Update -latomic architecture list (closes: #1105150).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Mon, 19 May 2025 20:39:08 +0200
+
+fuse3 (3.17.2-1) unstable; urgency=medium
+
+  * New upstream release:
+    - check if pthread_setname_np() exists before use it,
+    - fix example/memfs_ll rename deadlock error,
+    - signal handlers: Store fuse_session unconditionally.
+  * Backport upstream fixes:
+    - fix meson function tests,
+    - meson.build: make special_funcs check more reliable.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sun, 27 Apr 2025 08:10:01 +0200
+
+fuse3 (3.17.1+git250416-1) unstable; urgency=medium
+
+  * New git snapshot release:
+    - fixes "both 'want' and 'want_ext' are set" errors (closes: #1101305).
+  * Refer online versions of Free Software Foundation licences.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Wed, 16 Apr 2025 18:35:53 +0200
+
+fuse3 (3.17.1-1) unstable; urgency=medium
+
+  * New major upstream release:
+    - fixes want flag conversion (closes: #1101129).
+  * Update Standards-Version to 4.7.2 .
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Mon, 24 Mar 2025 14:12:08 +0100
+
+fuse3 (3.17.1~rc1-3) unstable; urgency=medium
+
+  * Backport upstream fix for mount: fix closing stdout/err and error logs.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Thu, 13 Mar 2025 15:30:01 +0100
+
+fuse3 (3.17.1~rc1-2) experimental; urgency=medium
+
+  * Link examples with atomic on armel, m68k and powerpc architectures.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sat, 22 Feb 2025 07:44:45 +0100
+
+fuse3 (3.17.1~rc1-1) experimental; urgency=medium
+
+  * New major upstream release candidate version.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Wed, 19 Feb 2025 17:29:04 +0100
+
+fuse3 (3.17.1~rc0-1) experimental; urgency=medium
+
+  * New major upstream release candidate version (closes: #1095239):
+    - fixes ABI breaks (closes: #1031802),
+    - fixes max threads value warning (closes: #1037410).
+  * Library transition from libfuse3-3 to libfuse3-4.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Fri, 14 Feb 2025 22:49:04 +0100
+
+fuse3 (3.14.0-10) unstable; urgency=medium
+
+  [ Helmut Grohne <helmut@subdivi.de> ]
+  * Upgrade Breaks for fuse to Conflicts to prevent accidental file loss
+    (DEP17, closes: #1082357).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sat, 21 Sep 2024 14:06:04 +0200
+
+fuse3 (3.14.0-9) unstable; urgency=medium
+
+  * Fix FTBFS due to the fuse transitional package.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sun, 15 Sep 2024 08:00:33 +0200
+
+fuse3 (3.14.0-8) unstable; urgency=medium
+
+  [ Jeremy Bícha <jeremy.bicha@canonical.com> ]
+  * Provide fuse transitional package for upgrade (closes: #918984, #927291,
+    #1074767, #1081537).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Fri, 13 Sep 2024 19:31:58 +0200
+
+fuse3 (3.14.0-7) unstable; urgency=medium
+
+  [ Guillem Jover ]
+  * Use canonical pathnames in initramfs hook (closes: #1079573).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sun, 25 Aug 2024 13:39:34 +0200
+
+fuse3 (3.14.0-6) unstable; urgency=medium
+
+  [ Helmut Grohne ]
+  * Move aliased files to /usr (DEP17) (closes: #1073058).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sun, 07 Jul 2024 07:17:03 +0200
+
+fuse3 (3.14.0-5) unstable; urgency=medium
+
+  * Fix 99-fuse3.rules path (closes: #1060067).
+  * Switch udev build dependency to systemd-dev (closes: #1060606).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Fri, 12 Jan 2024 16:46:21 +0100
+
+fuse3 (3.14.0-4) unstable; urgency=medium
+
+  * Backport upstream fixes:
+    - fix max_threads command line parameter propagation,
+    - fix memory leak in high level API.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Tue, 18 Apr 2023 23:07:15 +0200
+
+fuse3 (3.14.0-3) unstable; urgency=medium
+
+  [ Helge Deller <deller@gmx.de> ]
+  * Add the big-endian hppa platform to the disabled self-testing list
+    (closes: #1032187).
+
+  [ Laszlo Boszormenyi (GCS) ]
+  * Update fuse header name in examples.
+  * Fix Makefile for examples (closes: #1031544).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Fri, 17 Mar 2023 20:51:05 +0100
+
+fuse3 (3.14.0-2) unstable; urgency=medium
+
+  * Revert upgrade of fuse_kernel.h for not being upstreamed yet
+    (closes: #1031524).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sat, 18 Feb 2023 07:22:30 +0100
+
+fuse3 (3.14.0-1) unstable; urgency=medium
+
+  * New upstream release:
+    - fix header installation issue (closes: #1031455).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Fri, 17 Feb 2023 19:50:40 +0100
+
+fuse3 (3.13.1-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Fri, 10 Feb 2023 22:04:50 +0100
+
+fuse3 (3.13.0-2) unstable; urgency=medium
+
+  * Can't run self-testing on big-endian machines.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sun, 22 Jan 2023 08:17:08 +0100
+
+fuse3 (3.13.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Tue, 17 Jan 2023 19:11:25 +0100
+
+fuse3 (3.12.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update library symbols for this release.
+  * Update watch file.
+  * Update Lintian overrides.
+  * Update Standards-Version to 4.6.1 .
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sat, 22 Oct 2022 21:28:52 +0200
+
+fuse3 (3.11.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update Standards-Version to 4.6.0.1 .
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sat, 07 May 2022 16:30:30 +0200
+
+fuse3 (3.10.5-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Thu, 16 Sep 2021 17:41:27 +0200
+
+fuse3 (3.10.4-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Mon, 23 Aug 2021 22:05:34 +0200
+
+fuse3 (3.10.3-2) unstable; urgency=medium
+
+  * Do not try to alter cuse device permissions (closes: #947229, #989977).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sun, 20 Jun 2021 15:45:33 +0200
+
+fuse3 (3.10.3-1) unstable; urgency=medium
+
+  * New upstream release:
+    - fix returning d_ino and d_type by readdir(3) in non-plus mode,
+    - remove unused fuse_worker bufsize,
+    - fix typos.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Wed, 21 Apr 2021 14:34:39 +0200
+
+fuse3 (3.10.2-2) unstable; urgency=medium
+
+  * Mark libfuse3-dev as Multi-Arch same.
+
+  [ Matthias Klose <doko@ubuntu.com> ]
+  * Allow one to build without udeb package (closes: #983438).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Wed, 24 Feb 2021 23:28:30 +0100
+
+fuse3 (3.10.2-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Mon, 08 Feb 2021 21:21:32 +0100
+
+fuse3 (3.10.1-3) unstable; urgency=medium
+
+  * Update debhelper level to 13 .
+
+  [ Stephen Kitt <skitt@debian.org> ]
+  * Ignore "-o nonempty" instead of treating it as an error; the default
+    behaviour in fuse3 is equivalent to "-o nonempty". This allows
+    software expecting fuse2 semantics to work with fusermount3
+    (closes: #939767).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Fri, 29 Jan 2021 16:59:06 +0100
+
+fuse3 (3.10.1-2) unstable; urgency=medium
+
+  * Add upstream metadata.
+  * Update watch file.
+  * Update packaging bits.
+  * Update Standards-Version to 4.5.1 .
+
+  [ Laurent Bigonville <bigon@debian.org> ]
+  * Fix FTBFS on kFreeBSD (closes: #980213).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sat, 16 Jan 2021 10:34:25 +0100
+
+fuse3 (3.10.1-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Backport upstream fix:
+    - add exfat to whitelist.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Fri, 01 Jan 2021 15:32:48 +0100
+
+fuse3 (3.10.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sun, 11 Oct 2020 23:01:33 +0200
+
+fuse3 (3.9.3-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Thu, 20 Aug 2020 15:16:47 +0200
+
+fuse3 (3.9.2-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Use udev for Linux builds, specify udevrulesdir otherwise
+    (closes: #956579).
+
+  [ Laurent Bigonville <bigon@debian.org> ]
+  * Run tests form the correct directory and make them non fatal
+    (closes: #956592).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sat, 13 Jun 2020 14:54:36 +0200
+
+fuse3 (3.9.0-2) unstable; urgency=medium
+
+  * Don't explicitly remove fuse.conf on purge (closes: #953223).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sat, 07 Mar 2020 11:10:15 +0000
+
+fuse3 (3.9.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update Standards-Version to 4.5.0 .
+
+  [ Hideki Yamane <henrich@debian.org> ]
+  * Add version for Provides: fuse (closes: #943896).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Thu, 13 Feb 2020 16:06:09 +0000
+
+fuse3 (3.7.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update library symbols for this release.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sat, 28 Sep 2019 21:28:17 +0000
+
+fuse3 (3.6.2-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Drop outdated udevadm commands from postinst (closes: #934293).
+  * Remove dh_makeshlibs override.
+  * Update Standards-Version to 4.4.0 .
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sun, 01 Sep 2019 06:15:20 +0000
+
+fuse3 (3.4.1-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update library symbols for this release.
+  * Update Standards-Version to 4.3.0 .
+
+  [ Dmitry Smirnov <onlyjob@member.fsf.org> ]
+  * Make "fuse3" to replace "fuse", instead of conflict (closes: #912528).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Tue, 25 Dec 2018 16:57:44 +0000
+
+fuse3 (3.2.6-1) unstable; urgency=medium
+
+  * New upstream release:
+    - fix CVE-2018-10906, restriction bypass of the allow_other option when
+      SELinux is active (closes: #911343).
+  * Honor nocheck in DEB_BUILD_OPTIONS (closes: #910029).
+  * Don't force xz compression for source and binaries (closes: #910030).
+  * Update copyright file.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Thu, 18 Oct 2018 21:36:00 +0000
+
+fuse3 (3.2.4-1) unstable; urgency=medium
+
+  * New major upstream release (closes: #904216).
+  * Drop own udev rules.
+  * Update watch file.
+  * Update copyright file.
+  * Update debhelper level to 11:
+    - remove dh-autoreconf build dependency,
+    - don't specify parallel to debhelper.
+  * Update Standards-Version to 4.1.5:
+    - remove fuse-dbg package and use the auto-generated one.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sat, 21 Jul 2018 14:11:44 +0000

@@ -1,0 +1,38 @@
+From 194023c5999651386a3ddbf91fdd710d661d083b Mon Sep 17 00:00:00 2001
+From: Bernd Schubert <bernd@bsbernd.com>
+Date: Tue, 15 Jul 2025 23:54:27 +0200
+Subject: [PATCH] fusermount: Fix the close_range ifdef
+
+This fixes commit 82bcd818
+That commit had removed HAVE_LINUX_CLOSE_RANGE in meson generation,
+but didn't remove the usage in fusermount.c - fusermount was then
+not using the close_range syscall.
+
+Closes: https://github.com/libfuse/libfuse/issues/1284
+Signed-off-by: Bernd Schubert <bernd@bsbernd.com>
+---
+ util/fusermount.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/util/fusermount.c b/util/fusermount.c
+index 48f7fe7fa..1b94e8e5e 100644
+--- a/util/fusermount.c
++++ b/util/fusermount.c
+@@ -36,7 +36,7 @@
+ #include <stdbool.h>
+ #include <sys/vfs.h>
+ 
+-#ifdef HAVE_LINUX_CLOSE_RANGE_H
++#ifdef HAVE_CLOSE_RANGE
+ #include <linux/close_range.h>
+ #endif
+ 
+@@ -1477,7 +1477,7 @@ static int close_inherited_fds(int cfd)
+ 	if (cfd <= STDERR_FILENO)
+ 		return -EINVAL;
+ 
+-#ifdef HAVE_LINUX_CLOSE_RANGE_H
++#ifdef HAVE_CLOSE_RANGE
+ 	if (cfd < STDERR_FILENO + 2) {
+ 		close_range_loop(STDERR_FILENO + 1, cfd - 1, cfd);
+ 	} else {

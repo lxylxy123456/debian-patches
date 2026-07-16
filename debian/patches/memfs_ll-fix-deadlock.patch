@@ -1,0 +1,27 @@
+From b96c738b10e9a308725c62b9392ba7d553eec254 Mon Sep 17 00:00:00 2001
+From: Long Li <leo.lilong@huawei.com>
+Date: Wed, 16 Jul 2025 09:54:07 +0800
+Subject: [PATCH] memfs_ll: fix deadlock in truncate operation
+
+Remove redundant mutex lock acquisition in the truncate() method to
+prevent deadlock. The issue occurs when memfs_setattr() already holds
+the mutex lock and then calls truncate(), which attempts to acquire
+the same lock again.
+
+Signed-off-by: Long Li <leo.lilong@huawei.com>
+---
+ example/memfs_ll.cc | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/example/memfs_ll.cc b/example/memfs_ll.cc
+index 0da7c2544..17d7d034b 100644
+--- a/example/memfs_ll.cc
++++ b/example/memfs_ll.cc
+@@ -197,7 +197,6 @@ class Inode {
+ 
+ 	void truncate(off_t size)
+ 	{
+-		std::lock_guard<std::mutex> lock(mutex);
+ 		std::lock_guard<std::mutex> attr_lock(attr_mutex);
+ 		if (size < content.size()) {
+ 			content.resize(size);

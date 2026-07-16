@@ -1,0 +1,9 @@
+fuse3 (3.14.0-6) unstable; urgency=medium
+
+  The fuse3 package honours a dpkg-statoverride of /bin/fusermount3 installed
+  by a system administrator (e.g. to remove the setuid binary installed by
+  default). The path to this file according to the package manager is
+  transitioned to /usr/bin/fusermount3. If you installed a statoverride,
+  please move it to the new path and verify the permissions.
+
+ -- Helmut Grohne <helmut@subdivi.de>  Wed, 12 Jun 2024 13:41:27 +0200

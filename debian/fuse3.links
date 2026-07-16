@@ -1,0 +1,4 @@
+/usr/bin/fusermount3	/usr/bin/fusermount
+/usr/sbin/mount.fuse3	/usr/sbin/mount.fuse
+/usr/share/man/man1/fusermount3.1.gz	/usr/share/man/man1/fusermount.1.gz
+/usr/share/man/man8/mount.fuse3.8.gz	/usr/share/man/man8/mount.fuse.8.gz

@@ -1,0 +1,3 @@
+usr/bin/fusermount3
+usr/sbin/mount.fuse3
+etc/fuse.conf

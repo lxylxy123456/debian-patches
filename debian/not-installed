@@ -1,0 +1,2 @@
+debian/tmp/etc/init.d/fuse3
+debian/tmp/usr/lib/udev/rules.d/99-fuse3.rules

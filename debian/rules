@@ -1,0 +1,69 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+SHELL := sh -e
+
+include /usr/share/dpkg/architecture.mk
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+ifneq (,$(filter $(DEB_HOST_ARCH), arc armel m68k mips mipsel powerpc sh3 sh4 sparc))
+   export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed -latomic
+endif
+
+ifeq (,$(filter noudeb, $(DEB_BUILD_PROFILES)))
+  with_udeb = yes
+endif
+
+override_dh_auto_configure-arch:
+	dh_auto_configure -- -Ddefault_library=both -Duseroot=false \
+		$(DEB_CONFIGURE_EXTRA_FLAGS)
+
+override_dh_auto_configure-indep:
+	@echo Do not configure indep
+
+override_dh_auto_build-indep:
+	@echo Do not build indep
+
+override_dh_auto_install-indep:
+	@echo Do not install indep
+
+override_dh_compress:
+	dh_compress -Xusr/share/doc/libfuse3-dev/examples -XREADME.md
+
+override_dh_fixperms-arch:
+	dh_fixperms --arch
+ifeq ($(DEB_HOST_ARCH),linux)
+	chmod 0755 debian/fuse3/bin/fusermount3
+endif
+
+execute_after_dh_install:
+	# adding initramfs-tools integration
+	install -D -m 0755 debian/local/fuse.hook debian/fuse3/usr/share/initramfs-tools/hooks/fuse
+
+override_dh_auto_test-arch:
+ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
+ifeq (,$(findstring $(DEB_BUILD_ARCH),powerpc ppc64 sparc64 s390x hppa))
+		(cd obj-${DEB_HOST_GNU_TYPE}; python3 -m pytest test/) \
+			|| true
+endif
+endif
+
+override_dh_auto_test-indep:
+	@echo Do not test indep
+
+override_dh_missing:
+	dh_missing --fail-missing
+
+%:
+	dh ${@} --buildsystem=meson
+
+.PHONY: override_dh_auto_configure-arch override_dh_auto_configure-indep \
+	override_dh_auto_build-indep override_dh_auto_install-indep \
+	override_dh_compress override_dh_fixperms-arch \
+	execute_after_dh_install \
+	override_dh_auto_test-arch override_dh_auto_test-indep \
+	override_dh_missing

@@ -1,0 +1,559 @@
+From 066e8111f0ff522e4682a31bd63b5a3532e8af86 Mon Sep 17 00:00:00 2001
+From: Bernd Schubert <bschubert@ddn.com>
+Date: Sun, 18 May 2025 00:24:07 +0200
+Subject: [PATCH] conn->want conversion: Fix fuse_apply_conn_info_opts()
+
+fuse_apply_conn_info_opts() was applying to 'want_ext',
+which would cause conflicts with 'want' if the application
+applied its own flags to 'conn->want'.
+
+Solution is:
+    - to move fuse_{set,unset,get}_feature_flag and
+      convert_to_conn_want_ext() to fuse_lowlevel.c and
+      to define them as part of the public API, although
+      convert_to_conn_want_ext() should not be used - it is
+      currently needed to be a public function due as it needs
+      to be defined for the tests.
+
+Related to https://github.com/libfuse/libfuse/issues/1171 and
+https://github.com/libfuse/libfuse/pull/1172.
+
+Closes: https://github.com/libfuse/libfuse/issues/1171
+Signed-off-by: Bernd Schubert <bschubert@ddn.com>
+---
+ include/fuse_common.h       | 50 +++++++++++--------
+ lib/fuse.c                  |  9 +---
+ lib/fuse_i.h                | 38 +++------------
+ lib/fuse_lowlevel.c         | 78 ++++++++++++++++++++++++++---
+ lib/fuse_versionscript      | 10 ++++
+ lib/helper.c                | 15 ++++--
+ lib/util.c                  |  8 +++
+ lib/util.h                  |  3 ++
+ test/test_want_conversion.c | 97 ++++++++++++++++++++++---------------
+ 9 files changed, 200 insertions(+), 108 deletions(-)
+
+diff --git a/include/fuse_common.h b/include/fuse_common.h
+index 582505fa9..dd08f444a 100644
+--- a/include/fuse_common.h
++++ b/include/fuse_common.h
+@@ -1096,28 +1096,40 @@ void fuse_loop_cfg_convert(struct fuse_loop_config *config,
+ 			   struct fuse_loop_config_v1 *v1_conf);
+ #endif
+ 
++/**
++ * Set a feature flag in the want_ext field of fuse_conn_info.
++ *
++ * @param conn connection information
++ * @param flag feature flag to be set
++ * @return true if the flag was set, false if the flag is not supported
++ */
++bool fuse_set_feature_flag(struct fuse_conn_info *conn, uint64_t flag);
+ 
+-static inline bool fuse_set_feature_flag(struct fuse_conn_info *conn,
+-					 uint64_t flag)
+-{
+-	if (conn->capable_ext & flag) {
+-		conn->want_ext |= flag;
+-		return true;
+-	}
+-	return false;
+-}
++/**
++ * Unset a feature flag in the want_ext field of fuse_conn_info.
++ *
++ * @param conn connection information
++ * @param flag feature flag to be unset
++ */
++void fuse_unset_feature_flag(struct fuse_conn_info *conn, uint64_t flag);
++
++/**
++ * Get the value of a feature flag in the want_ext field of fuse_conn_info.
++ *
++ * @param conn connection information
++ * @param flag feature flag to be checked
++ * @return true if the flag is set, false otherwise
++ */
++bool fuse_get_feature_flag(struct fuse_conn_info *conn, uint64_t flag);
++
++/*
++ * DO NOT USE: Not part of public API, for internal test use only.
++ * The function signature or any use of it is not guaranteeed to
++ * remain stable. And neither are results of what this function does.
++ */
++int fuse_convert_to_conn_want_ext(struct fuse_conn_info *conn);
+ 
+-static inline void fuse_unset_feature_flag(struct fuse_conn_info *conn,
+-					 uint64_t flag)
+-{
+-	conn->want_ext &= ~flag;
+-}
+ 
+-static inline bool fuse_get_feature_flag(struct fuse_conn_info *conn,
+-					     uint64_t flag)
+-{
+-	return conn->capable_ext & flag ? true : false;
+-}
+ 
+ /* ----------------------------------------------------------- *
+  * Compatibility stuff					       *
+diff --git a/lib/fuse.c b/lib/fuse.c
+index 4964de20f..85914546e 100644
+--- a/lib/fuse.c
++++ b/lib/fuse.c
+@@ -2611,15 +2611,8 @@ void fuse_fs_init(struct fuse_fs *fs, struct fuse_conn_info *conn,
+ 		fuse_unset_feature_flag(conn, FUSE_CAP_POSIX_LOCKS);
+ 	if (!fs->op.flock)
+ 		fuse_unset_feature_flag(conn, FUSE_CAP_FLOCK_LOCKS);
+-	if (fs->op.init) {
+-		uint64_t want_ext_default = conn->want_ext;
+-		uint32_t want_default = fuse_lower_32_bits(conn->want_ext);
+-
+-		conn->want = want_default;
++	if (fs->op.init)
+ 		fs->user_data = fs->op.init(conn, cfg);
+-
+-		convert_to_conn_want_ext(conn, want_ext_default, want_default);
+-	}
+ }
+ 
+ static int fuse_init_intr_signal(int signum, int *installed);
+diff --git a/lib/fuse_i.h b/lib/fuse_i.h
+index bf5e2ca41..718fa142c 100644
+--- a/lib/fuse_i.h
++++ b/lib/fuse_i.h
+@@ -85,6 +85,13 @@ struct fuse_session {
+ 
+ 	/* true if reading requests from /dev/fuse are handled internally */
+ 	bool buf_reallocable;
++
++	/*
++	 * conn->want and conn_want_ext options set by libfuse , needed
++	 * to correctly convert want to want_ext
++	 */
++	uint32_t conn_want;
++	uint64_t conn_want_ext;
+ };
+ 
+ struct fuse_chan {
+@@ -227,34 +234,3 @@ int fuse_loop_cfg_verify(struct fuse_loop_config *config);
+ /* room needed in buffer to accommodate header */
+ #define FUSE_BUFFER_HEADER_SIZE 0x1000
+ 
+-/**
+- * Get the wanted capability flags, converting from old format if necessary
+- */
+-static inline int convert_to_conn_want_ext(struct fuse_conn_info *conn,
+-					   uint64_t want_ext_default,
+-					   uint32_t want_default)
+-{
+-	/*
+-	 * Convert want to want_ext if necessary.
+-	 * For the high level interface this function might be called
+-	 * twice, once from the high level interface and once from the
+-	 * low level interface. Both, with different want_ext_default and
+-	 * want_default values. In order to suppress a failure for the
+-	 * second call, we check if the lower 32 bits of want_ext are
+-	 * already set to the value of want.
+-	 */
+-	if (conn->want != want_default &&
+-	    fuse_lower_32_bits(conn->want_ext) != conn->want) {
+-		if (conn->want_ext != want_ext_default)
+-			return -EINVAL;
+-
+-		/* high bits from want_ext, low bits from want */
+-		conn->want_ext = fuse_higher_32_bits(conn->want_ext) |
+-				 conn->want;
+-	}
+-
+-	/* ensure there won't be a second conversion */
+-	conn->want = fuse_lower_32_bits(conn->want_ext);
+-
+-	return 0;
+-}
+diff --git a/lib/fuse_lowlevel.c b/lib/fuse_lowlevel.c
+index cb046aae0..1276a0fd9 100644
+--- a/lib/fuse_lowlevel.c
++++ b/lib/fuse_lowlevel.c
+@@ -1994,6 +1994,77 @@ static bool want_flags_valid(uint64_t capable, uint64_t want)
+ 	return true;
+ }
+ 
++/**
++ * Get the wanted capability flags, converting from old format if necessary
++ */
++int fuse_convert_to_conn_want_ext(struct fuse_conn_info *conn)
++{
++	struct fuse_session *se = container_of(conn, struct fuse_session, conn);
++
++	/*
++	 * Convert want to want_ext if necessary.
++	 * For the high level interface this function might be called
++	 * twice, once from the high level interface and once from the
++	 * low level interface. Both, with different want_ext_default and
++	 * want_default values. In order to suppress a failure for the
++	 * second call, we check if the lower 32 bits of want_ext are
++	 * already set to the value of want.
++	 */
++	if (conn->want != se->conn_want &&
++	    fuse_lower_32_bits(conn->want_ext) != conn->want) {
++		if (conn->want_ext != se->conn_want_ext) {
++			fuse_log(FUSE_LOG_ERR,
++				"%s: Both conn->want_ext and conn->want are set.\n"
++				"want=%x, want_ext=%lx, se->want=%lx se->want_ext=%lx\n",
++				__func__, conn->want, conn->want_ext,
++				se->conn_want, se->conn_want_ext);
++			return -EINVAL;
++		}
++
++		/* high bits from want_ext, low bits from want */
++		conn->want_ext = fuse_higher_32_bits(conn->want_ext) |
++				 conn->want;
++	}
++
++	/* ensure there won't be a second conversion */
++	conn->want = fuse_lower_32_bits(conn->want_ext);
++
++	return 0;
++}
++
++bool fuse_set_feature_flag(struct fuse_conn_info *conn,
++					 uint64_t flag)
++{
++	struct fuse_session *se = container_of(conn, struct fuse_session, conn);
++
++	if (conn->capable_ext & flag) {
++		conn->want_ext |= flag;
++		se->conn_want_ext |= flag;
++		conn->want  |= flag;
++		se->conn_want |= flag;
++		return true;
++	}
++	return false;
++}
++
++void fuse_unset_feature_flag(struct fuse_conn_info *conn,
++					 uint64_t flag)
++{
++	struct fuse_session *se = container_of(conn, struct fuse_session, conn);
++
++	conn->want_ext &= ~flag;
++	se->conn_want_ext &= ~flag;
++	conn->want  &= ~flag;
++	se->conn_want &= ~flag;
++}
++
++bool fuse_get_feature_flag(struct fuse_conn_info *conn,
++					     uint64_t flag)
++{
++	return conn->capable_ext & flag ? true : false;
++}
++
++
+ /* Prevent bogus data races (bogus since "init" is called before
+  * multi-threading becomes relevant */
+ static __attribute__((no_sanitize("thread")))
+@@ -2154,12 +2225,8 @@ void do_init(fuse_req_t req, fuse_ino_t nodeid, const void *inarg)
+ 
+ 	se->got_init = 1;
+ 	if (se->op.init) {
+-		uint64_t want_ext_default = se->conn.want_ext;
+-		uint32_t want_default = fuse_lower_32_bits(se->conn.want_ext);
+-
+ 		// Apply the first 32 bits of capable_ext to capable
+ 		se->conn.capable = fuse_lower_32_bits(se->conn.capable_ext);
+-		se->conn.want = want_default;
+ 
+ 		se->op.init(se->userdata, &se->conn);
+ 
+@@ -2168,8 +2235,7 @@ void do_init(fuse_req_t req, fuse_ino_t nodeid, const void *inarg)
+ 		 * se->conn.want_ext
+ 		 * Userspace might still use conn.want - we need to convert it
+ 		 */
+-		convert_to_conn_want_ext(&se->conn, want_ext_default,
+-					      want_default);
++		fuse_convert_to_conn_want_ext(&se->conn);
+ 	}
+ 
+ 	if (!want_flags_valid(se->conn.capable_ext, se->conn.want_ext)) {
+diff --git a/lib/fuse_versionscript b/lib/fuse_versionscript
+index 6c5fc83eb..a2653fcdd 100644
+--- a/lib/fuse_versionscript
++++ b/lib/fuse_versionscript
+@@ -202,6 +202,16 @@ FUSE_3.17 {
+ 		fuse_log_close_syslog;
+ } FUSE_3.12;
+ 
++FUSE_3.17.3 {
++	global:
++		fuse_set_feature_flag;
++		fuse_unset_feature_flag;
++		fuse_get_feature_flag;
++
++		# Not part of public API, for internal test use only
++		fuse_convert_to_conn_want_ext;
++} FUSE_3.17;
++
+ # Local Variables:
+ # indent-tabs-mode: t
+ # End:
+diff --git a/lib/helper.c b/lib/helper.c
+index 59dd48881..aceff9fd5 100644
+--- a/lib/helper.c
++++ b/lib/helper.c
+@@ -423,10 +423,17 @@ void fuse_apply_conn_info_opts(struct fuse_conn_info_opts *opts,
+ 	if(opts->set_max_readahead)
+ 		conn->max_readahead = opts->max_readahead;
+ 
+-#define LL_ENABLE(cond,cap) \
+-	if (cond) conn->want_ext |= (cap)
+-#define LL_DISABLE(cond,cap) \
+-	if (cond) conn->want_ext &= ~(cap)
++#define LL_ENABLE(cond, cap)                     \
++	do {                                     \
++		if (cond)                        \
++			fuse_set_feature_flag(conn, cap); \
++	} while (0)
++
++#define LL_DISABLE(cond, cap)                     \
++	do {                                      \
++		if (cond)                         \
++			fuse_unset_feature_flag(conn, cap); \
++	} while (0)
+ 
+ 	LL_ENABLE(opts->splice_read, FUSE_CAP_SPLICE_READ);
+ 	LL_DISABLE(opts->no_splice_read, FUSE_CAP_SPLICE_READ);
+diff --git a/lib/util.c b/lib/util.c
+index a529d383c..956c3d2e9 100644
+--- a/lib/util.c
++++ b/lib/util.c
+@@ -1,7 +1,14 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ 
++#ifndef FUSE_USE_VERSION
++#define FUSE_USE_VERSION (FUSE_MAKE_VERSION(3, 18))
++#endif
++
+ #include "util.h"
++#include "fuse_log.h"
++#include "fuse_lowlevel.h"
++#include <stdio.h>
+ 
+ int libfuse_strtol(const char *str, long *res)
+ {
+@@ -25,3 +32,4 @@ int libfuse_strtol(const char *str, long *res)
+ 	*res = val;
+ 	return 0;
+ }
++
+diff --git a/lib/util.h b/lib/util.h
+index ed03ad40e..f24401a29 100644
+--- a/lib/util.h
++++ b/lib/util.h
+@@ -2,12 +2,15 @@
+ #define FUSE_UTIL_H_
+ 
+ #include <stdint.h>
++#include <stdbool.h>
+ 
+ #define ROUND_UP(val, round_to) (((val) + (round_to - 1)) & ~(round_to - 1))
+ 
+ #define likely(x) __builtin_expect(!!(x), 1)
+ #define unlikely(x) __builtin_expect(!!(x), 0)
+ 
++struct fuse_conn_info;
++
+ int libfuse_strtol(const char *str, long *res);
+ 
+ /**
+diff --git a/test/test_want_conversion.c b/test/test_want_conversion.c
+index bee23cc6e..db731edbf 100644
+--- a/test/test_want_conversion.c
++++ b/test/test_want_conversion.c
+@@ -1,16 +1,22 @@
+-#include "util.h"
+ #define FUSE_USE_VERSION FUSE_MAKE_VERSION(3, 17)
+ 
++#include "util.h"
+ #include "fuse_i.h"
++#include "fuse_lowlevel.h"
+ #include <stdio.h>
+ #include <assert.h>
+ #include <inttypes.h>
+ #include <stdbool.h>
++#include <err.h>
+ 
+ static void print_conn_info(const char *prefix, struct fuse_conn_info *conn)
+ {
+-	printf("%s: want=0x%" PRIx32 " want_ext=0x%" PRIx64 "\n", prefix,
+-	       conn->want, conn->want_ext);
++	struct fuse_session *se = container_of(conn, struct fuse_session, conn);
++
++	printf("%s: want=0x%" PRIx32 " want_ext=0x%" PRIx64
++		" want_default=0x%" PRIx32 " want_ext_default=0x%" PRIx64 "\n",
++		prefix, conn->want, conn->want_ext, se->conn_want,
++		se->conn_want_ext);
+ }
+ 
+ static void application_init_old_style(struct fuse_conn_info *conn)
+@@ -18,33 +24,31 @@ static void application_init_old_style(struct fuse_conn_info *conn)
+ 	/* Simulate application init the old style */
+ 	conn->want |= FUSE_CAP_ASYNC_READ;
+ 	conn->want &= ~FUSE_CAP_SPLICE_READ;
++
++	/*
++	 * Also use new style API, as that might happen through
++	 * fuse_apply_conn_info_opts()
++	 */
++	fuse_set_feature_flag(conn, FUSE_CAP_IOCTL_DIR);
+ }
+ 
+ static void application_init_new_style(struct fuse_conn_info *conn)
+ {
+ 	/* Simulate application init the new style */
+ 	fuse_set_feature_flag(conn, FUSE_CAP_ASYNC_READ);
++	fuse_set_feature_flag(conn, FUSE_CAP_IOCTL_DIR);
+ 	fuse_unset_feature_flag(conn, FUSE_CAP_SPLICE_READ);
+ }
+ 
+ static void test_fuse_fs_init(struct fuse_conn_info *conn, bool new_style)
+ {
+-	uint64_t want_ext_default = conn->want_ext;
+-	uint32_t want_default = fuse_lower_32_bits(conn->want_ext);
+-	int rc;
+-
+ 	/* High-level init */
+ 	fuse_set_feature_flag(conn, FUSE_CAP_EXPORT_SUPPORT);
+ 
+-	conn->want = want_default;
+-
+ 	if (new_style)
+ 		application_init_new_style(conn);
+ 	else
+ 		application_init_old_style(conn);
+-
+-	rc = convert_to_conn_want_ext(conn, want_ext_default, want_default);
+-	assert(rc == 0);
+ }
+ 
+ static void test_do_init(struct fuse_conn_info *conn, bool new_style)
+@@ -53,49 +57,71 @@ static void test_do_init(struct fuse_conn_info *conn, bool new_style)
+ 	conn->capable_ext = FUSE_CAP_SPLICE_READ | FUSE_CAP_SPLICE_WRITE |
+ 			    FUSE_CAP_SPLICE_MOVE | FUSE_CAP_POSIX_LOCKS |
+ 			    FUSE_CAP_FLOCK_LOCKS | FUSE_CAP_EXPORT_SUPPORT |
+-			    FUSE_CAP_ASYNC_READ;
++			    FUSE_CAP_ASYNC_READ | FUSE_CAP_IOCTL_DIR;
+ 	conn->capable = fuse_lower_32_bits(conn->capable_ext);
+-	conn->want_ext = conn->capable_ext;
++
++	fuse_set_feature_flag(conn, FUSE_CAP_SPLICE_READ |
++				    FUSE_CAP_SPLICE_WRITE |
++				    FUSE_CAP_SPLICE_MOVE);
+ 
+ 	print_conn_info("Initial state", conn);
+ 
+-	uint64_t want_ext_default = conn->want_ext;
+-	uint32_t want_default = fuse_lower_32_bits(conn->want_ext);
+ 	int rc;
+ 
+-	conn->want = want_default;
+-	conn->capable = fuse_lower_32_bits(conn->capable_ext);
+-
+ 	test_fuse_fs_init(conn, new_style);
++	print_conn_info("After init", conn);
+ 
+-	rc = convert_to_conn_want_ext(conn, want_ext_default, want_default);
++	rc = fuse_convert_to_conn_want_ext(conn);
+ 	assert(rc == 0);
+ 
+ 	/* Verify all expected flags are set */
+ 	assert(!(conn->want_ext & FUSE_CAP_SPLICE_READ));
+ 	assert(conn->want_ext & FUSE_CAP_SPLICE_WRITE);
+ 	assert(conn->want_ext & FUSE_CAP_SPLICE_MOVE);
+-	assert(conn->want_ext & FUSE_CAP_POSIX_LOCKS);
+-	assert(conn->want_ext & FUSE_CAP_FLOCK_LOCKS);
+ 	assert(conn->want_ext & FUSE_CAP_EXPORT_SUPPORT);
+ 	assert(conn->want_ext & FUSE_CAP_ASYNC_READ);
++	assert(conn->want_ext & FUSE_CAP_IOCTL_DIR);
++
+ 	/* Verify no other flags are set */
+ 	assert(conn->want_ext ==
+ 	       (FUSE_CAP_SPLICE_WRITE | FUSE_CAP_SPLICE_MOVE |
+-		FUSE_CAP_POSIX_LOCKS | FUSE_CAP_FLOCK_LOCKS |
+-		FUSE_CAP_EXPORT_SUPPORT | FUSE_CAP_ASYNC_READ));
++		FUSE_CAP_EXPORT_SUPPORT | FUSE_CAP_ASYNC_READ |
++		FUSE_CAP_IOCTL_DIR));
+ 
+ 	print_conn_info("After init", conn);
+ }
+ 
+ static void test_want_conversion_basic(void)
+ {
+-	struct fuse_conn_info conn = { 0 };
++	const struct fuse_lowlevel_ops ops = { 0 };
++	struct fuse_args args = FUSE_ARGS_INIT(0, NULL);
++	struct fuse_session *se;
++	struct fuse_conn_info *conn;
++
++	/* Add the program name to arg[0] */
++	if (fuse_opt_add_arg(&args, "test_signals")) {
++		fprintf(stderr, "Failed to add argument\n");
++		errx(1, "Failed to add argument");
++	}
++
++
++	se = fuse_session_new(&args, &ops, sizeof(ops), NULL);
++	assert(se);
++	conn = &se->conn;
++	printf("\nTesting basic want conversion, old style:\n");
++	test_do_init(conn, false);
++	fuse_session_destroy(se);
++
++	se = fuse_session_new(&args, &ops, sizeof(ops), NULL);
++	assert(se);
++	conn = &se->conn;
++	printf("\nTesting basic want conversion, new style:\n");
++	test_do_init(conn, true);
++	print_conn_info("After init", conn);
++	fuse_session_destroy(se);
++
++	fuse_opt_free_args(&args);
+ 
+-	printf("\nTesting basic want conversion:\n");
+-	test_do_init(&conn, false);
+-	test_do_init(&conn, true);
+-	print_conn_info("After init", &conn);
+ }
+ 
+ static void test_want_conversion_conflict(void)
+@@ -115,16 +141,11 @@ static void test_want_conversion_conflict(void)
+ 	conn.want = fuse_lower_32_bits(conn.want_ext);
+ 	print_conn_info("Test conflict initial", &conn);
+ 
+-	/* Initialize default values like in basic test */
+-	uint64_t want_ext_default_ll = conn.want_ext;
+-	uint32_t want_default_ll = fuse_lower_32_bits(want_ext_default_ll);
+-
+ 	/* Simulate application init modifying capabilities */
+ 	conn.want_ext |= FUSE_CAP_ATOMIC_O_TRUNC; /* Add new capability */
+ 	conn.want &= ~FUSE_CAP_SPLICE_READ; /* Remove a capability */
+ 
+-	rc = convert_to_conn_want_ext(&conn, want_ext_default_ll,
+-				      want_default_ll);
++	rc = fuse_convert_to_conn_want_ext(&conn);
+ 	assert(rc == -EINVAL);
+ 	print_conn_info("Test conflict after", &conn);
+ 
+@@ -143,11 +164,7 @@ static void test_want_conversion_high_bits(void)
+ 	conn.want = fuse_lower_32_bits(conn.want_ext);
+ 	print_conn_info("Test high bits initial", &conn);
+ 
+-	uint64_t want_ext_default_ll = conn.want_ext;
+-	uint32_t want_default_ll = fuse_lower_32_bits(want_ext_default_ll);
+-
+-	rc = convert_to_conn_want_ext(&conn, want_ext_default_ll,
+-				      want_default_ll);
++	rc = fuse_convert_to_conn_want_ext(&conn);
+ 	assert(rc == 0);
+ 	assert(conn.want_ext == ((1ULL << 33) | FUSE_CAP_ASYNC_READ));
+ 	print_conn_info("Test high bits after", &conn);
