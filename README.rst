@@ -232,3 +232,22 @@ Bug report: https://qt-project.atlassian.net/browse/QTBUG-144987
 .. _libqt5widgets5t64_5.15.15_dfsg-6_deb13u1: https://github.com/lxylxy123456/debian-patches/tree/libqt5widgets5t64_5.15.15_dfsg-6_deb13u1
 .. _a4eabe75..84561a12: https://github.com/lxylxy123456/debian-patches/compare/a4eabe7538f4067a5a3cbff99d5959f76127632b..84561a125fdbd58aa7806f1ff8aee28188da6a24
 
+libfuse3-4: fix zero inode problem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Backport work by Dave Vasilevsky: https://github.com/libfuse/libfuse/pull/1372
+
+As a result of this bug, bash does not expand wildcards correctly.
+Demo: https://youtu.be/fjaaJyk71kk
+
+Thanks: https://utcc.utoronto.ca/~cks/space/blog/linux/LinuxZeroInodesExist
+
++--------+------------+----------+------------------------+-----------------------+
+| Debian | Package    | Version  | Branch                 | Diff                  |
++========+============+==========+========================+=======================+
+|   13   | libfuse3-4 | 3.17.2-3 | `libfuse3-4_3.17.2-3`_ | `f738f76f..ff25ec65`_ |
++--------+------------+----------+------------------------+-----------------------+
+
+.. _libfuse3-4_3.17.2-3: https://github.com/lxylxy123456/debian-patches/tree/libfuse3-4_3.17.2-3
+.. _f738f76f..ff25ec65: https://github.com/lxylxy123456/debian-patches/compare/f738f76fcc1bc402cf10b50c3c0a01be61a7c744..ff25ec65199f41a59dd5366972b90ef7ccc8b4d6
+

@@ -1,0 +1,93 @@
+diff --git a/example/passthrough.c b/example/passthrough.c
+index cc93f53ee5b80a0251d7168a9e277e1a3d0c07cc..16763c82c614cf7b52f5d16a805110c9e8d645db 100644
+--- a/example/passthrough.c
++++ b/example/passthrough.c
+@@ -52,12 +52,13 @@
+ #include "passthrough_helpers.h"
+ 
+ static int fill_dir_plus = 0;
++static int readdir_zero_ino;
+ 
+ static void *xmp_init(struct fuse_conn_info *conn,
+ 		      struct fuse_config *cfg)
+ {
+ 	(void) conn;
+-	cfg->use_ino = 1;
++	cfg->use_ino = !readdir_zero_ino;
+ 
+ 	/* parallel_direct_writes feature depends on direct_io features.
+ 	   To make parallel_direct_writes valid, need either set cfg->direct_io
+@@ -144,6 +145,8 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
+ 			st.st_ino = de->d_ino;
+ 			st.st_mode = de->d_type << 12;
+ 		}
++		if (readdir_zero_ino)
++			st.st_ino = 0;
+ 		if (filler(buf, de->d_name, &st, 0, fill_dir_plus))
+ 			break;
+ 	}
+@@ -580,6 +583,9 @@ int main(int argc, char *argv[])
+ 	for (i=0, new_argc=0; (i<argc) && (new_argc<MAX_ARGS); i++) {
+ 		if (!strcmp(argv[i], "--plus")) {
+ 			fill_dir_plus = FUSE_FILL_DIR_PLUS;
++		} else if (!strcmp(argv[i], "--readdir-zero-inodes")) {
++			// Return zero inodes from readdir
++			readdir_zero_ino = 1;
+ 		} else {
+ 			new_argv[new_argc++] = argv[i];
+ 		}
+diff --git a/include/fuse.h b/include/fuse.h
+index 4582cc7ac992715514c65779223d48939f016dc0..47347e59042a29dc8ff48ad56865998529c277b7 100644
+--- a/include/fuse.h
++++ b/include/fuse.h
+@@ -57,13 +57,16 @@ enum fuse_readdir_flags {
+  */
+ enum fuse_fill_dir_flags {
+ 	/**
+-	 * "Plus" mode: all file attributes are valid
++	 * "Plus" mode: file attributes are valid
+ 	 *
+ 	 * The attributes are used by the kernel to prefill the inode cache
+ 	 * during a readdir.
+ 	 *
+ 	 * It is okay to set FUSE_FILL_DIR_PLUS if FUSE_READDIR_PLUS is not set
+ 	 * and vice versa.
++	 *
++	 * This does not make libfuse honor the 'st_ino' field. That is
++	 * controlled by the 'use_ino' option instead.
+ 	 */
+ 	FUSE_FILL_DIR_DEFAULTS = 0,
+ 	FUSE_FILL_DIR_PLUS = (1 << 1)
+diff --git a/lib/fuse.c b/lib/fuse.c
+index 85914546e9dab2ce0a26cda859a5cdd5725c8eb4..346afc0420b01248031225cdf8db31ccde920b6c 100644
+--- a/lib/fuse.c
++++ b/lib/fuse.c
+@@ -3563,17 +3563,17 @@ static int fill_dir_plus(void *dh_, const char *name, const struct stat *statp,
+ 
+ 	if (statp && (flags & FUSE_FILL_DIR_PLUS)) {
+ 		e.attr = *statp;
+-	} else {
+-		e.attr.st_ino = FUSE_UNKNOWN_INO;
+-		if (statp) {
+-			e.attr.st_mode = statp->st_mode;
+-			if (f->conf.use_ino)
+-				e.attr.st_ino = statp->st_ino;
+-		}
+-		if (!f->conf.use_ino && f->conf.readdir_ino) {
+-			e.attr.st_ino = (ino_t)
+-				lookup_nodeid(f, dh->nodeid, name);
+-		}
++	}
++
++	e.attr.st_ino = FUSE_UNKNOWN_INO;
++	if (statp) {
++		e.attr.st_mode = statp->st_mode;
++		if (f->conf.use_ino)
++			e.attr.st_ino = statp->st_ino;
++	}
++	if (!f->conf.use_ino && f->conf.readdir_ino) {
++		e.attr.st_ino = (ino_t)
++			lookup_nodeid(f, dh->nodeid, name);
+ 	}
+ 
+ 	if (off) {
