@@ -1,3 +1,13 @@
+vlc (3.0.24-0+deb13u1) trixie-security; urgency=medium
+
+  * New upstream version 3.0.24
+    - Fix memory-safety vulnerabilities when processing crafted media
+      (CVE-2026-56711, CVE-2026-73324)
+  * debian/upstream: Update upstream signing key
+  * debian/: Add librist-dev for new rist plugin
+
+ -- Sebastian Ramacher <sramacher@debian.org>  Thu, 24 Sep 2026 06:49:02 +0200
+
 vlc (3.0.23-0+deb13u1) trixie-security; urgency=medium
 
   * New upstream version 3.0.23
