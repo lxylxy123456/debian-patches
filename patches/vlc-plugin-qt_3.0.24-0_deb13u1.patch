@@ -1,0 +1,41 @@
+diff --git a/modules/gui/qt/components/info_panels.cpp b/modules/gui/qt/components/info_panels.cpp
+index 53cf4f39b85475bf614d0ff4d596a8f57cca93a2..973c5b12bc866f6503d62dc5d5c03f10f2f21979 100644
+--- a/modules/gui/qt/components/info_panels.cpp
++++ b/modules/gui/qt/components/info_panels.cpp
+@@ -398,6 +398,22 @@ ExtraMetaPanel::ExtraMetaPanel( QWidget *parent ) : QWidget( parent )
+      layout->addWidget( extraMeta, 1, 0 );
+ }
+ 
++void ExtraMetaPanel::showEvent( QShowEvent * event )
++{
++    static int lxy_resize_count = 1;
++    if (lxy_resize_count) {
++        extraMeta->resizeRowsToContents();
++        lxy_resize_count--;
++    }
++    QWidget::showEvent( event );
++}
++
++void ExtraMetaPanel::resizeEvent( QResizeEvent * event )
++{
++    extraMeta->resizeRowsToContents();
++    QWidget::resizeEvent( event );
++}
++
+ /**
+  * Update the Extra Metadata from p_meta->i_extras
+  **/
+diff --git a/modules/gui/qt/components/info_panels.hpp b/modules/gui/qt/components/info_panels.hpp
+index c5549f70c88f5a4c27ed9969fd059d368687767b..a4ebca8aa3428e843789c6e6b0670baeffcbe226 100644
+--- a/modules/gui/qt/components/info_panels.hpp
++++ b/modules/gui/qt/components/info_panels.hpp
+@@ -100,6 +100,9 @@ class ExtraMetaPanel: public QWidget
+     Q_OBJECT
+ public:
+     ExtraMetaPanel( QWidget * );
++protected:
++    void showEvent( QShowEvent * ) override;
++    void resizeEvent( QResizeEvent * ) override;
+ private:
+     QTableWidget *extraMeta;
+ public slots:

@@ -213,10 +213,14 @@ vlc-plugin-qt: fix row height in Metadata tab
 | Debian | Package       | Version           | Branch                            | Diff                  |
 +========+===============+===================+===================================+=======================+
 |   13   | vlc-plugin-qt | 3.0.23-0+deb13u1  | `vlc-plugin-qt_3.0.23-0_deb13u1`_ | `f6d4961c..b43b9015`_ |
+|        |               +-------------------+-----------------------------------+-----------------------+
+|        |               | 3.0.24-0+deb13u1  | `vlc-plugin-qt_3.0.24-0_deb13u1`_ | `53cf4f39..973c5b12`_ |
 +--------+---------------+-------------------+-----------------------------------+-----------------------+
 
 .. _vlc-plugin-qt_3.0.23-0_deb13u1: https://github.com/lxylxy123456/debian-patches/tree/vlc-plugin-qt_3.0.23-0_deb13u1
 .. _f6d4961c..b43b9015: https://github.com/lxylxy123456/debian-patches/compare/f6d4961c3edbbc449a681c7e4fc8216e382fff3c..b43b901576ac19ebe62e1103741dfb482acc9015
+.. _vlc-plugin-qt_3.0.24-0_deb13u1: https://github.com/lxylxy123456/debian-patches/tree/vlc-plugin-qt_3.0.24-0_deb13u1
+.. _53cf4f39..973c5b12: https://github.com/lxylxy123456/debian-patches/compare/53cf4f39b85475bf614d0ff4d596a8f57cca93a2..973c5b12bc866f6503d62dc5d5c03f10f2f21979
 
 libqt5widgets5t64: fix calculateElidedText when line height changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
